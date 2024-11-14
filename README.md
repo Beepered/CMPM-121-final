@@ -2,11 +2,13 @@
 
 # Log 1 - Nov 14 2024
 ## Introducing the team
-Tools Lead: Brendan Trieu
+Brendan Trieu will be working under the name Beepered and be responsible for creating reusable functions and template code such as classes
 
-Engine Lead: Ian Liu and Andrew Byi
+Ian Liu will be responsible for researching the primary and alternate engines. 
 
-Design Lead: Izaiah Lozano will be responsible for Game art and music/soundFX
+Andrew Byi will be responsible for establishing standard of organizing the code. 
+
+Izaiah Lozano will be responsible for Game art and music/soundFX
 
 ## Tools and materials
 We will be using Phaser because we are all familiar with it from CMPM 120. We will also be programming in Javascript because it is compatible with Phaser and we all know it from other CMPM classes. We will primarily be using Visual Studio code or whatever text editor people wish to work with, along with Git for version control. Our main designs will be created in PixelArt and any sound either borrowed from freesounds or created using FLStudio. We plan on switching javascript out with typescript to explore how strong typing along with interfaces interact with Phaser. 
