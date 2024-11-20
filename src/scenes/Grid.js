@@ -11,6 +11,14 @@ class Grid{
         this.tileY = height/y;
         this.gridMap = Array.from({ length: y }, () => Array(x).fill(0));
     }
+
+    getGridXCoordinate(x){
+        return Math.floor(x/tileX);
+    }
+
+    getGridYCoordinate(y){
+        return Math.floor(y/tileY);
+    }
 }
 
 class gridScene extends Phaser.Scene {
@@ -22,8 +30,8 @@ class gridScene extends Phaser.Scene {
     }
     create(){
         this.grid = new Grid(this.scale.width, this.scale.height, XTILES,YTILES);
-        let playGrid = this.grid.gridMap;
-        console.log(playGrid[0][0]);
+        let playGrid = this.grid
+        console.log(playGrid.gridMap[0][0]);
     }
 
     update(){
