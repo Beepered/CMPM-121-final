@@ -10,7 +10,6 @@ class Play extends Phaser.Scene {
 
     create(){
         this.player = new Player(this, gameWidth / 2, gameHeight / 2, "player");
-        this.player.create(this)
 
         this.gameObjects = [] // list of all game objects and loop over and call their update
         this.gameObjects.push(this.player)

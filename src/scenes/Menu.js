@@ -30,6 +30,8 @@ class Menu extends Phaser.Scene {
         this.add.text(gameWidth / 2, gameHeight / 1.8, "press DOWN for CREDITS", textConfig).setOrigin(0.5)
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+
+        this.scene.start("playScene") // Brendan: testing in case I forget to delete it
     }
 
     update(){

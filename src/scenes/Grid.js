@@ -27,6 +27,7 @@ class gridScene extends Phaser.Scene {
     }
     preload(){
         //TO-DO Preload Assets here
+        
     }
     create(){
         this.grid = new Grid(this.scale.width, this.scale.height, NUMTILEX, NUMTILESY);
