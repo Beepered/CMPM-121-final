@@ -28,16 +28,17 @@ class Menu extends Phaser.Scene {
         this.add.text(gameWidth / 2, gameHeight / 2.5, "TITLE", titleConfig).setOrigin(0.5)
         this.add.text(gameWidth / 2, gameHeight / 2, "press UP to PLAY", textConfig).setOrigin(0.5)
         this.add.text(gameWidth / 2, gameHeight / 1.8, "press DOWN for CREDITS", textConfig).setOrigin(0.5)
-        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+       
+        //controls defined so it is not global
+        this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     }
 
     update(){
-        if(Phaser.Input.Keyboard.JustDown(keyUP)){
-            console.log("play")
-            //this.scene.start("playScene")
+        if(Phaser.Input.Keyboard.JustDown(this.keyUP)){
+            this.scene.start("playScene")
         }
-        if(Phaser.Input.Keyboard.JustDown(keyDOWN)){
+        if(Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
             console.log("credits")
             //this.scene.start("creditScene")
         }

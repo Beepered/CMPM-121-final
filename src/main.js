@@ -9,13 +9,14 @@ let config = {
             debug:false
         }
     },
+    backgroundColor: '#4488aa',
     width: 800,
     height: 500,
-    scene: [Menu]
+    scene: [Menu, Play]
 }
 
 let game = new Phaser.Game(config);
 let gameHeight = game.config.height
 let gameWidth = game.config.width
 
-let keyUP, keyDOWN
+//let keyUP, keyDOWN
