@@ -29,7 +29,7 @@ class gridScene extends Phaser.Scene {
         //TO-DO Preload Assets here
     }
     create(){
-        this.grid = new Grid(this.scale.width, this.scale.height, XTILES,YTILES);
+        this.grid = new Grid(this.scale.width, this.scale.height, NUMTILEX, NUMTILESY);
         let playGrid = this.grid
         console.log(playGrid.gridMap[0][0]);
     }
