@@ -1,5 +1,5 @@
-const XTILES = 8;
-const YTILES = 8;
+const NUMTILEX = 8;
+const NUMTILESY = 8;
 
 /*
 Grid is built by taking the config height/width and the x/y dimensions of the grid
