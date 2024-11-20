@@ -30,6 +30,7 @@ class Player extends Phaser.GameObjects.Sprite{
         if(this.keyDOWN.isDown){
             this.y += this.moveSpeed
         }
+        
         if(Phaser.Input.Keyboard.JustDown(this.SPACE)){
             this.Action();
         }

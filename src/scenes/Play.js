@@ -1,10 +1,9 @@
 class Play extends Phaser.Scene {
     preload(){
-        this.load.image("player", "assets/player.png") // I want to find a way to move the preload into the player script
+        this.load.image("player", "assets/player.png")
     }
 
     constructor(){
-        console.log("start play")
         super("playScene")
     }
 
