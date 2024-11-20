@@ -2,6 +2,8 @@ class Player extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y, texture){
         super(scene, x, y, texture);
         scene.add.existing(this)
+
+        this.moveSpeed = 3
     }
     
     create(scene){
@@ -17,16 +19,16 @@ class Player extends Phaser.GameObjects.Sprite{
 
     controls(){
         if(this.keyUP.isDown){
-            console.log("player up")
+            this.y -= this.moveSpeed
         }
         if(this.keyLEFT.isDown){
-            console.log("player left")
+            this.x -= this.moveSpeed
         }
         if(this.keyRIGHT.isDown){
-            console.log("player right")
+            this.x += this.moveSpeed
         }
         if(this.keyDOWN.isDown){
-            console.log("player down")
+            this.y += this.moveSpeed
         }
     }
 }
