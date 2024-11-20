@@ -35,7 +35,7 @@ class Menu extends Phaser.Scene {
     update(){
         if(Phaser.Input.Keyboard.JustDown(keyUP)){
             console.log("play")
-            //this.scene.start("playScene")
+            this.scene.start("gridScene")
         }
         if(Phaser.Input.Keyboard.JustDown(keyDOWN)){
             console.log("credits")
