@@ -40,7 +40,7 @@ class Menu extends Phaser.Scene {
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
             console.log("credits")
-            //this.scene.start("creditScene")
+            this.scene.start("creditScene")
         }
     }
 

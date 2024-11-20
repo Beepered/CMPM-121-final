@@ -1,8 +1,5 @@
 let config = {
     type: Phaser.CANVAS,
-    render: {
-        pixelArt: true
-    },
     physics:{
         default: "arcade",
         arcade:{
@@ -11,7 +8,7 @@ let config = {
     },
     width: 800,
     height: 500,
-    scene: [Menu, Play, gridScene]
+    scene: [Menu, Play, gridScene, Credits]
 }
 
 let game = new Phaser.Game(config);
