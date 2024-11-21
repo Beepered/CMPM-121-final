@@ -1,8 +1,5 @@
 let config = {
     type: Phaser.CANVAS,
-    render: {
-        pixelArt: true
-    },
     physics:{
         default: "arcade",
         arcade:{
@@ -11,11 +8,9 @@ let config = {
     },
     width: 800,
     height: 500,
-    scene: [Menu,gridScene]
+    scene: [Menu, Play, gridScene, Credits]
 }
 
 let game = new Phaser.Game(config);
 let gameHeight = game.config.height
 let gameWidth = game.config.width
-
-let keyUP, keyDOWN

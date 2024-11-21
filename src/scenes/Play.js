@@ -1,24 +1,29 @@
 class Play extends Phaser.Scene {
     preload(){
-        this.load.image("player", "assets/player.png") // I want to find a way to move the preload into the player script
+        this.load.image("player", "assets/player.png")
+        this.load.image("testplant", "assets/testplant.png")
     }
 
     constructor(){
-        console.log("start play")
         super("playScene")
+        this.bus = new EventTarget();
     }
 
     create(){
+        this.gameObjects = this.add.group({
+            runChildUpdate: true
+        })
         this.player = new Player(this, gameWidth / 2, gameHeight / 2, "player");
-        this.player.create(this)
+        this.gameObjects.add(this.player);
 
-        this.gameObjects = [] // list of all game objects and loop over and call their update
-        this.gameObjects.push(this.player)
+        // test
+        this.player.addListener("win-event", ()=>{
+            console.log("player received win event")
+        })
+
+        this.bus.dispatchEvent(new Event("win-event"))
     }
 
     update(){
-        this.gameObjects.forEach((object) => {
-            object.update();
-        })
     }
 }
