@@ -10,11 +10,13 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        this.gameObjects = this.add.group({
+            runChildUpdate: true
+        })
         this.player = new Player(this, gameWidth / 2, gameHeight / 2, "player");
+        this.gameObjects.add(this.player);
 
-        this.gameObjects = [] // list of all game objects and loop over and call their update
-        this.gameObjects.push(this.player)
-
+        // test
         this.player.addListener("win-event", ()=>{
             console.log("player received win event")
         })
@@ -23,8 +25,5 @@ class Play extends Phaser.Scene {
     }
 
     update(){
-        this.gameObjects.forEach((object) => {
-            object.update();
-        })
     }
 }
