@@ -3,6 +3,8 @@ class Player extends Phaser.GameObjects.Sprite{
         super(scene, x, y, texture);
         scene.add.existing(this)
 
+        this.depth = 1 // render ordering
+
         this.moveSpeed = 3
         
         // defining controls
@@ -30,14 +32,14 @@ class Player extends Phaser.GameObjects.Sprite{
         if(this.keyDOWN.isDown){
             this.y += this.moveSpeed
         }
-        
+
         if(Phaser.Input.Keyboard.JustDown(this.SPACE)){
             this.Action();
         }
     }
 
     Action(){
-        console.log("space")
+        this.Plant(this.x, this.y) // create object at given position (temporary plant)
         /*
         check current cell
         if(cell is empty)
@@ -46,5 +48,9 @@ class Player extends Phaser.GameObjects.Sprite{
             reap
         */
 
+    }
+
+    Plant(x, y) {
+        new TestPlant(this.scene, x, y, "testplant")
     }
 }

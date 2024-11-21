@@ -1,10 +1,12 @@
 class Play extends Phaser.Scene {
     preload(){
         this.load.image("player", "assets/player.png")
+        this.load.image("testplant", "assets/testplant.png")
     }
 
     constructor(){
         super("playScene")
+        this.bus = new EventTarget();
     }
 
     create(){
@@ -12,6 +14,12 @@ class Play extends Phaser.Scene {
 
         this.gameObjects = [] // list of all game objects and loop over and call their update
         this.gameObjects.push(this.player)
+
+        this.player.addListener("win-event", ()=>{
+            console.log("player received win event")
+        })
+
+        this.bus.dispatchEvent(new Event("win-event"))
     }
 
     update(){

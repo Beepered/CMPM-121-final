@@ -1,6 +1,5 @@
 class Credits extends Phaser.Scene {
     constructor(){
-        console.log("start menu")
         super("creditScene")
     }
     create(){

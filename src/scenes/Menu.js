@@ -1,6 +1,5 @@
 class Menu extends Phaser.Scene {
     constructor(){
-        console.log("start menu")
         super("menuScene")
     }
 
@@ -31,6 +30,8 @@ class Menu extends Phaser.Scene {
         
         this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+
+        this.scene.start("playScene")
     }
 
     update(){
