@@ -32,9 +32,7 @@ class gridScene extends Phaser.Scene {
         const xIncrement = gameWidth / this.XTiles;
         const yIncrement = gameHeight / this.YTiles;
         for(let i = 0; i < arr.length; i++){ // y
-            let newI = i + 1;
             for(let j = 0; j < arr[i].length; j++){ // x
-                let newJ = j + 1;
                 arr[i][j] = new Cell(this, xIncrement * j, yIncrement * i, "testplant");
             }
         }
