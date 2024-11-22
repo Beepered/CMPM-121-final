@@ -28,10 +28,14 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.moveSpeed = 3
         this.seeds = 3;
+
+        this.playersTurn = true; //for turn base
     }
 
     update(){
-        this.controls();
+        if(this.playersTurn){
+            this.controls();
+        }
     }
 
     controls(){
@@ -68,6 +72,14 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             reap
         */
 
+    }
+
+    changeTurn(){
+        if(this.playersTurn){
+            this.playersTurn = false;
+        }else{
+            this.playersTurn = true;
+        }
     }
 
 

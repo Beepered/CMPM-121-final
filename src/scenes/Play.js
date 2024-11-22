@@ -21,6 +21,10 @@ class Play extends Phaser.Scene {
             console.log("player received win event")
         })
 
+        this.player.addListener("next-turn", ()=>{
+            this.player.changeTurn();
+        })
+
         this.bus.dispatchEvent(new Event("win-event"))
     }
 
