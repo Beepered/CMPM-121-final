@@ -29,13 +29,11 @@ class gridScene extends Phaser.Scene {
     }
 
     nextTurn(){
-        this.player.seeds += 3;
         //Could change to parsing an array with indexes of the active plants. This is temp
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[0].length; j++){
-                const currentPlant = grid[i][j]
+                const currentPlant = grid[i][j].plant
                 if(currentPlant.isVisible){
-                    console.log(currentPlant.water)
                     currentPlant.growth ++;
                 }
             }
