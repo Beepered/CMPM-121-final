@@ -58,11 +58,11 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action(){
-        const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)].plant;
+        const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
         console.log(currentGrid.growth)
         if(!currentGrid.isVisible){
             if(this.seeds > 0){
-                currentGrid.plant();
+                currentGrid.sow();
                 this.seeds--;
             }
         }
