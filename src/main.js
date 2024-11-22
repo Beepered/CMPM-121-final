@@ -8,6 +8,7 @@ let config = {
     },
     width: 800,
     height: 500,
+    backgroundColor: '#3f9b0b',
     scene: [Menu, Play, gridScene, Credits]
 }
 
