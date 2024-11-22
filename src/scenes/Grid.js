@@ -13,7 +13,7 @@ class gridScene extends Phaser.Scene {
     create(){
        this.grid = this.MakeArray(this.XTiles, this.YTiles);
        this.FillGridWithCells(this.grid);
-       this.player = new Player(this,0,0,"playerCharacter",this.grid)
+       this.player = new Player(this, 0, 0, "playerCharacter", this.grid)
     }
 
     update(){

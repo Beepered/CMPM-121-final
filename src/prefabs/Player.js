@@ -63,19 +63,29 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action() {
-        //should change to currentCell
-        const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)].plant;
-        console.log(currentGrid.growth)
-        if(!currentGrid.isVisible){
+        if(this.grid){ // sloppy change but does let the player plant if on a not-grid level
+            //should change to currentCell
+            const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)].plant;
+            console.log(currentGrid.growth)
+            if(!currentGrid.isVisible){
+                if(this.seeds > 0){
+                    currentGrid.plant();
+                    this.seeds--;
+                }
+            }
+            else if(currentGrid.growth >= 3){
+                //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
+                currentGrid.reap();
+            }
+        }
+        else{
             if(this.seeds > 0){
-                currentGrid.plant();
+                this.emitter.emit("plant")
+                this.Plant(this.x, this.y)
                 this.seeds--;
             }
         }
-        else if(currentGrid.growth >= 3){
-            //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
-            currentGrid.reap();
-        }
+        
     }
 
     setListeners() {
@@ -102,6 +112,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
 
     Plant(x, y) {
-        new Plant(this.scene, x, y, "testplant")
+        new TestPlant(this.scene, x, y, "testplant") // Brendan: temporarily changed to testplant
     }
 }
