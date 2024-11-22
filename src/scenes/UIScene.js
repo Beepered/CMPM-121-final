@@ -8,7 +8,7 @@ class UIScene extends Phaser.Scene {
     }
 
     create (){
-        this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${this.seeds}`, 35)
+        this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
     }
     
     // absolutely terrible way to do this
