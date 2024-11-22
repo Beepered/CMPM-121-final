@@ -67,18 +67,19 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             }
         }
         else if(currentGrid.growth >= 3){
+            //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
             currentGrid.reap();
         }
     }
         
 
-    changeTurn(){
-        if(this.playersTurn){
-            this.playersTurn = false;
-        }else{
-            this.playersTurn = true;
-        }
-    }
+    // changeTurn(){
+    //     if(this.playersTurn){
+    //         this.playersTurn = false;
+    //     }else{
+    //         this.playersTurn = true;
+    //     }
+    // }
 
 
     Plant(x, y) {
