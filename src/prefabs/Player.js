@@ -58,9 +58,16 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action(){
+        const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)]
         if(this.seeds > 0){ // replace with the cell's x and y
-            this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)].setVisible(true); 
-            this.seeds--;
+            if(!currentGrid.isVisible){
+                currentGrid.setVisible(true); 
+                currentGrid.isVisible = true;
+                currentGrid.setActive(true); 
+                this.seeds--;
+                console.log(this.seeds);
+                console.log(currentGrid.isVisible);
+            }
             
         }
         
