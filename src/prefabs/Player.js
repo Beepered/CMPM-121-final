@@ -63,6 +63,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Plant(x, y) {
-        new TestPlant(this.scene, x, y, "testplant")
+        new Plant(this.scene, x, y, "testplant")
     }
 }
