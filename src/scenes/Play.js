@@ -10,24 +10,31 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+        this.emitter = EventDispatcher.getInstance(); //
+        this.turnSystem = new TurnSystem(this);
+
         this.gameObjects = this.add.group({
             runChildUpdate: true
         })
         this.player = new Player(this, gameWidth / 2, gameHeight / 2, "player");
         this.gameObjects.add(this.player);
 
-        // test
-        this.player.addListener("win-event", ()=>{
-            console.log("player received win event")
-        })
+        this.setListeners();
 
-        this.player.addListener("next-turn", ()=>{
-            this.player.changeTurn();
-        })
-
-        this.bus.dispatchEvent(new Event("win-event"))
+        this.keyU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U) // testing
     }
 
     update(){
+        if(Phaser.Input.Keyboard.JustDown(this.keyU)){ // test button
+            this.emitter.emit("next-turn")
+        }
+    }
+
+    setListeners() {
+        this.emitter.on("next-turn", this.test.bind(this));
+    }
+
+    test(){
+        console.log("next turn received")
     }
 }
