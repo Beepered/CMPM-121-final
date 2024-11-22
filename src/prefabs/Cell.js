@@ -11,4 +11,15 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.sun = 5;
         this.water = 5;
     }
+
+    // Method to randomly generate the incoming sun and water per turn
+    generateSunandWater() {
+
+        const SunPower = Math.floor(Math.random() * 10) + 1; // Random generation from 1 to 10
+        const WaterPower = Math.floor(Math.random() * 10) + 1; // Random generation from 1 to 10
+
+        this.sun = SunPower; // Immediate use of sun or it will be reset
+        this.water = this.water + WaterPower // Collect the water
+    }
+
 }
