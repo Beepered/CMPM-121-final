@@ -32,9 +32,13 @@ class gridScene extends Phaser.Scene {
         //Could change to parsing an array with indexes of the active plants. This is temp
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[0].length; j++){
-                const currentPlant = grid[i][j].plant
+                const currentGrid = grid[i][j]
+                const currentPlant = currentGrid.plant;
                 if(currentPlant.isVisible){
-                    currentPlant.growth ++;
+                    //Change these to const values instead of magic numbers. This is just temp growth condition.
+                    if(currentGrid.sun >= 5 && currentGrid.water >= 5){
+                        currentPlant.growth ++;
+                    }
                 }
             }
         }
