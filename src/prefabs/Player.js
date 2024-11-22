@@ -1,21 +1,23 @@
 class Player extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, x, y, texture, grid){
         super(scene, x, y, texture);
-        this.emitter = EventDispatcher.getInstance();
-
         scene.add.existing(this)
         scene.physics.add.existing(this)
         this.setCollideWorldBounds(true) 
+
+        this.emitter = EventDispatcher.getInstance();
+        this.setListeners();
 
         this.depth = 1 // render ordering
 
         this.setScale(0.5); 
         this.body.setSize(this.width * 0.5, this.height * 0.5); 
         this.grid = grid;
-        /* // commenting out to test in Play scene
-        this.gridX = gameWidth/this.grid[0].length;
-        this.gridY = gameHeight/this.grid.length;
-        */
+        if(this.grid){ // Brendan: put if statement so it can work without a grid
+            this.gridX = gameWidth/this.grid[0].length;
+            this.gridY = gameHeight/this.grid.length;
+        }
+
         this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
         this.keyA = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
         this.keyS = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
@@ -31,13 +33,14 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.moveSpeed = 3
         this.seeds = 3;
 
-        this.playersTurn = true; //for turn base
+        this.playersTurn = false; //for turn base
     }
 
     update(){
         if(this.playersTurn){
             this.controls();
         }
+        // if moved to next cell, then emit next turn
     }
 
     controls(){
@@ -59,7 +62,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         }
     }
 
-    Action(){
+    Action() {
+        //should change to currentCell
         const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)].plant;
         console.log(currentGrid.growth)
         if(!currentGrid.isVisible){
@@ -74,12 +78,17 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         }
     }
 
-    setListener() {
-        this.emitter.on("next-turn", this.testReceived.bind(this));
+    setListeners() {
+        this.emitter.on("next-turn", this.NextTurn.bind(this));
+        this.emitter.on("param-test", this.ParamTest.bind(this));
     }
-
-    testReceived (){
-        console.log("PLAYER got next-turn event")
+    NextTurn (){ // maybe it lets the player move again and gives seeds?
+        console.log("PLAYER next-turn")
+        this.playersTurn = true;
+        this.seeds = 3;
+    }
+    ParamTest(param) {
+        console.log("PLAYER param-test:", param)
     }
         
 
