@@ -58,29 +58,28 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action(){
-        if(this.seeds > 0){ // replace with the cell's x and y
-            this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)].setVisible(true); 
-            this.seeds--;
-            
+        const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)].plant;
+        console.log(currentGrid.growth)
+        if(!currentGrid.isVisible){
+            if(this.seeds > 0){
+                currentGrid.plant();
+                this.seeds--;
+            }
         }
+        else if(currentGrid.growth >= 3){
+            //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
+            currentGrid.reap();
+        }
+    }
         
-        /*
-        check current cell
-        if(cell is empty)
-            plant
-        else
-            reap
-        */
 
-    }
-
-    changeTurn(){
-        if(this.playersTurn){
-            this.playersTurn = false;
-        }else{
-            this.playersTurn = true;
-        }
-    }
+    // changeTurn(){
+    //     if(this.playersTurn){
+    //         this.playersTurn = false;
+    //     }else{
+    //         this.playersTurn = true;
+    //     }
+    // }
 
 
     Plant(x, y) {
