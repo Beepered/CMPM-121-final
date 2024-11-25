@@ -4,9 +4,9 @@ class Plant extends Phaser.GameObjects.Sprite{
         this.setOrigin(0, 0);
         scene.add.existing(this);
 
-        this.setActive(false);
-        this.setVisible(false);
-        this.isVisible = false;
+        this.setActive(true);
+        this.setVisible(true);
+        this.isVisible = true;
 
         this.growth = 0;
     }
@@ -15,12 +15,12 @@ class Plant extends Phaser.GameObjects.Sprite{
         this.growth += lvl;
     }
 
-    plant(){
+    /*plant(){
         this.setActive(true);
         this.setVisible(true);
         this.isVisible = true;
         this.growth = 1;
-    }
+    }*/
     
     reap(){
         this.setActive(false);
