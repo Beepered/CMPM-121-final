@@ -11,20 +11,27 @@
     </style>
 </head>
 <body>
+    <!-- Has to be first -->
     <script src="lib/phaser.js"></script>
+
+    <!-- Utilities -->
+    <script src="src/Utils/EventDispatcher.js"></script>
+    <script src="src/Utils/TurnSystem.js"></script>
 
     <!--  all scene scripts here -->
     <script src="src/scenes/Menu.js"></script>
+    <script src="src/scenes/Credits.js"></script>
     <script src="src/scenes/Grid.js"></script>
     <script src="src/scenes/Play.js"></script>
-    <script src="src/scenes/Credits.js"></script>
+    <script src="src/scenes/UIScene.js"></script>
 
     <!--  all prefab scripts here -->
     <script src="src/prefabs/Player.js"></script>
     <script src="src/prefabs/Plant.js"></script>
+    <script src="src/prefabs/TestPlant.js"></script>
     <script src="src/prefabs/Cell.js"></script>
-
-    <!-- This has to be last -->
+    
+    <!-- Has to be last -->
     <script src="src/main.js"></script>
 </body>
 </html>
