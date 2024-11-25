@@ -86,14 +86,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         
     }
 
-    // changeTurn(){
-    //     if(this.playersTurn){
-    //         this.playersTurn = false;
-    //     }else{
-    //         this.playersTurn = true;
-    //     }
-    // }
-
     Plant(selectedGrid, type) {
         if(this.seeds > 0){
             selectedGrid.Plant = new Plant(this.scene, selectedGrid.x, selectedGrid.y, type);

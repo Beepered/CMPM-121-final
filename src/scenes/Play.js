@@ -3,6 +3,11 @@ class Play extends Phaser.Scene {
         this.load.image("player", "assets/player.png")
         this.load.image("testplant", "assets/testplant.png")
         this.load.image("grass", "assets/GrassV1.png")
+
+        // flowers
+        this.load.image("pink", "assets/Pink_Flower.png")
+        this.load.image("purple", "assets/Purple_Flower.png")
+        this.load.image("red", "assets/Red_Flower.png")
     }
 
     constructor(){
