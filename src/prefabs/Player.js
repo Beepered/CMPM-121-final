@@ -5,14 +5,19 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         scene.physics.add.existing(this)
         this.setCollideWorldBounds(true) 
 
+        this.emitter = EventDispatcher.getInstance();
+
         this.depth = 1 // render ordering
 
         this.setScale(0.5); 
         this.body.setSize(this.width * 0.5, this.height * 0.5); 
         this.grid = grid;
 
-        this.gridX = gameWidth/this.grid[0].length;
-        this.gridY = gameHeight/this.grid.length;
+        if(this.grid){
+            this.gridX = gameWidth/this.grid[0].length;
+            this.gridY = gameHeight/this.grid.length;
+        }
+        
 
         this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
         this.keyA = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
@@ -28,8 +33,9 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.moveSpeed = 3
         this.seeds = 3;
+        this.cell = null;
 
-        this.playersTurn = true; //for turn base
+        this.playersTurn = true;
     }
 
     update(){
@@ -58,16 +64,26 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action(){
-        const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
+        if(this.grid){
+            const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
         
-        //console.log(currentGrid.growth)
-        if(currentGrid.Plant == null){
-            this.Plant(currentGrid, "testplant");
+            if(currentGrid.Plant == null){
+                this.emitter.emit("plant")
+                this.Plant(currentGrid, "testplant");
+            }
+            else if(currentGrid.growth >= 3){
+                //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
+                currentGrid.reap();
+            }
         }
-        else if(currentGrid.growth >= 3){
-            //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
-            currentGrid.reap();
+        else{
+            if(this.seeds > 0){
+                this.emitter.emit("plant")
+                this.PlantInCell(this.cell)
+                this.seeds--;
+            }
         }
+        
     }
 
     // changeTurn(){
@@ -83,5 +99,15 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             selectedGrid.Plant = new Plant(this.scene, selectedGrid.x, selectedGrid.y, type);
             this.seeds--;
         }
+    }
+
+    PlantInCell(cell){ // planting using cell pointer instead
+        if(cell != null){
+            new Plant(this.scene, cell.x, cell.y, "testplant");
+        }
+        else{
+            console.log("no cell in player")
+        }
+        
     }
 }

@@ -14,15 +14,16 @@ class UIScene extends Phaser.Scene {
     // absolutely terrible way to do this
     setListeners() {
         this.emitter.on("next-turn", this.NextTurn.bind(this));
-        this.emitter.on("plant", this.updateText.bind(this));
+        this.emitter.on("plant", this.Plant.bind(this));
     }
 
     NextTurn(){
         this.seeds = 3;
+        this.seedText.text = `Seeds: ${this.seeds}`
     }
 
-    updateText(){
-        this.seeds--
+    Plant(){
+        this.seeds--;
         this.seedText.text = `Seeds: ${this.seeds}`
     }
 }
