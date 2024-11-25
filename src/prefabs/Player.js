@@ -62,7 +62,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         
         //console.log(currentGrid.growth)
         if(currentGrid.Plant == null){
-            this.Plant(this.x, this.y, currentGrid, "testplant");
+            this.Plant(currentGrid, "testplant");
         }
         else if(currentGrid.growth >= 3){
             //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
@@ -78,9 +78,9 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     //     }
     // }
 
-    Plant(x, y, selectedGrid, type) {
+    Plant(selectedGrid, type) {
         if(this.seeds > 0){
-            selectedGrid.Plant = new Plant(this.scene, x, y, type);
+            selectedGrid.Plant = new Plant(this.scene, selectedGrid.x, selectedGrid.y, type);
             this.seeds--;
         }
     }
