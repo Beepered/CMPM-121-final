@@ -53,16 +53,17 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         }
         
         if(Phaser.Input.Keyboard.JustDown(this.SPACE)){
-            this.Action();
+            this.Plant();
         }
     }
 
-    Action(){
-        const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)].plant;
-        console.log(currentGrid.growth)
-        if(!currentGrid.isVisible){
+    Plant(){
+        const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
+        
+        //console.log(currentGrid.growth)
+        if(currentGrid.Plant == null){
             if(this.seeds > 0){
-                currentGrid.plant();
+                currentGrid.Plant = new Plant(this.scene, this.x, this.y, "testplant");
                 this.seeds--;
             }
         }
@@ -71,7 +72,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             currentGrid.reap();
         }
     }
-        
 
     // changeTurn(){
     //     if(this.playersTurn){
@@ -81,8 +81,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     //     }
     // }
 
-
+/*
     Plant(x, y) {
-        new Plant(this.scene, x, y, "testplant")
-    }
+        return new Plant(this.scene, x, y, "testplant")
+    }*/
 }

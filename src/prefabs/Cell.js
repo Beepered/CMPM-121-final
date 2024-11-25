@@ -3,7 +3,7 @@ class Cell extends Phaser.GameObjects.Sprite {
         super(scene, x, y);
         scene.add.existing(this)
 
-        this.plant = new Plant(scene,x,y,texture);
+        this.plant = null;
 
         this.sun = 5;
         this.water = 5;
