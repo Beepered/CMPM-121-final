@@ -66,7 +66,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     Action(){
         if(this.grid){
             const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
-        
             if(currentGrid.Plant == null){
                 this.emitter.emit("plant")
                 this.Plant(currentGrid, "testplant");
@@ -95,7 +94,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     PlantInCell(cell){ // planting using cell pointer instead
         if(cell != null){
-            new Plant(this.scene, cell.x, cell.y, "testplant");
+            const type = Math.floor(Math.random() * 2) + 1; // Random generation from 1 to 2
+            new Plant(this.scene, cell.x, cell.y, cell, type); // could honestly simplify to not having x and y
         }
         else{
             console.log("no cell in player")

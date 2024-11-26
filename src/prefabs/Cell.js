@@ -25,14 +25,14 @@ class Cell extends Phaser.GameObjects.Sprite {
 
     ChangeSun() {
         const minSun = 1;
-        const maxSun = 3;
+        const maxSun = 10;
         this.sun = Math.floor(Math.random() * maxSun) + minSun; // Immediate use of sun or it will be reset
     }
 
     ChangeWater() {
         const minWater = 1;
         const maxWater = 3;
-        const WaterPower = Math.floor(Math.random() * maxWater) + minWater; // Random generation from 1 to 10
+        const WaterPower = Math.floor(Math.random() * maxWater) + minWater; // Random generation from 1 to 3
         this.water = this.water + WaterPower // Collect the water
         if(this.water > 10){
             this.water = 10; // max water is 10
