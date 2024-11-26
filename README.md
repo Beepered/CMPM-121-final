@@ -15,12 +15,8 @@ We want to take on a different interpretation of the requirements. The hardest p
 
 ## Log 2 - Nov 25 2024
 ### Overview
-- Grid cells have sun and water levels. The incoming sun and water for each cell is somehow randomly generated each turn. Sun energy cannot be stored in a cell (it is used immediately or lost) while water moisture can be slowly accumulated over several turns.
-- Each plant on the grid has a distinct type (e.g. one of 3 species) and a growth level (level 1-3).
-- Simple spatial rules govern plant growth based on sun, water, and nearby plants (growth is unlocked by satisfying conditions).
-- A play scenario is completed when some condition is satisfied (e.g. at least X plants at growth level Y or above).
 
-We first implemented a simple player character that has top down movement. We are thinking that the player can freely move, but once the player steps on a new cell it counts as the next-turn. The player can create plant using the spacebar if the cell isn't taken otherwise the cell's plant the player is standing on is destroyed. Each cell has its own sun and water levels. Everything else is unfinished.
+We first implemented a simple player character that has top down movement. The player has two available actions when standing on a grid that are both bound to spacebar. Using spacebar on an empty grid plants one of three plants, while using spacebar on an occupied grid removes the seed from the cell.  We currently allow the player to move freely, but once the player steps on a new cell time advances forward. If the cell meets a certain water/sun level requirement when a new turn occurs, the plant on that cell will grow. For now, players can win by completing 3 full plants. 
 
 ### Reflection
-Progress was slow because everyone was given other projects in other classes to start. Since Thanksgiving was near, we all went home at the same time and couldn't work on the weekends. Hopefully we should work faster now that no one is traveling. 
+Progress was slow because everyone was given other projects in other classes to start. Since Thanksgiving was near, we all went home at the same time and couldn't work on the weekends. Hopefully we should work faster now that no one is traveling. We are still working with phaser and javascript along with Git for version control. But, we have started using more temporary assets created in MSPaint to make certain all of our game mechanics work.   
