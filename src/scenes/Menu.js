@@ -31,15 +31,15 @@ class Menu extends Phaser.Scene {
         this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
-        this.scene.start("playScene")
+        this.scene.switch("playScene")
     }
 
     update(){
         if(Phaser.Input.Keyboard.JustDown(this.keyUP)){
-            this.scene.start("gridScene")
+            this.scene.switch("playScene")
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
-            this.scene.start("creditScene")
+            this.scene.switch("creditScene")
         }
     }
 

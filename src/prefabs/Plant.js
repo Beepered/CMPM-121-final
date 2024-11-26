@@ -20,6 +20,7 @@ class Plant extends Phaser.GameObjects.Sprite{
         }
         else if(this.growth == 3){
             this.setTexture("red")
+            this.emitter.emit("fully-grown");
         }
     }
     
