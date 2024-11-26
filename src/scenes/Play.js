@@ -39,6 +39,7 @@ class Play extends Phaser.Scene {
 
     update(){
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
+            this.player.playersTurn = false;
             this.emitter.emit("end-game")
         }
     }

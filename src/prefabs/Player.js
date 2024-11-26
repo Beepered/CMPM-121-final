@@ -12,7 +12,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.setScale(0.5); 
         this.body.setSize(this.width * 0.5, this.height * 0.5); 
         this.grid = grid;
-        console.log(this.grid);
         if(this.grid){
             this.gridX = gameWidth/this.grid[0].width;
             this.gridY = gameHeight/this.grid.length;
@@ -68,41 +67,29 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             
             //const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
             //console.log("cell: " + JSON.stringify(this.cell));
-            if(this.cell.Plant == null){
-                
+            if(this.cell.plant == null){
                 this.emitter.emit("plant")
                 this.Plant(this.cell, "testplant");
             }
-            else if(this.cell.Plant.growth >= 3){
+            else if(this.cell.plant.growth >= 3){
                 //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
-                console.log("reaping");
+                // Brendan: maybe make a border around the cell. Could be code or just its own sprite
                 this.Reap(this.cell);
             }
         }
         
     }
 
-    Plant(selectedCell, type) {
+    Plant(selectedCell, type) { // we can use "type" later but right now just using a random seed
         console.log("seed count: " + this.seeds);
+        const randSeed = Math.floor(Math.random() * 2) + 0;
         if(this.seeds > 0){
-            console.log("planting");
-            selectedCell.Plant = new Plant(this.scene, selectedCell.x, selectedCell.y, type);
+            selectedCell.plant = new Plant(this.scene, selectedCell.x, selectedCell.y, randSeed);
         }
     }
 
     Reap(cell){
-        cell.Plant.setVisible(false);
-        delete cell.Plant;
-        cell.Plant = null;
-    }
-
-    PlantInCell(cell){ // planting using cell pointer instead
-        if(cell != null){
-            new Plant(this.scene, cell.x, cell.y, "testplant");
-        }
-        else{
-            console.log("no cell in player")
-        }
-        
+        cell.plant.destroy();
+        cell.plant = null;
     }
 }
