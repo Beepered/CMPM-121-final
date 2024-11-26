@@ -1,5 +1,5 @@
 class Plant extends Phaser.GameObjects.Sprite{
-    constructor(scene, x, y, cell = null, type = 0){
+    constructor(scene, x, y, type = 0){
         let texture;
         switch(type) {
             case(0):
@@ -18,9 +18,8 @@ class Plant extends Phaser.GameObjects.Sprite{
         scene.add.existing(this);
 
         this.emitter = EventDispatcher.getInstance();
-        this.setListeners();
+        //this.setListeners();
 
-        this.cell = cell;
         this.type = type
 
         this.alpha = 0.4;
@@ -47,11 +46,11 @@ class Plant extends Phaser.GameObjects.Sprite{
         this.isVisible = false;
         this.growth = 0;
     }
-
+    /*
     setListeners(){
         this.emitter.on("next-turn", this.NextTurn.bind(this));
     }
-
+    
     NextTurn(){
         if(this.cell){
             if(this.growth < 3){
@@ -77,6 +76,32 @@ class Plant extends Phaser.GameObjects.Sprite{
         }
         else{
             console.log("no cell for plant")
+        }
+    }
+    */
+    GiveNutrients(cell, sun, water){
+        if(this.growth < 3){
+            if(this.type == 0){ // pink
+                if(sun >= 2 && water >= 2){ // probably better way to do this (JSON file?)
+                    this.growPlant(1)
+                    if(cell)
+                        cell.water -= 2;
+                }
+            }
+            else if (this.type == 1){ // purple
+                if(sun >= 5 && water >= 5){
+                    this.growPlant(1)
+                    if(cell)
+                        cell.water -= 5;
+                }
+            }
+            else if (this.type == 2){ // red
+                if(sun >= 1 && water >= 3){
+                    this.growPlant(1)
+                    if(cell)
+                        cell.water -= 3;
+                }
+            }
         }
     }
 }
