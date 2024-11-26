@@ -10,6 +10,8 @@ class UIScene extends Phaser.Scene {
 
     create (){
         this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
+        this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
+        this.endText.visible = false
     }
     
     // absolutely terrible way to do this
@@ -31,6 +33,8 @@ class UIScene extends Phaser.Scene {
     }
 
     endGame() {
+        this.endText.visible = true
+        /* // Brendan: not sure what this does but commented out
         const scenes = this.scene.manager.getScenes(true); 
         scenes.forEach(scene => {
             if (scene.scene.key !== "creditScene") {
@@ -38,7 +42,8 @@ class UIScene extends Phaser.Scene {
             }
         });
     
-        this.scene.start("creditScene"); 
+        this.scene.start("creditScene");
+        */ 
     }
 
     winCon(){
