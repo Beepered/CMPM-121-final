@@ -26,8 +26,9 @@ class Play extends Phaser.Scene {
         this.gameObjects.add(this.player);
 
         this.cellGroup = this.add.group()
-        this.createCell(gameWidth / 2, gameHeight / 2)
-        this.createCell(gameWidth / 1.3, gameHeight / 2)
+        this.createCell(gameWidth / 4, gameHeight / 2); this.createCell(gameWidth / 4, gameHeight / 1.3)
+        this.createCell(gameWidth / 2, gameHeight / 2); this.createCell(gameWidth / 2, gameHeight / 1.3)
+        this.createCell(gameWidth / 1.3, gameHeight / 2); this.createCell(gameWidth / 1.3, gameHeight / 1.3)
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
             if(player.cell != cell){
                 this.emitter.emit("next-turn")
