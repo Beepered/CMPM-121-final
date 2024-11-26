@@ -12,9 +12,9 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.setScale(0.5); 
         this.body.setSize(this.width * 0.5, this.height * 0.5); 
         this.grid = grid;
-
+        console.log(this.grid);
         if(this.grid){
-            this.gridX = gameWidth/this.grid[0].length;
+            this.gridX = gameWidth/this.grid[0].width;
             this.gridY = gameHeight/this.grid.length;
         }
         
@@ -64,41 +64,45 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action(){
-        if(this.grid){
-            const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
-            if(currentGrid.Plant == null){
+        if(this.cell){
+            
+            //const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
+            //console.log("cell: " + JSON.stringify(this.cell));
+            if(this.cell.Plant == null){
+                
                 this.emitter.emit("plant")
-                this.Plant(currentGrid, "testplant");
+                this.Plant(this.cell, "testplant");
             }
-            else if(currentGrid.growth >= 3){
+            else if(this.cell.Plant.growth >= 3){
                 //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
-                currentGrid.reap();
-            }
-        }
-        else{
-            if(this.seeds > 0){
-                this.emitter.emit("plant")
-                this.PlantInCell(this.cell)
-                this.seeds--;
+                console.log("reaping");
+                this.Reap(this.cell);
             }
         }
         
     }
 
-    Plant(selectedGrid, type) {
+    Plant(selectedCell, type) {
+        console.log("seed count: " + this.seeds);
         if(this.seeds > 0){
-            selectedGrid.Plant = new Plant(this.scene, selectedGrid.x, selectedGrid.y, type);
-            this.seeds--;
+            console.log("planting");
+            selectedCell.Plant = new Plant(this.scene, selectedCell.x, selectedCell.y, type);
         }
+    }
+
+    Reap(cell){
+        cell.Plant.setVisible(false);
+        delete cell.Plant;
+        cell.Plant = null;
     }
 
     PlantInCell(cell){ // planting using cell pointer instead
         if(cell != null){
-            const type = Math.floor(Math.random() * 2) + 0; // Random generation from 0 to 2
-            cell.plant = new Plant(this.scene, cell.x, cell.y, type); // could honestly simplify to not having x and y
+            new Plant(this.scene, cell.x, cell.y, "testplant");
         }
         else{
-            console.log("no cell for player")
+            console.log("no cell in player")
         }
+        
     }
 }
