@@ -4,6 +4,9 @@ class Cell extends Phaser.GameObjects.Sprite {
         scene.add.existing(this)
         scene.physics.add.existing(this)
 
+        this.emitter = EventDispatcher.getInstance();
+        this.setListeners();
+
         this.plant = null;
 
         this.sun = 5;
@@ -18,6 +21,27 @@ class Cell extends Phaser.GameObjects.Sprite {
 
         this.sun = SunPower; // Immediate use of sun or it will be reset
         this.water = this.water + WaterPower // Collect the water
+    }
+
+    ChangeSun() {
+        const minSun = 1;
+        const maxSun = 3;
+        this.sun = Math.floor(Math.random() * maxSun) + minSun; // Immediate use of sun or it will be reset
+    }
+
+    ChangeWater() {
+        const minWater = 1;
+        const maxWater = 3;
+        const WaterPower = Math.floor(Math.random() * maxWater) + minWater; // Random generation from 1 to 10
+        this.water = this.water + WaterPower // Collect the water
+        if(this.water > 10){
+            this.water = 10; // max water is 10
+        }
+    }
+
+    setListeners() {
+        this.emitter.on("next-turn", this.ChangeSun.bind(this));
+        this.emitter.on("next-turn", this.ChangeWater.bind(this));
     }
 
 }
