@@ -1,8 +1,8 @@
 class Plant extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y, type){
         super(scene, x, y, type);
-        //this.setOrigin(0, 0);
         scene.add.existing(this);
+        this.alpha = 0.4 // temporary since we don't have seed/growing sprites
 
         this.emitter = EventDispatcher.getInstance();
         this.setListeners();
@@ -13,13 +13,13 @@ class Plant extends Phaser.GameObjects.Sprite{
     growPlant(lvl){ // have some parameters like if sun and water > 1 then growth++
         this.growth += lvl;
         if(this.growth == 1){ // only works if sprites were preloaded in scene
-            this.setTexture("pink")
+            this.alpha += 0.2
         }
         else if(this.growth == 2){
-            this.setTexture("purple")
+            this.alpha += 0.2
         }
         else if(this.growth == 3){
-            this.setTexture("red")
+            this.alpha += 0.2
         }
     }
     
