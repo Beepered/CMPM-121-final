@@ -64,49 +64,35 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action(){
-        console.log("currentGrid: ");
-        //console.log(this.grid);
         if(this.cell){
             
             //const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
-            console.log("cell: " + JSON.stringify(this.cell));
+            //console.log("cell: " + JSON.stringify(this.cell));
             if(this.cell.Plant == null){
-                console.log("planting");
+                
                 this.emitter.emit("plant")
                 this.Plant(this.cell, "testplant");
             }
             else if(this.cell.Plant.growth >= 3){
                 //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
-                //currentGrid.reap();
                 console.log("reaping");
                 this.Reap(this.cell);
             }
-            //console.log("current cell growth: " + this.cell.Plant.growth);
         }
-        /*
-        else{
-            if(this.seeds > 0){
-                this.emitter.emit("plant")
-                this.PlantInCell(this.cell)
-                this.seeds--;
-            }
-            else if (this.cell.Plant.growth >= 3){
-                this.Reap(this.cell);
-
-            }
-        }*/
         
     }
 
     Plant(selectedCell, type) {
+        console.log("seed count: " + this.seeds);
         if(this.seeds > 0){
+            console.log("planting");
             selectedCell.Plant = new Plant(this.scene, selectedCell.x, selectedCell.y, type);
-            this.seeds--;
         }
     }
 
     Reap(cell){
         cell.Plant.setVisible(false);
+        delete cell.Plant;
         cell.Plant = null;
     }
 

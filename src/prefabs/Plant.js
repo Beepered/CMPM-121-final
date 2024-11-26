@@ -23,13 +23,6 @@ class Plant extends Phaser.GameObjects.Sprite{
         }
     }
     
-    reap(){
-        this.setActive(false);
-        this.setVisible(false);
-        this.isVisible = false;
-        this.growth = 0;
-    }
-
     setListeners(){
         this.emitter.on("next-turn", this.NextTurn.bind(this));
     }
