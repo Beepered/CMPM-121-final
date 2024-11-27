@@ -79,16 +79,24 @@ class Play extends Phaser.Scene {
         return cell;
     }
 
+    Make2DArray(x, y){
+        var arr = []; // make 2d array
+        for(let i = 0; i < y; i++) {
+            arr.push(new Array(x));
+        }
+        return arr
+    }
+
     MakeCellGrid(x, y){
         const minXPos = 100;
         const minYPos = 70;
-        var cellArr = [];
+        var cellGrid = this.Make2DArray(x, y);
         for(let i = 0; i < x ; i++){
             for(let j = 0; j < y; j++){
-                cellArr.push(this.createCell(minXPos + gameWidth / this.XTiles * i, minYPos + gameHeight / this.YTiles * j));
+                cellGrid[i][j] = this.createCell(minXPos + gameWidth / this.XTiles * i, minYPos + gameHeight / this.YTiles * j);
             }
         }
-        return cellArr;
+        return cellGrid;
     }
 
     GameBehavior(){ // only declared once, not in update()
