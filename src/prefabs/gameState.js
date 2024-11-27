@@ -1,5 +1,3 @@
-
-
 class Action {
     constructor(identifier, prevState, nextState) {
         this.identifier = identifier; // like reap plant and next turn
