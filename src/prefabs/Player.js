@@ -30,6 +30,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.playersTurn = true;
 
+        this.gameStateManager = new gameStateManager();
         
     }
 
@@ -60,20 +61,27 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     Action(){
         console.log(this.seeds)
+        let identifier = null;
         if(this.cell){
-            
-            //const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
-            //console.log("cell: " + JSON.stringify(this.cell));
+            let prevState = new State(this.cell, this.cell.plant, this.seeds);
             if(this.cell.plant == null && this.seeds > 0){
                 this.emitter.emit("plant")
                 this.Plant(this.cell, "testplant");
                 this.seeds--;
+                identifier = "plant";
             }
             else if(this.cell.plant && this.cell.plant.growth >= 3){
                 //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
                 // Brendan: maybe make a border around the cell. Could be code or just its own sprite
                 this.Reap(this.cell);
+                identifier = "reap";
             }
+            if(identifier){
+                let nextState = new State(this.cell, this.cell.plant, this.seeds);
+                const action = new Action(identifier, prevState, nextState);
+                this.gameStateManager.performAction(action);
+            }
+            
         }
         
     }
