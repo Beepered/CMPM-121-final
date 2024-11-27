@@ -1,6 +1,5 @@
 class Action {
     constructor(identifier, prevState, nextState) {
-        this.identifier = identifier; // like reap plant and next turn
         this.prevState = prevState;
         this.nextState = nextState;   
     }
@@ -42,3 +41,15 @@ class gameStateManager {
         }
     }
 }
+/*
+Game state objects need to contain
+Cell array 
+    Cell sun/water levels
+    Cell plant type/growth
+
+Player 
+    turn count 
+    player Seed count
+    player position
+
+ */

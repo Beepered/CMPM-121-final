@@ -60,11 +60,10 @@ class Play extends Phaser.Scene {
             this.checkCellTime = 0.02;
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
-            // this.player.playersTurn = false;
-            // this.emitter.emit("end-game")
             this.emitter.emit("next-turn");
             this.player.NextTurn();
         }
+
         // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
         //     this.player.gameStateManager.undo();
         //     this.emitter.emit("undo"); //make later

@@ -18,6 +18,7 @@ class Cell extends Phaser.GameObjects.Sprite {
 
     // Method to randomly generate the incoming sun and water per turn
     generateSunandWater() {
+        // Might need to randomly generate with a set seed like the cache generate
         const SunPower = Math.floor(Math.random() * 10) + 1; // Random generation from 1 to 10
         const WaterPower = Math.floor(Math.random() * 10) + 1; // Random generation from 1 to 10
 

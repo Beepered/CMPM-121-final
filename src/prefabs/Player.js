@@ -70,10 +70,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 // Brendan: maybe make a border around the cell. Could be code or just its own sprite
                 this.Reap(this.cell);
             }
-            
-            
-        }
-        
+        } 
     }
 
     Plant(selectedCell, type) { // we can use "type" later but right now just using a random seed
