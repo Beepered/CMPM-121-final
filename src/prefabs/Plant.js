@@ -17,16 +17,13 @@ class Plant extends Phaser.GameObjects.Sprite{
         super(scene, x, y, texture);
         scene.add.existing(this);
 
-        this.emitter = EventDispatcher.getInstance();
-        //this.setListeners();
-
         this.alpha = 0.4
         this.growth = 0;
     }
     
-    growPlant(lvl){ // have some parameters like if sun and water > 1 then growth++
+    growPlant(lvl){
         this.growth += lvl;
-        if(this.growth == 1){ // does the same thing but maybe it can change on each level. or just change sprite
+        if(this.growth == 1){
             this.alpha += 0.2
         }
         else if(this.growth == 2){
@@ -37,15 +34,7 @@ class Plant extends Phaser.GameObjects.Sprite{
             this.emitter.emit("fully-grown");
         }
     }
-    /*
-    setListeners(){
-        this.emitter.on("next-turn", this.NextTurn.bind(this));
-    }
 
-    NextTurn(){
-        this.growPlant(1)
-    }
-    */
     GiveNutrients(cell, sun, water){
         if(this.growth < 3){
             switch(this.type){

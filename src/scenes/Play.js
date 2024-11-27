@@ -42,20 +42,28 @@ class Play extends Phaser.Scene {
         this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
 
         this.canSwitchCells = true
-        this.checkCellTime = 0.02;
+        this.checkCellTime = 0.02; // how often to check for new cell
+        this.checkTime = this.checkCellTime
         this.checkCellList = []
-        
+
         this.GameBehavior();
+        this.player.cell = this.CalculateWhichCell();
+
+        //console.log("byte array: ", this.ByteArrayStuff());
     }
 
-    update(delta){
-        this.checkCellTime -= delta
-        if(this.checkCellTime <= 0){
+    update(time, delta){
+        this.checkTime -= delta * 0.001
+        if(this.checkTime <= 0){
             this.canSwitchCells = !this.canSwitchCells
             if(this.canSwitchCells == true){
-                this.CalculateWhichCell();
+                const newCell = this.CalculateWhichCell()
+                if(newCell != null && newCell != this.player.cell){
+                    this.emitter.emit("next-turn")
+                    this.player.cell = newCell
+                }
             }
-            this.checkCellTime = 0.02;
+            this.checkTime = this.checkCellTime
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
             this.player.playersTurn = false;
@@ -84,14 +92,16 @@ class Play extends Phaser.Scene {
     GameBehavior(){ // only declared once, not in update()
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
             if(this.canSwitchCells){
-                this.checkCellList.push(cell)
+                if(!this.checkCellList.includes(cell)){
+                    this.checkCellList.push(cell)
+                }
             }
         })
     }
 
     CalculateWhichCell(){
         // checks all cells the player is colliding with
-        // If cell contains original cell, just use that otherwise take the first cell
+        // If cells contains original cell, just use that otherwise take the first cell
         let newCell = this.player.cell
         for(let i = 0; i < this.checkCellList.length; i++){
             if(i == 0){
@@ -102,8 +112,14 @@ class Play extends Phaser.Scene {
                 break;
             }
         }
-        this.emitter.emit("next-turn")
-        this.player.cell = newCell;
         this.checkCellList = []
+        return newCell
+    }
+
+    ByteArrayStuff(){
+        const buffer = new ArrayBuffer(2);
+        new DataView(buffer).setInt16(0, 256, true /* littleEndian */);
+        // Int16Array uses the platform's endianness.
+        return new Int16Array(buffer)[0] === 256;
     }
 }
