@@ -22,6 +22,7 @@ class Play extends Phaser.Scene {
     create(){
         this.scene.launch("uiScene")
         this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q) // testing
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) // testing
 
         this.gameObjects = this.add.group({
             runChildUpdate: true
@@ -47,9 +48,7 @@ class Play extends Phaser.Scene {
         this.checkCellList = []
 
         this.GameBehavior();
-        this.player.cell = this.CalculateWhichCell();
-
-        //console.log("byte array: ", this.ByteArrayStuff());
+        this.player.cell = this.CalculateWhichCell(); // doesn't do anything since it starts with "null"
     }
 
     update(time, delta){
@@ -69,9 +68,12 @@ class Play extends Phaser.Scene {
             this.player.playersTurn = false;
             this.emitter.emit("end-game")
         }
+        if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // test button
+            this.ByteArrayStuff();
+        }
     }
 
-    createCell(x, y){
+    createCell(x, y) {
         const cell = new Cell(this, x, y, "grass");
         this.cellGroup.add(cell);
         return cell;
@@ -116,10 +118,20 @@ class Play extends Phaser.Scene {
         return newCell
     }
 
-    ByteArrayStuff(){
-        const buffer = new ArrayBuffer(2);
-        new DataView(buffer).setInt16(0, 256, true /* littleEndian */);
-        // Int16Array uses the platform's endianness.
-        return new Int16Array(buffer)[0] === 256;
+    ByteArrayStuff() {
+        //(this.XTiles * this.YTiles) * 2 = num of cells * 2 bytes
+        const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 2);
+        const view = new DataView(buffer);
+        view.setInt16(0, this.grid[0].sun);
+        view.setInt16(2, this.grid[0].water);
+        console.log(view.getInt16(0));
+        console.log(view.getInt16(2));
+
+        if(this.grid[0].plant != null){
+            view.setInt16(4, this.grid[0].plant.type);
+            view.setInt16(6, this.grid[0].plant.growth);
+            console.log(view.getInt16(4));
+            console.log(view.getInt16(6));
+        }
     }
 }

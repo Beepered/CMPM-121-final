@@ -17,6 +17,10 @@ class Plant extends Phaser.GameObjects.Sprite{
         super(scene, x, y, texture);
         scene.add.existing(this);
 
+        this.type = type
+
+        this.emitter = EventDispatcher.getInstance();
+
         this.alpha = 0.4
         this.growth = 0;
     }
