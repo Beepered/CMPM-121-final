@@ -8,13 +8,13 @@ class State{
 
 class Action {
     constructor(identifier, prevState, nextState) {
-        this.identifier = identifier;
+        this.identifier = identifier; // like reap plant and next turn
         this.prevState = prevState;
         this.nextState = nextState;   
     }
 
     undo() {
-        game.switchState(this.prevState);
+        game.switchState(this.prevState); //idk how to reference a function in play
     }
 
     redo() {
@@ -28,7 +28,7 @@ class gameStateManager {
         this.redoStack = [];
     }
 
-    performAction(action) {
+    gameStateChange(action) {
         this.undoStack.push(action);
         this.redoStack = []; 
         action.redo(); 

@@ -65,18 +65,19 @@ class Play extends Phaser.Scene {
             this.emitter.emit("next-turn");
             this.player.NextTurn();
         }
-        if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
-            this.player.gameStateManager.undo();
-            this.emitter.emit("undo"); //make later
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keyP)){ //Redo Btn
-            this.player.gameStateManager.redo();
-            this.emitter.emit("redo");//make later
-        }
+        // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
+        //     this.player.gameStateManager.undo();
+        //     this.emitter.emit("undo"); //make later
+        // }
+        // if(Phaser.Input.Keyboard.JustDown(this.keyP)){ //Redo Btn
+        //     this.player.gameStateManager.redo();
+        //     this.emitter.emit("redo");//make later
+        // }
     }
     switchState(state) {
-        
+        //somehow load the whole save state to the current
     };
+    
     createCell(x, y){
         const cell = new Cell(this, x, y, "grass");
         this.cellGroup.add(cell);
