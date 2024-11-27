@@ -22,6 +22,8 @@ class Play extends Phaser.Scene {
     create(){
         this.scene.launch("uiScene")
         this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q) // testing
+        this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O)//Undo tmp button
+        this.keyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P) // Redo tmp button
 
         this.gameObjects = this.add.group({
             runChildUpdate: true
@@ -58,11 +60,23 @@ class Play extends Phaser.Scene {
             this.checkCellTime = 0.02;
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
-            this.player.playersTurn = false;
-            this.emitter.emit("end-game")
+            this.emitter.emit("next-turn");
+            this.player.NextTurn();
         }
-    }
 
+        // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
+        //     this.player.gameStateManager.undo();
+        //     this.emitter.emit("undo"); //make later
+        // }
+        // if(Phaser.Input.Keyboard.JustDown(this.keyP)){ //Redo Btn
+        //     this.player.gameStateManager.redo();
+        //     this.emitter.emit("redo");//make later
+        // }
+    }
+    switchState(state) {
+        //somehow load the whole save state to the current
+    };
+    
     createCell(x, y){
         const cell = new Cell(this, x, y, "grass");
         this.cellGroup.add(cell);
@@ -102,7 +116,7 @@ class Play extends Phaser.Scene {
                 break;
             }
         }
-        this.emitter.emit("next-turn")
+       // this.emitter.emit("next-turn")
         this.player.cell = newCell;
         this.checkCellList = []
     }

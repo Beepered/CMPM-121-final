@@ -11,14 +11,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.setScale(0.5); 
         this.body.setSize(this.width * 0.5, this.height * 0.5); 
-        /*
-        //Brendan: not used. let's delete
-        this.grid = grid;
-        if(this.grid){
-            this.gridX = gameWidth/this.grid[0].width;
-            this.gridY = gameHeight/this.grid.length;
-        }
-        */
+
         this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
         this.keyA = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
         this.keyS = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
@@ -36,7 +29,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.cell = null;
 
         this.playersTurn = true;
-
         
     }
 
@@ -66,21 +58,19 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action(){
+        console.log(this.seeds)
         if(this.cell){
-            
-            //const currentGrid = this.grid[Math.floor(this.y/this.gridY)][Math.floor(this.x/this.gridX)];
-            //console.log("cell: " + JSON.stringify(this.cell));
-            if(this.cell.plant == null){
+            if(this.cell.plant == null && this.seeds > 0){
                 this.emitter.emit("plant")
                 this.Plant(this.cell, "testplant");
+                this.seeds--;
             }
-            else if(this.cell.plant.growth >= 3){
+            else if(this.cell.plant && this.cell.plant.growth >= 3){
                 //Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
                 // Brendan: maybe make a border around the cell. Could be code or just its own sprite
                 this.Reap(this.cell);
             }
-        }
-        
+        } 
     }
 
     Plant(selectedCell, type) { // we can use "type" later but right now just using a random seed
@@ -93,5 +83,9 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     Reap(cell){
         cell.plant.destroy();
         cell.plant = null;
+    }
+
+    NextTurn(){
+        this.seeds = 3;
     }
 }
