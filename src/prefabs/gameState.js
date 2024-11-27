@@ -1,10 +1,4 @@
-class State{
-    constructor(cell, plant, seeds){
-        this.cell = cell;
-        this.plant = plant;
-        this.seeds = seeds;
-    }
-}
+
 
 class Action {
     constructor(identifier, prevState, nextState) {
