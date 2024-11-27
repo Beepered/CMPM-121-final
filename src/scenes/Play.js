@@ -47,8 +47,15 @@ class Play extends Phaser.Scene {
         this.checkTime = this.checkCellTime
         this.checkCellList = []
 
-        this.GameBehavior();
-        this.player.cell = this.CalculateWhichCell(); // doesn't do anything since it starts with "null"
+        this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
+            if(this.canSwitchCells){
+                if(!this.checkCellList.includes(cell)){
+                    this.checkCellList.push(cell)
+                }
+            }
+        })
+
+        this.player.cell = this.CalculateWhichCell(); // doesn't do anything since it starts with "null". should probably fix
     }
 
     update(time, delta){
@@ -69,7 +76,10 @@ class Play extends Phaser.Scene {
             this.emitter.emit("end-game")
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // test button
-            this.ByteArrayStuff();
+            console.log("set")
+            const arr = this.SetArrayBuffer()
+            console.log("begin get")
+            this.GetArrayBuffer(arr)
         }
     }
 
@@ -97,16 +107,6 @@ class Play extends Phaser.Scene {
             }
         }
         return cellGrid;
-    }
-
-    GameBehavior(){ // only declared once, not in update()
-        this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
-            if(this.canSwitchCells){
-                if(!this.checkCellList.includes(cell)){
-                    this.checkCellList.push(cell)
-                }
-            }
-        })
     }
 
     CalculateWhichCell(){
@@ -140,6 +140,43 @@ class Play extends Phaser.Scene {
             view.setInt16(6, this.grid[0].plant.growth);
             console.log(view.getInt16(4));
             console.log(view.getInt16(6));
+        }
+    }
+
+    SetArrayBuffer() {
+        const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save, 2 = bytes)
+        const view = new DataView(buffer);
+        let byteCount = 0
+        for(let i = 0; i < this.grid.length ; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                view.setInt16(byteCount, this.grid[i][j].sun);
+                console.log(view.getInt16(byteCount))
+                view.setInt16(byteCount + 2, this.grid[i][j].water);
+                console.log(view.getInt16(byteCount + 2))
+                if(this.grid[i][j].plant != null){
+                    view.setInt16(byteCount + 4, this.grid[i][j].plant.type);
+                    console.log(view.getInt16(byteCount + 4))
+                    view.setInt16(byteCount + 6, this.grid[i][j].plant.growth);
+                    console.log(view.getInt16(byteCount + 6))
+                }
+                byteCount += 8
+            }
+        }
+        return view
+    }
+
+    GetArrayBuffer(view) { // just printing out values to see if I did everything correct
+        let byteCount = 0
+        for(let i = 0; i < this.grid.length ; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                console.log(view.getInt16(byteCount))
+                console.log(view.getInt16(byteCount + 2))
+                if(this.grid[0].plant != null){
+                    console.log(view.getInt16(byteCount + 4))
+                    console.log(view.getInt16(byteCount + 6))
+                }
+                byteCount += 8
+            }
         }
     }
 }
