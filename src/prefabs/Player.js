@@ -11,13 +11,14 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.setScale(0.5); 
         this.body.setSize(this.width * 0.5, this.height * 0.5); 
+        /*
+        //Brendan: not used. let's delete
         this.grid = grid;
         if(this.grid){
             this.gridX = gameWidth/this.grid[0].width;
             this.gridY = gameHeight/this.grid.length;
         }
-        
-
+        */
         this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
         this.keyA = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
         this.keyS = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
@@ -35,6 +36,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.cell = null;
 
         this.playersTurn = true;
+
+        
     }
 
     update(){
@@ -81,7 +84,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Plant(selectedCell, type) { // we can use "type" later but right now just using a random seed
-        console.log("seed count: " + this.seeds);
         const randSeed = Math.floor(Math.random() * 2) + 0;
         if(this.seeds > 0){
             selectedCell.plant = new Plant(this.scene, selectedCell.x, selectedCell.y, randSeed);

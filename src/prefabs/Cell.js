@@ -1,7 +1,10 @@
 class Cell extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
+        scene.add.rectangle(x, y, this.displayWidth + 5, this.displayHeight + 5, 0x000000); // border
         scene.add.existing(this)
+        
+
         scene.physics.add.existing(this)
 
         this.emitter = EventDispatcher.getInstance();

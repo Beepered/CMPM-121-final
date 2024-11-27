@@ -1,3 +1,8 @@
+/*
+UNUSED: just used to see if we needed a turn system script, but there isn't much it needs to do
+all the behavior is connected to the object's scripts
+*/
+
 class TurnSystem extends Phaser.Scene {
     constructor(scene){
         super(scene)
