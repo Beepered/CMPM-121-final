@@ -1,6 +1,6 @@
 class Play extends Phaser.Scene {
     preload(){
-        this.load.image("player", "assets/player.png")
+        this.load.image("player", "assets/Player_Character.png")
         this.load.image("testplant", "assets/testplant.png")
         this.load.image("grass", "assets/GrassV1.png")
 
@@ -13,6 +13,9 @@ class Play extends Phaser.Scene {
     constructor(){
         super("playScene")
         this.emitter = EventDispatcher.getInstance();
+
+        this.XTiles = 3;
+        this.YTiles = 3;
     }
 
     create(){
@@ -25,16 +28,19 @@ class Play extends Phaser.Scene {
         this.player = new Player(this, gameWidth / 2, gameHeight / 2, "player");
         this.gameObjects.add(this.player);
 
+        /*
+        Brendan Idea spouting:
+        make 1d array of cells because when will we need to change a specific cell?
+        1 byte array buffer for each cell?
+        0000 0000
+        it just stores the sun, water level, and plant
+        const buffer = new ArrayBuffer()
+        new DataView(buffer)
+        */
+
         this.cellGroup = this.add.group()
-        this.createCell(gameWidth / 4, gameHeight / 2); this.createCell(gameWidth / 4, gameHeight / 1.3)
-        this.createCell(gameWidth / 2, gameHeight / 2); this.createCell(gameWidth / 2, gameHeight / 1.3)
-        this.createCell(gameWidth / 1.3, gameHeight / 2); this.createCell(gameWidth / 1.3, gameHeight / 1.3)
-        this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
-            if(player.cell != cell){
-                this.emitter.emit("next-turn")
-            }
-            player.cell = cell;
-        })
+        this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
+        this.GameBehavior();
     }
 
     update(){
@@ -48,5 +54,26 @@ class Play extends Phaser.Scene {
         const cell = new Cell(this, x, y, "grass");
         this.cellGroup.add(cell);
         return cell;
+    }
+
+    MakeCellGrid(x, y){
+        var cellArr = [];
+        for(let i = 1; i < x + 1 ; i++){
+            console.log((gameWidth / 128))
+            for(let j = 1; j < y + 1; j++){
+                
+                cellArr.push(this.createCell(gameWidth / i, gameHeight / j));
+            }
+        }
+        return cellArr;
+    }
+
+    GameBehavior(){
+        this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
+            if(player.cell != cell){
+                this.emitter.emit("next-turn")
+            }
+            player.cell = cell;
+        })
     }
 }
