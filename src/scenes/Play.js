@@ -58,8 +58,10 @@ class Play extends Phaser.Scene {
             this.checkCellTime = 0.02;
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
-            this.player.playersTurn = false;
-            this.emitter.emit("end-game")
+            // this.player.playersTurn = false;
+            // this.emitter.emit("end-game")
+            this.emitter.emit("next-turn");
+            this.player.NextTurn();
         }
     }
 
@@ -102,7 +104,7 @@ class Play extends Phaser.Scene {
                 break;
             }
         }
-        this.emitter.emit("next-turn")
+       // this.emitter.emit("next-turn")
         this.player.cell = newCell;
         this.checkCellList = []
     }
