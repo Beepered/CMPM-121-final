@@ -21,6 +21,7 @@ class Play extends Phaser.Scene {
     create(){
         this.scene.launch("uiScene")
         this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q) // testing
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) // testing
         this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O)//Undo tmp button
         this.keyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P) // Redo tmp button
 
@@ -38,6 +39,8 @@ class Play extends Phaser.Scene {
         this.checkCellList = []
         
         this.GameBehavior();
+
+        this.view = this.SetArrayBuffer();
     }
 
     update(delta){
@@ -51,6 +54,9 @@ class Play extends Phaser.Scene {
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
             this.emitter.emit("next-turn");
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
+            this.GetArrayBuffer()
         }
 
         // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
@@ -109,7 +115,7 @@ class Play extends Phaser.Scene {
         this.checkCellList = []
     }
 
-    SetArrayBuffer() {
+    GetArrayBuffer() {
         const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save, 2 = bytes)
         const view = new DataView(buffer);
         let byteCount = 0
@@ -127,7 +133,7 @@ class Play extends Phaser.Scene {
         return view
     }
 
-    GetArrayBuffer(view) {
+    SetArrayBuffer(view) {
         //const view = JSON.parse(localStorage.getItem("test"))
         let byteCount = 0
         for(let i = 0; i < this.grid.length ; i++){
