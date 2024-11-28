@@ -3,25 +3,11 @@ class stateInfo{
         this.playerInfo = null;
         this.cellArray = null;
     }
-    setPlayerInfo(turns, seeds, pos){
-        this.playerInfo = {turnCount: turns, seedCount: seeds, playerPos: pos};
+    setPlayerInfo(posX, posY){
+        this.playerInfo = {playerX: posX, playerY: posY};
     }
 }
 
-class Action {
-    constructor(prevState, nextState) {
-        this.prevState = prevState;
-        this.nextState = nextState;   
-    }
-
-    undo() {
-        game.switchState(this.prevState); //idk how to reference a function in play
-    }
-
-    redo() {
-        game.switchState(this.nextState);
-    }
-}
 
 class gameStateManager {
     constructor() {
@@ -32,14 +18,14 @@ class gameStateManager {
     gameStateChange(action) {
         this.undoStack.push(action);
         this.redoStack = []; 
-        action.redo(); 
+       // action.redo(); 
     }
 
     undo() {
         if (this.undoStack.length > 0) {
             const action = this.undoStack.pop();
             this.redoStack.push(action);
-            action.undo();
+            return action;
         }
     }
 
@@ -47,7 +33,7 @@ class gameStateManager {
         if (this.redoStack.length > 0) {
             const action = this.redoStack.pop();
             this.undoStack.push(action);
-            action.redo();
+            return action;
         }
     }
 }
