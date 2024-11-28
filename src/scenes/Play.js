@@ -46,7 +46,7 @@ class Play extends Phaser.Scene {
 
         // temp
         localStorage.clear()
-        this.buffer = this.GetArrayBuffer();
+        //this.buffer = this.GetArrayBufferFromGrid();
     }
 
     update(time, delta){
@@ -125,7 +125,7 @@ class Play extends Phaser.Scene {
         return newCell
     }
 
-    GetArrayBuffer() {
+    GetArrayBufferFromGrid() {
         const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save, 2 = bytes)
         const view = new DataView(buffer);
         let byteCount = 0
@@ -168,20 +168,41 @@ class Play extends Phaser.Scene {
         }
     }
 
+    arrayBufferToBase64(buffer){
+        //https://stackoverflow.com/questions/75577296/which-is-the-fastest-method-to-convert-array-buffer-to-base64
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+    base64ToArrayBuffer(base64) {
+        //https://stackoverflow.com/questions/21797299/how-can-i-convert-a-base64-string-to-arraybuffer
+        var binaryString = atob(base64);
+        var bytes = new Uint8Array(binaryString.length);
+        for (var i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
     PlayerSave() {
         console.log("save")
-        this.buffer = this.GetArrayBuffer();
-        //localStorage.setItem("save", JSON.stringify(this.buffer))
+        const buffer = this.GetArrayBufferFromGrid()
+        const encode = this.arrayBufferToBase64(buffer)
+        localStorage.setItem("save", encode)
     }
 
     PlayerLoad() {
         console.log("load")
-        const buffer = this.buffer //JSON.parse(localStorage.getItem("save"))
-        if(buffer){
-            //this.buffer = buffer
+        const save = localStorage.getItem("save")
+        if(save){
+            const buffer = this.base64ToArrayBuffer(save)
             this.SetGridFromArrayBuffer(buffer)
         }
         else
-            console.log("null")
+            console.log("null save")
     }
 }
