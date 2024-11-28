@@ -1,11 +1,10 @@
 class Play extends Phaser.Scene {
     preload(){
-        this.load.image("testPlayer", "assets/player.png")
         this.load.image("player", "assets/Player_Character.png")
-        this.load.image("testplant", "assets/testplant.png")
         this.load.image("grass", "assets/GrassV1.png")
 
         // flowers
+        this.load.image("testplant", "assets/testplant.png")
         this.load.image("pink", "assets/Pink_Flower.png")
         this.load.image("purple", "assets/Purple_Flower.png")
         this.load.image("red", "assets/Red_Flower.png")
@@ -30,15 +29,6 @@ class Play extends Phaser.Scene {
         })
         this.player = new Player(this, gameWidth / 2, gameHeight / 2, "player");
         this.gameObjects.add(this.player);
-
-        /*
-        Brendan Idea spouting:
-        DONE: make 1d array of cells because when will we need to change a specific cell?
-        1 byte array buffer for each cell?
-            0000 0000
-            it just stores the sun, water level, and plant
-        
-        */
 
         this.cellGroup = this.add.group()
         this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
@@ -116,8 +106,50 @@ class Play extends Phaser.Scene {
                 break;
             }
         }
-       // this.emitter.emit("next-turn")
         this.player.cell = newCell;
         this.checkCellList = []
+    }
+
+    SetArrayBuffer() {
+        const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save, 2 = bytes)
+        const view = new DataView(buffer);
+        let byteCount = 0
+        for(let i = 0; i < this.grid.length ; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                view.setInt16(byteCount, this.grid[i][j].sun);
+                view.setInt16(byteCount + 2, this.grid[i][j].water);
+                if(this.grid[i][j].plant != null){
+                    view.setInt16(byteCount + 4, this.grid[i][j].plant.type);
+                    view.setInt16(byteCount + 6, this.grid[i][j].plant.growth);
+                }
+                byteCount += 8
+            }
+        }
+        return view
+    }
+
+    GetArrayBuffer(view) {
+        //const view = JSON.parse(localStorage.getItem("test"))
+        let byteCount = 0
+        for(let i = 0; i < this.grid.length ; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                this.grid[i][j].sun = view.getInt16(byteCount)
+                this.grid[i][j].water = view.getInt16(byteCount + 2)
+                if(this.grid[i][j].plant != null){
+                    this.grid[i][j].plant.type = view.getInt16(byteCount + 4)
+                    this.grid[i][j].plant.growth = view.getInt16(byteCount + 6)
+                }
+                byteCount += 8
+                this.grid[i][j].updateText();
+            }
+        }
+    }
+
+    UpdateCellText() {
+        for(let i = 0; i < this.grid.length ; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                this.grid[i][j].updateText();
+            }
+        }
     }
 }
