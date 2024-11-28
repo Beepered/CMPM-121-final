@@ -24,6 +24,8 @@ class UIScene extends Phaser.Scene {
         this.emitter.on("plant", this.Plant.bind(this));
         this.emitter.on("end-game", this.endGame.bind(this));
         this.emitter.on("fully-grown", this.winCon.bind(this));
+        this.emitter.on("undo", this.undo.bind(this));
+        this.emitter.on("redo", this.redo.bind(this));
     }
 
     NextTurn(){
@@ -36,6 +38,16 @@ class UIScene extends Phaser.Scene {
     Plant(){
         this.seeds--;
         this.seedText.text = `Seeds: ${this.seeds}`
+    }
+
+    undo(){
+        this.turnsTaken--;
+        this.turnsText.text = `Turns: ${this.turnsTaken}`
+    }
+    
+    redo(){
+        this.turnsTaken++;
+        this.turnsText.text = `Turns: ${this.turnsTaken}`
     }
 
     endGame() {
