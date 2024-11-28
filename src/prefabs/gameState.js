@@ -1,5 +1,15 @@
+class stateInfo{
+    constructor(){
+        this.playerInfo = null;
+        this.cellArray = null;
+    }
+    setPlayerInfo(turns, seeds, pos){
+        this.playerInfo = {turnCount: turns, seedCount: seeds, playerPos: pos};
+    }
+}
+
 class Action {
-    constructor(identifier, prevState, nextState) {
+    constructor(prevState, nextState) {
         this.prevState = prevState;
         this.nextState = nextState;   
     }
