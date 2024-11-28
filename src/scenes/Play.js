@@ -51,7 +51,6 @@ class Play extends Phaser.Scene {
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
             this.emitter.emit("next-turn");
-            this.player.NextTurn();
         }
 
         // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
