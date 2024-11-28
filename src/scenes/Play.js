@@ -61,9 +61,12 @@ class Play extends Phaser.Scene {
             this.emitter.emit("next-turn");
             this.UpdateCellText()
         }
-        if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // test button
-            this.SetGridFromArrayBuffer()
-            this.UpdateCellText();
+        if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
+            this.PlayerSave();
+            //this.SetGridFromArrayBuffer(this.view) // temp
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keyO)){ // loading
+            this.PlayerLoad();
         }
 
         // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
@@ -162,6 +165,27 @@ class Play extends Phaser.Scene {
             for(let j = 0; j < this.grid[i].length; j++){
                 this.grid[i][j].updateText();
             }
+        }
+    }
+
+    PlayerSave() { // Brendan: Just testing to see if I can save the player's cell/position
+        const playerInfo = {
+            cell: this.player.cell,
+            seeds: this.player.seeds
+        }
+        localStorage.setItem("playerInfo", JSON.stringify(playerInfo))
+    }
+
+    PlayerLoad() {
+        const playerInfo = JSON.parse(localStorage.getItem("playerInfo"))
+        if(playerInfo){
+            this.player.cell = playerInfo.cell
+            this.player.x = this.player.cell.x
+            this.player.y = this.player.cell.y
+            this.player.seeds = playerInfo.seeds
+        }
+        else{
+            console.log("no cell saved")
         }
     }
 }
