@@ -55,7 +55,9 @@ class Play extends Phaser.Scene {
             }
         })
 
-        this.player.cell = this.CalculateWhichCell(); // doesn't do anything since it starts with "null". should probably fix
+        this.player.cell = this.CalculatePlayerCell(); // doesn't do anything since it starts with "null". should probably fix
+
+        this.view = this.SetArrayBuffer()
     }
 
     update(time, delta){
@@ -63,10 +65,11 @@ class Play extends Phaser.Scene {
         if(this.checkTime <= 0){
             this.canSwitchCells = !this.canSwitchCells
             if(this.canSwitchCells == true){
-                const newCell = this.CalculateWhichCell()
+                const newCell = this.CalculatePlayerCell()
                 if(newCell != null && newCell != this.player.cell){
                     this.emitter.emit("next-turn")
                     this.player.cell = newCell
+                    this.UpdateCellText()
                 }
             }
             this.checkTime = this.checkCellTime
@@ -76,10 +79,9 @@ class Play extends Phaser.Scene {
             this.emitter.emit("end-game")
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // test button
-            console.log("set")
-            const arr = this.SetArrayBuffer()
-            console.log("begin get")
-            this.GetArrayBuffer(arr)
+            //const view = this.SetArrayBuffer()
+            this.GetArrayBuffer(this.view)
+            this.UpdateCellText()
         }
     }
 
@@ -109,7 +111,7 @@ class Play extends Phaser.Scene {
         return cellGrid;
     }
 
-    CalculateWhichCell(){
+    CalculatePlayerCell(){
         // checks all cells the player is colliding with
         // If cells contains original cell, just use that otherwise take the first cell
         let newCell = this.player.cell
@@ -126,23 +128,6 @@ class Play extends Phaser.Scene {
         return newCell
     }
 
-    ByteArrayStuff() {
-        //(this.XTiles * this.YTiles) * 2 = num of cells * 2 bytes
-        const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 2);
-        const view = new DataView(buffer);
-        view.setInt16(0, this.grid[0].sun);
-        view.setInt16(2, this.grid[0].water);
-        console.log(view.getInt16(0));
-        console.log(view.getInt16(2));
-
-        if(this.grid[0].plant != null){
-            view.setInt16(4, this.grid[0].plant.type);
-            view.setInt16(6, this.grid[0].plant.growth);
-            console.log(view.getInt16(4));
-            console.log(view.getInt16(6));
-        }
-    }
-
     SetArrayBuffer() {
         const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save, 2 = bytes)
         const view = new DataView(buffer);
@@ -150,14 +135,10 @@ class Play extends Phaser.Scene {
         for(let i = 0; i < this.grid.length ; i++){
             for(let j = 0; j < this.grid[i].length; j++){
                 view.setInt16(byteCount, this.grid[i][j].sun);
-                console.log(view.getInt16(byteCount))
                 view.setInt16(byteCount + 2, this.grid[i][j].water);
-                console.log(view.getInt16(byteCount + 2))
                 if(this.grid[i][j].plant != null){
                     view.setInt16(byteCount + 4, this.grid[i][j].plant.type);
-                    console.log(view.getInt16(byteCount + 4))
                     view.setInt16(byteCount + 6, this.grid[i][j].plant.growth);
-                    console.log(view.getInt16(byteCount + 6))
                 }
                 byteCount += 8
             }
@@ -165,17 +146,27 @@ class Play extends Phaser.Scene {
         return view
     }
 
-    GetArrayBuffer(view) { // just printing out values to see if I did everything correct
+    GetArrayBuffer(view) {
+        //const view = JSON.parse(localStorage.getItem("test"))
         let byteCount = 0
         for(let i = 0; i < this.grid.length ; i++){
             for(let j = 0; j < this.grid[i].length; j++){
-                console.log(view.getInt16(byteCount))
-                console.log(view.getInt16(byteCount + 2))
+                this.grid[i][j].sun = view.getInt16(byteCount)
+                this.grid[i][j].water = view.getInt16(byteCount + 2)
                 if(this.grid[0].plant != null){
-                    console.log(view.getInt16(byteCount + 4))
-                    console.log(view.getInt16(byteCount + 6))
+                    this.grid[i][j].plant.type = view.getInt16(byteCount + 4)
+                    this.grid[i][j].plant.growth = view.getInt16(byteCount + 6)
                 }
                 byteCount += 8
+                this.grid[i][j].updateText();
+            }
+        }
+    }
+
+    UpdateCellText() {
+        for(let i = 0; i < this.grid.length ; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                this.grid[i][j].updateText();
             }
         }
     }
