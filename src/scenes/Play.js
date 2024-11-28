@@ -63,7 +63,7 @@ class Play extends Phaser.Scene {
             this.UpdateCellText()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
-            this.PlayerSave()
+            this.Test()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyO)){ // loading
             this.PlayerLoad()
@@ -155,7 +155,6 @@ class Play extends Phaser.Scene {
                     this.grid[i][j].plant.growth = view.getInt16(byteCount + 6)
                 }
                 byteCount += 8
-                this.grid[i][j].updateText();
             }
         }
     }
@@ -167,6 +166,14 @@ class Play extends Phaser.Scene {
             }
         }
     }
+
+    appendBuffer = function(buffer1, buffer2) {
+        //https://gist.github.com/72lions/4528834
+        var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+        tmp.set(new Uint8Array(buffer1), 0);
+        tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+        return tmp.buffer;
+    };
 
     arrayBufferToBase64(buffer){
         //https://stackoverflow.com/questions/75577296/which-is-the-fastest-method-to-convert-array-buffer-to-base64
@@ -188,21 +195,21 @@ class Play extends Phaser.Scene {
         return bytes.buffer;
     }
 
-    PlayerSave() {
-        console.log("save")
+    
+
+    PlayerSave() { // saves cell info. Now need to figure out how to save player info
         const buffer = this.GetArrayBufferFromGrid()
         const encode = this.arrayBufferToBase64(buffer)
         localStorage.setItem("save", encode)
     }
 
     PlayerLoad() {
-        console.log("load")
         const save = localStorage.getItem("save")
         if(save){
             const buffer = this.base64ToArrayBuffer(save)
             this.SetGridFromArrayBuffer(buffer)
         }
         else
-            console.log("null save")
+            alert("null save")
     }
 }
