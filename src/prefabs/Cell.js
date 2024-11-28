@@ -22,6 +22,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     NextTurn(){
         this.ChangeSun();
         this.ChangeWater();
+        this.updateText();
         if(this.plant)
             this.plant.GiveNutrients(this, this.sun, this.water);
     }
