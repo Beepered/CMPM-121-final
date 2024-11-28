@@ -16,7 +16,7 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.water = 5;
 
         this.sunText = scene.add.text(x - 60, y - 60, this.sun.toString(), { fontSize: '18px', color:'yellow' })
-        this.waterText = scene.add.text(x - 45, y - 60, this.water.toString(), { fontSize: '18px', color:'blue' })
+        this.waterText = scene.add.text(x - 40, y - 60, this.water.toString(), { fontSize: '18px', color:'blue' })
     }
 
     NextTurn(){
@@ -24,6 +24,7 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.ChangeWater();
         if(this.plant)
             this.plant.GiveNutrients(this, this.sun, this.water);
+        //this.updateText()
     }
 
     ChangeSun() {
@@ -42,7 +43,7 @@ class Cell extends Phaser.GameObjects.Sprite {
         }
     }
 
-    updateText(){
+    updateText() {
         this.sunText.text = this.sun.toString()
         this.waterText.text = this.water.toString()
     }

@@ -38,25 +38,32 @@ class Play extends Phaser.Scene {
         this.checkCellTime = 0.02;
         this.checkCellList = []
         
-        this.GameBehavior();
+        this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
+            if(this.canSwitchCells){
+                this.checkCellList.push(cell)
+            }
+        })
 
-        this.view = this.SetArrayBuffer();
+        // temp
+        this.view = this.GetArrayBuffer();
     }
 
-    update(delta){
+    update(time, delta){
         this.checkCellTime -= delta
         if(this.checkCellTime <= 0){
             this.canSwitchCells = !this.canSwitchCells
             if(this.canSwitchCells == true){
-                this.CalculateWhichCell();
+                this.player.cell = this.CalculatePlayerCell();
             }
             this.checkCellTime = 0.02;
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
             this.emitter.emit("next-turn");
+            this.UpdateCellText()
         }
-        if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
-            this.GetArrayBuffer()
+        if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // test button
+            this.SetGridFromArrayBuffer()
+            this.UpdateCellText();
         }
 
         // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
@@ -78,27 +85,27 @@ class Play extends Phaser.Scene {
         return cell;
     }
 
+    Make2DArray(x, y){
+        var arr = []; // make 2d array
+        for(let i = 0; i < y; i++) {
+            arr.push(new Array(x));
+        }
+        return arr
+    }
+
     MakeCellGrid(x, y){
         const minXPos = 100;
         const minYPos = 70;
-        var cellArr = [];
+        var cellGrid = this.Make2DArray(x, y);
         for(let i = 0; i < x ; i++){
             for(let j = 0; j < y; j++){
-                cellArr.push(this.createCell(minXPos + gameWidth / this.XTiles * i, minYPos + gameHeight / this.YTiles * j));
+                cellGrid[i][j] = this.createCell(minXPos + gameWidth / this.XTiles * i, minYPos + gameHeight / this.YTiles * j);
             }
         }
-        return cellArr;
+        return cellGrid;
     }
 
-    GameBehavior(){ // only declared once, not in update()
-        this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
-            if(this.canSwitchCells){
-                this.checkCellList.push(cell)
-            }
-        })
-    }
-
-    CalculateWhichCell(){
+    CalculatePlayerCell(){
         // checks all cells the player is colliding with
         // If cell contains original cell, just use that otherwise take the first cell
         let newCell = this.player.cell
@@ -111,8 +118,8 @@ class Play extends Phaser.Scene {
                 break;
             }
         }
-        this.player.cell = newCell;
         this.checkCellList = []
+        return newCell
     }
 
     GetArrayBuffer() {
@@ -133,7 +140,7 @@ class Play extends Phaser.Scene {
         return view
     }
 
-    SetArrayBuffer(view) {
+    SetGridFromArrayBuffer(view) {
         //const view = JSON.parse(localStorage.getItem("test"))
         let byteCount = 0
         for(let i = 0; i < this.grid.length ; i++){
