@@ -173,7 +173,6 @@ class Play extends Phaser.Scene {
         view.setInt16(0, this.player.x);
         view.setInt16(2, this.player.y);
         view.setInt16(4, this.player.seeds);
-        console.log(buffer)
         return buffer
     }
 
@@ -182,7 +181,6 @@ class Play extends Phaser.Scene {
         this.player.x = view.getInt16(0);
         this.player.y = view.getInt16(2);
         this.player.seeds = view.getInt16(4);
-        console.log(buffer)
         return buffer
     }
 
@@ -231,26 +229,17 @@ class Play extends Phaser.Scene {
     }
 
     Test(){
-        //const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
-        const encode = this.arrayBufferToBase64(this.GetArrayBufferFromPlayer())
+        const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
+        const encode = this.arrayBufferToBase64(newBuffer)
         localStorage.setItem("test", encode)
     }
 
     Test2(){
         const decode = localStorage.getItem("test")
         const buffer = this.base64ToArrayBuffer(decode)
-        this.SetPlayerFromArrayBuffer(buffer)
-        /*
-        this.SetGridFromArrayBuffer(bigBuffer)
-        console.log(bigBuffer)
-        
-        //trying to get player info
-        const view = new DataView(bigBuffer);
-        let byteCount = (this.XTiles * this.YTiles) * 8
-        this.player.x = view.getInt16(byteCount);
-        this.player.y = view.setInt16(byteCount + 2);
-        this.player.seeds = view.setInt16(byteCount + 4);
-        */
-        
+        const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
+        this.SetGridFromArrayBuffer(gridBuffer)
+        const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
+        this.SetPlayerFromArrayBuffer(playerBuffer)
     }
 }
