@@ -45,7 +45,8 @@ class Play extends Phaser.Scene {
         })
 
         // temp
-        this.view = this.GetArrayBuffer();
+        localStorage.clear()
+        this.buffer = this.GetArrayBuffer();
     }
 
     update(time, delta){
@@ -62,11 +63,10 @@ class Play extends Phaser.Scene {
             this.UpdateCellText()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
-            this.PlayerSave();
-            //this.SetGridFromArrayBuffer(this.view) // temp
+            this.PlayerSave()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyO)){ // loading
-            this.PlayerLoad();
+            this.PlayerLoad()
         }
 
         // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
@@ -140,11 +140,11 @@ class Play extends Phaser.Scene {
                 byteCount += 8
             }
         }
-        return view
+        return buffer
     }
 
-    SetGridFromArrayBuffer(view) {
-        //const view = JSON.parse(localStorage.getItem("test"))
+    SetGridFromArrayBuffer(buffer) {
+        const view = new DataView(buffer);
         let byteCount = 0
         for(let i = 0; i < this.grid.length ; i++){
             for(let j = 0; j < this.grid[i].length; j++){
@@ -168,24 +168,20 @@ class Play extends Phaser.Scene {
         }
     }
 
-    PlayerSave() { // Brendan: Just testing to see if I can save the player's cell/position
-        const playerInfo = {
-            cell: this.player.cell,
-            seeds: this.player.seeds
-        }
-        localStorage.setItem("playerInfo", JSON.stringify(playerInfo))
+    PlayerSave() {
+        console.log("save")
+        this.buffer = this.GetArrayBuffer();
+        //localStorage.setItem("save", JSON.stringify(this.buffer))
     }
 
     PlayerLoad() {
-        const playerInfo = JSON.parse(localStorage.getItem("playerInfo"))
-        if(playerInfo){
-            this.player.cell = playerInfo.cell
-            this.player.x = this.player.cell.x
-            this.player.y = this.player.cell.y
-            this.player.seeds = playerInfo.seeds
+        console.log("load")
+        const buffer = this.buffer //JSON.parse(localStorage.getItem("save"))
+        if(buffer){
+            //this.buffer = buffer
+            this.SetGridFromArrayBuffer(buffer)
         }
-        else{
-            console.log("no cell saved")
-        }
+        else
+            console.log("null")
     }
 }
