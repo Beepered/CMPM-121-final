@@ -84,4 +84,18 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         cell.plant.destroy();
         cell.plant = null;
     }
+
+    serialize() {
+        return {
+            x: this.x,
+            y: this.y,
+            seeds: this.seeds,
+        };
+    }
+
+    deserialize(data) {
+        this.x = data.x;
+        this.y = data.y;
+        this.seeds = data.seeds;
+    }
 }

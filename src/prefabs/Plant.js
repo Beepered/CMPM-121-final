@@ -65,4 +65,16 @@ class Plant extends Phaser.GameObjects.Sprite{
             }
         }
     }
+
+    serialize() {
+        return {
+            type: this.type,
+            growth: this.growth,
+        };
+    }
+
+    deserialize(data) {
+        this.type = data.type;
+        this.growth = data.growth;
+    }
 }

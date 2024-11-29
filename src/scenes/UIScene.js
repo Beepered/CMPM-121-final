@@ -16,6 +16,130 @@ class UIScene extends Phaser.Scene {
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
+
+        this.mainButton = this.add.text(700, 10, 'Menu', {
+          fontSize: '16px',
+          backgroundColor: '#555',
+          color: '#fff',
+          padding: { x: 10, y: 5 }
+        }).setOrigin(-0.25, 0) // Align to the top-right corner
+          .setInteractive()
+      
+        // Dropdown menu (hidden by default)
+        this.dropdownMenu = this.add.container(670, 30).setVisible(false)
+        this.createDropdownMenu()
+      
+        // Close dropdown if clicked outside
+        this.input.on('pointerdown', pointer => {
+          if (!this.mainButton.getBounds().contains(pointer.x, pointer.y)) {
+            this.dropdownMenu.setVisible(false)
+          }
+        })
+      
+        this.mainButton.on('pointerdown', () => {
+          this.dropdownMenu.setVisible(!this.dropdownMenu.visible)
+        })
+
+    }
+
+    createDropdownMenu() {
+      const dropdownBg = this.add.rectangle(0, 0, 150, 100, 0x0000ff).setOrigin(0)
+    
+      const saveButton = this.add.text(45, 10, 'Save', {
+        fontSize: '16px',
+        color: '#fff'
+      }).setInteractive()
+    
+      const loadButton = this.add.text(45, 40, 'Load', {
+        fontSize: '16px',
+        color: '#fff'
+      }).setInteractive()
+    
+      const deleteButton = this.add.text(37, 70, 'Delete', {
+        fontSize: '16px',
+        color: '#fff'
+      }).setInteractive()
+    
+      saveButton.on('pointerdown', () => this.showSlotWindow('save'))
+      loadButton.on('pointerdown', () => this.showSlotWindow('load'))
+      deleteButton.on('pointerdown', () => this.showSlotWindow('delete'))
+    
+      this.dropdownMenu.add([dropdownBg, saveButton, loadButton, deleteButton])
+    }
+
+    showSlotWindow(action) {
+      // Close dropdown menu
+      this.dropdownMenu.setVisible(false)
+    
+      // Remove any existing slot window
+      if (this.slotWindow) {
+        this.slotWindow.destroy()
+      }
+    
+      // Create slot window container
+      this.slotWindow = this.add.container(400, 200) // Position at the center
+      const bg = this.add.rectangle(0, 0, 300, 200, 0x222222).setOrigin(0.5)
+      const title = this.add.text(0, -80, `${action.toUpperCase()} SLOTS`, {
+        fontSize: '20px',
+        color: '#fff'
+      }).setOrigin(0.5)
+    
+      // Display slots based on action
+      const slots = ['Slot 1', 'Slot 2', 'Slot 3']
+      let yOffset = -30
+      slots.forEach(slot => {
+        const slotButton = this.add.text(0, yOffset, slot, {
+          fontSize: '18px',
+          backgroundColor: '#0077cc',
+          color: '#fff',
+          padding: { x: 10, y: 5 }
+        }).setOrigin(0.5)
+          .setInteractive()
+    
+        slotButton.on('pointerdown', () => this.handleSlotAction(action, slot))
+    
+        this.slotWindow.add(slotButton)
+        yOffset += 40
+      })
+    
+      const closeButton = this.add.text(0, 80, 'Close', {
+        fontSize: '18px',
+        backgroundColor: '#cc0000',
+        color: '#fff',
+        padding: { x: 10, y: 5 }
+      }).setOrigin(0.5)
+        .setInteractive()
+    
+      closeButton.on('pointerdown', () => this.slotWindow.destroy())
+    
+      this.slotWindow.add([bg, title, closeButton])
+    }
+    
+    handleSlotAction(action, slot) {
+      switch (action) {
+        case 'save':
+          this.scene.get('playScene').saveGame(slot)
+          break
+        case 'load':
+          this.scene.get('playScene').loadGame(slot)
+          break
+        case 'delete':
+          this.scene.get('playScene').deleteGame(slot)
+          break
+      }
+      console.log(`${action} executed on ${slot}`)
+      if (this.slotWindow) {
+        this.slotWindow.destroy()
+      }
+    }
+
+    getCurrentGameState() {
+        return {
+            player: this.scene.get('playScene').player.serialize(),
+            grid: this.scene.get('playScene').grid.map(row => row.map(cell => cell.serialize())),
+            turnsTaken: this.turnsTaken,
+            seeds: this.seeds,
+        };
     }
     
     // absolutely terrible way to do this
