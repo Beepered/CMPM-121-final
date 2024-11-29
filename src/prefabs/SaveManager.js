@@ -1,7 +1,7 @@
 class SaveManager {
   static storageKey = "save_game";
   static initialized = false;
-  static emitter = EventDispatcher.getInstance()
+  static emitter = EventDispatcher.getInstance();
 
   constructor() {
     // this.emitter = EventDispatcher.getInstance();
@@ -17,17 +17,17 @@ class SaveManager {
   static initializeSlots() {
     console.log("Initializing save slots...");
     const saves = localStorage.getItem(SaveManager.storageKey);
-  
+
     if (saves) {
       const parsedSaves = JSON.parse(saves);
-  
+
       for (let i = 1; i <= 3; i++) {
         const slotName = `Slot ${i}`;
         if (!parsedSaves[slotName]) {
           parsedSaves[slotName] = "Empty Slot";
         }
       }
-  
+
       localStorage.setItem(SaveManager.storageKey, JSON.stringify(parsedSaves));
       console.log("Updated Save Slots:", parsedSaves);
     } else {
@@ -44,7 +44,10 @@ class SaveManager {
 
   static saveGame(slotName, gameState) {
     const saves = SaveManager.getallSaves();
-    saves[slotName] = gameState;
+    const fullyGrownCount = gameState.grid.flat().filter((cell) => {
+      return cell.plant && cell.plant.growth >= 3;
+    }).length;
+    saves[slotName] = { gameState, fullyGrownCount };
     localStorage.setItem(SaveManager.storageKey, JSON.stringify(saves));
     console.log(`Game saved in ${slotName}`);
   }
@@ -52,8 +55,26 @@ class SaveManager {
   static loadGame(slotName) {
     const saves = SaveManager.getallSaves();
     if (saves[slotName] && saves[slotName] !== "Empty Slot") {
-      this.emitter.emit("switch-state", saves[slotName]);
+      const gameState = saves[slotName];
+
+      // Re-emit fully-grown events if needed
+      const fullyGrownCount = gameState.fullyGrownCount || 0;
+      for (let i = 0; i < fullyGrownCount; i++) {
+        SaveManager.emitter.emit("fully-grown");
+      }
+
+      SaveManager.emitter.emit("switch-state", gameState);
       console.log(`Game loaded from ${slotName}`);
+      console.log("GameState after loading:", gameState);
+      gameState.grid.forEach((row, i) => {
+        row.forEach((cell, j) => {
+          if (cell.plant) {
+            console.log(
+              `Plant at ${i}, ${j}: Type=${cell.plant.type}, Growth=${cell.plant.growth}`
+            );
+          }
+        });
+      });
     } else {
       console.warn(`No save found for: ${slotName}`);
     }
@@ -63,7 +84,7 @@ class SaveManager {
     if (!SaveManager.initialized) {
       SaveManager.initializeSlots(); // Ensure slots exist before proceeding
     }
-  
+
     const saves = localStorage.getItem(SaveManager.storageKey);
     console.log("Fetching all saves:", saves);
     return saves ? JSON.parse(saves) : {};

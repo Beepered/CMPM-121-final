@@ -1,85 +1,86 @@
-class Plant extends Phaser.GameObjects.Sprite{
-    constructor(scene, x, y, type = 0){
-        let texture;
-        switch(type){
-            case(0):
-                texture = "pink"
-                break;
-            case(1):
-                texture = "purple"
-                break;
-            case(2):
-                texture = "red"
-                break;
-            default:
-                texture = "testplant"
-        }
-        super(scene, x, y, texture);
-        scene.add.existing(this);
-
-        this.type = type
-
-        this.emitter = EventDispatcher.getInstance();
-
-        this.alpha = 0.4
-        this.growth = 0;
+class Plant extends Phaser.GameObjects.Sprite {
+  constructor(scene, x, y, type = 0) {
+    let texture;
+    switch (type) {
+      case 0:
+        texture = "pink";
+        break;
+      case 1:
+        texture = "purple";
+        break;
+      case 2:
+        texture = "red";
+        break;
+      default:
+        texture = "testplant";
     }
-    
-    growPlant(lvl){
-        this.growth += lvl;
-        if(this.growth == 1){
-            this.alpha = 0.6
-            console.log("Entered Stage 1");
-        }
-        else if(this.growth == 2){
-            this.alpha = 0.8
-            console.log("Entered Stage 2");
-        }
-        else if(this.growth >= 3){
-            this.alpha = 1
-            this.emitter.emit("fully-grown");
-            console.log("Plant is fully grown");
-        }
-    }
+    super(scene, x, y, texture);
+    scene.add.existing(this);
 
-    GiveNutrients(cell, sun, water){
-        if(this.growth < 3){
-            switch(this.type){
-                case(0):
-                    if(sun >= 2 && water >= 2){
-                        this.growPlant(1);
-                        cell.water -= 2;
-                    }
-                    break;
-                case(1):
-                    if(sun >= 1 && water >= 5){
-                        this.growPlant(1);
-                        cell.water -= 5;
-                    }
-                    break;
-                case(2):
-                    if(sun >= 4 && water >= 4){
-                        this.growPlant(1);
-                        cell.water -= 4;
-                    }
-                    break;
-                default:
-                    this.growPlant(1);
-            }
-        }
-    }
+    this.type = type;
 
-    serialize() {
-        return {
-            type: this.type,
-            growth: this.growth,
-            alpha: this.alpha
-        };
-    }
+    this.emitter = EventDispatcher.getInstance();
 
-    deserialize(data) {
-        this.type = data.type;
-        this.growth = data.growth;
-        this.alpha = data.alpha;
+    this.alpha = 0.4;
+    this.growth = 0;
+  }
+
+  growPlant(lvl) {
+    this.growth += lvl;
+    if (this.growth == 1) {
+      this.alpha = 0.6;
+      console.log("Entered Stage 1");
+    } else if (this.growth == 2) {
+      this.alpha = 0.8;
+      console.log("Entered Stage 2");
+    } else if (this.growth >= 3) {
+      this.alpha = 1;
+      this.emitter.emit("fully-grown");
+      console.log("Plant is fully grown");
     }
+  }
+
+  GiveNutrients(cell, sun, water) {
+    if (this.growth < 3) {
+      switch (this.type) {
+        case 0:
+          if (sun >= 2 && water >= 2) {
+            this.growPlant(1);
+            cell.water -= 2;
+          }
+          break;
+        case 1:
+          if (sun >= 1 && water >= 5) {
+            this.growPlant(1);
+            cell.water -= 5;
+          }
+          break;
+        case 2:
+          if (sun >= 4 && water >= 4) {
+            this.growPlant(1);
+            cell.water -= 4;
+          }
+          break;
+        default:
+          this.growPlant(1);
+      }
+    }
+  }
+
+  serialize() {
+    return {
+      type: this.type,
+      growth: this.growth,
+      alpha: this.alpha,
+    };
+  }
+
+  deserialize(data) {
+    this.type = data.type;
+    this.growth = data.growth;
+    this.alpha = data.alpha;
+    if (this.growth >= 3) {
+      this.emitter.emit("fully-grown");
+    }
+  }
 }
