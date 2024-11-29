@@ -1,9 +1,10 @@
 class SaveManager {
   static storageKey = "save_game";
   static initialized = false;
+  static emitter = EventDispatcher.getInstance()
 
   constructor() {
-    this.emitter = EventDispatcher.getInstance();
+    // this.emitter = EventDispatcher.getInstance();
 
     this.initializeSlots();
 

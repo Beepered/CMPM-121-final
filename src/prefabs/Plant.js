@@ -29,13 +29,16 @@ class Plant extends Phaser.GameObjects.Sprite{
         this.growth += lvl;
         if(this.growth == 1){
             this.alpha = 0.6
+            console.log("Entered Stage 1");
         }
         else if(this.growth == 2){
             this.alpha = 0.8
+            console.log("Entered Stage 2");
         }
-        else if(this.growth == 3){
+        else if(this.growth >= 3){
             this.alpha = 1
             this.emitter.emit("fully-grown");
+            console.log("Plant is fully grown");
         }
     }
 
@@ -70,11 +73,13 @@ class Plant extends Phaser.GameObjects.Sprite{
         return {
             type: this.type,
             growth: this.growth,
+            alpha: this.alpha
         };
     }
 
     deserialize(data) {
         this.type = data.type;
         this.growth = data.growth;
+        this.alpha = data.alpha;
     }
 }
