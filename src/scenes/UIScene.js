@@ -85,22 +85,39 @@ class UIScene extends Phaser.Scene {
       }).setOrigin(0.5)
     
       // Display slots based on action
-      const slots = ['Slot 1', 'Slot 2', 'Slot 3']
-      let yOffset = -30
-      slots.forEach(slot => {
-        const slotButton = this.add.text(0, yOffset, slot, {
+      const saves = SaveManager.getallSaves(); // Retrieve save data
+      const slots = Object.keys(saves); // Extract slot names 
+
+      const filteredSlots = slots.filter(slot => {
+        if (action === 'save') return true; // Show all slots for saving
+        return saves[slot] !== "Empty Slot"; // Only show filled slots for load/delete
+      });
+
+      if (filteredSlots.length === 0) {
+        const emptyText = this.add.text(0, -30, 'No save slots found.', {
           fontSize: '18px',
-          backgroundColor: '#0077cc',
-          color: '#fff',
-          padding: { x: 10, y: 5 }
-        }).setOrigin(0.5)
-          .setInteractive()
+          color: '#fff'
+        }).setOrigin(0.5);
+        this.slotWindow.add([bg, title, emptyText]);
+      } else {
+        // Display slots based on action
+        let yOffset = -30;
+        filteredSlots.forEach(slot => {
+          const slotText = saves[slot] === "Empty Slot" ? "Empty Slot" : slot;
+          const slotButton = this.add.text(0, yOffset, slot, {
+            fontSize: '18px',
+            backgroundColor: '#0077cc',
+            color: '#fff',
+            padding: { x: 10, y: 5 }
+          }).setOrigin(0.5)
+            .setInteractive();
     
-        slotButton.on('pointerdown', () => this.handleSlotAction(action, slot))
+          slotButton.on('pointerdown', () => this.handleSlotAction(action, slot));
     
-        this.slotWindow.add(slotButton)
-        yOffset += 40
-      })
+          this.slotWindow.add(slotButton);
+          yOffset += 40;
+        });
+      }
     
       const closeButton = this.add.text(0, 80, 'Close', {
         fontSize: '18px',
@@ -116,16 +133,29 @@ class UIScene extends Phaser.Scene {
     }
     
     handleSlotAction(action, slot) {
+
+      const saves = SaveManager.getallSaves();
+
       switch (action) {
         case 'save':
-          this.scene.get('playScene').saveGame(slot)
-          break
+          if (saves[slot] === "Empty Slot" || confirm("This slot already contains a save. Overwrite?")) {
+            const gameState = this.getCurrentGameState();
+            SaveManager.saveGame(slot, gameState);
+            console.log(`Game saved in ${slot}`);
+          }
+          break;
         case 'load':
-          this.scene.get('playScene').loadGame(slot)
-          break
+          if (saves[slot] !== "Empty Slot") {
+            SaveManager.loadGame(slot);
+            console.log(`Game loaded from ${slot}`);
+          }
+          break;
         case 'delete':
-          this.scene.get('playScene').deleteGame(slot)
-          break
+          if (saves[slot] !== "Empty Slot" && confirm("Are you sure you want to delete this save?")) {
+            SaveManager.deleteSave(slot);
+            console.log(`Deleted save from ${slot}`);
+          }
+          break;
       }
       console.log(`${action} executed on ${slot}`)
       if (this.slotWindow) {
