@@ -28,13 +28,13 @@ class Plant extends Phaser.GameObjects.Sprite{
     growPlant(lvl){
         this.growth += lvl;
         if(this.growth == 1){
-            this.alpha += 0.2
+            this.alpha = 0.6
         }
         else if(this.growth == 2){
-            this.alpha += 0.2
+            this.alpha = 0.8
         }
         else if(this.growth == 3){
-            this.alpha += 0.2
+            this.alpha = 1
             this.emitter.emit("fully-grown");
         }
     }
