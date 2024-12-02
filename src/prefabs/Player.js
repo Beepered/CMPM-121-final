@@ -24,7 +24,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.SPACE = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
-        this.moveSpeed = 3
+        this.moveSpeed = 5
         this.seeds = 3;
         this.cell = null;
 

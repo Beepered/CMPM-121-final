@@ -74,10 +74,10 @@ class Play extends Phaser.Scene {
             this.UpdateCellText()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
-            this.Test()
+            this.Save()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyO)){ // loading
-            this.Test2()
+            this.Load()
             this.UpdateCellText();
         }
 
@@ -103,9 +103,6 @@ class Play extends Phaser.Scene {
             
         }
     }
-    switchState(state) {
-        //somehow load the whole save state to the current
-    };
     
     createCell(x, y){
         const cell = new Cell(this, x, y, "grass");
@@ -242,34 +239,23 @@ class Play extends Phaser.Scene {
         return bytes.buffer;
     }
 
-    Save() { // saves cell info. Now need to figure out how to save player info
-        const gridBuffer = this.GetArrayBufferFromGrid()
-        const encode = this.arrayBufferToBase64(gridBuffer)
+    Save() {
+        const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
+        const encode = this.arrayBufferToBase64(newBuffer)
         localStorage.setItem("save", encode)
     }
 
     Load() {
         const save = localStorage.getItem("save")
         if(save){
-            const gridBuffer = this.base64ToArrayBuffer(save)
+            const buffer = this.base64ToArrayBuffer(save)
+            const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
             this.SetGridFromArrayBuffer(gridBuffer)
+            const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
+            this.SetPlayerFromArrayBuffer(playerBuffer)
         }
-        else
+        else{
             alert("null save")
-    }
-
-    Test(){
-        const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
-        const encode = this.arrayBufferToBase64(newBuffer)
-        localStorage.setItem("test", encode)
-    }
-
-    Test2(){
-        const decode = localStorage.getItem("test")
-        const buffer = this.base64ToArrayBuffer(decode)
-        const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
-        this.SetGridFromArrayBuffer(gridBuffer)
-        const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
-        this.SetPlayerFromArrayBuffer(playerBuffer)
+        } 
     }
 }
