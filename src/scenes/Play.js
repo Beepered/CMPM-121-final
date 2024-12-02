@@ -37,20 +37,13 @@ class Play extends Phaser.Scene {
         this.cellGroup = this.add.group()
         this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
 
-        this.canSwitchCells = true
-        this.checkCellTime = 0.02;
-        this.checkCellList = []
+        this.checkCellTime = 0.05;
         
         this.gameStateManager = new gameStateManager();
         //starting State
         const initialState = new stateInfo();
         initialState.setPlayerInfo(this.player.x, this.player.y);
         this.gameStateManager.gameStateChange(initialState);
-        this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
-            if(this.canSwitchCells){
-                this.checkCellList.push(cell)
-            }
-        })
 
         // temp
         localStorage.clear()
@@ -59,11 +52,8 @@ class Play extends Phaser.Scene {
     update(time, delta){
         this.checkCellTime -= delta
         if(this.checkCellTime <= 0){
-            this.canSwitchCells = !this.canSwitchCells
-            if(this.canSwitchCells == true){
-                this.player.cell = this.CalculatePlayerCell();
-            }
-            this.checkCellTime = 0.02;
+            this.player.cell = this.CalculatePlayerCell();
+            this.checkCellTime = 0.05;
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
             const prevState = new stateInfo();
@@ -134,21 +124,20 @@ class Play extends Phaser.Scene {
     }
 
     CalculatePlayerCell(){
-        // checks all cells the player is colliding with
-        // If cell contains original cell, just use that otherwise take the first cell
-        let newCell = this.player.cell
-        for(let i = 0; i < this.checkCellList.length; i++){
-            if(i == 0){
-                newCell = this.checkCellList[0]
-            }
-            else if(this.checkCellList[i] == this.player.cell){
-                newCell = this.player.cell
-                break;
-            }
+        const cellWidth = gameWidth / this.XTiles;  
+        const cellHeight = gameHeight / this.YTiles; 
+        const minXPos = 100; 
+        const minYPos = 70;  
+
+        const gridX = Math.floor((this.player.x - minXPos) / cellWidth);
+        const gridY = Math.floor((this.player.y - minYPos) / cellHeight);
+    
+        if (gridX >= 0 && gridX < this.XTiles && gridY >= 0 && gridY < this.YTiles) {
+            return this.grid[gridX][gridY];
+        } else {
+            return null;
         }
-        this.checkCellList = []
-        return newCell
-    }
+    }   
 
     UpdateCellText() {
         for(let i = 0; i < this.grid.length ; i++){
