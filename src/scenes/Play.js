@@ -136,18 +136,23 @@ class Play extends Phaser.Scene {
     CalculatePlayerCell(){
         // checks all cells the player is colliding with
         // If cell contains original cell, just use that otherwise take the first cell
-        let newCell = this.player.cell
-        for(let i = 0; i < this.checkCellList.length; i++){
-            if(i == 0){
-                newCell = this.checkCellList[0]
-            }
-            else if(this.checkCellList[i] == this.player.cell){
-                newCell = this.player.cell
-                break;
-            }
+        if(this.checkCellList.length == 0){
+            return null;
         }
-        this.checkCellList = []
-        return newCell
+        else{
+            let newCell = this.player.cell
+            for(let i = 0; i < this.checkCellList.length; i++){
+                if(i == 0){
+                    newCell = this.checkCellList[0]
+                }
+                else if(this.checkCellList[i] == this.player.cell){
+                    newCell = this.player.cell
+                    break;
+                }
+            }
+            this.checkCellList = []
+            return newCell
+        }
     }
 
     UpdateCellText() {
