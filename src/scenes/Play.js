@@ -1,6 +1,6 @@
 class Play extends Phaser.Scene {
     preload(){
-        this.load.image("player", "assets/Player_Character.png")
+        this.load.image("player", "assets/PC_V3.png")
         this.load.image("grass", "assets/GrassV1.png")
 
         // flowers
@@ -22,12 +22,10 @@ class Play extends Phaser.Scene {
         this.scene.launch("uiScene")
         this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q) // testing
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) // save
-        this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O)//load
-        this.keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N) // Redo tmp button
+        this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O) //load
+        this.keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N) // Undo tmp button
         this.keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M) // Redo tmp button
         
-        
-
         this.gameObjects = this.add.group({
             runChildUpdate: true
         })
@@ -52,8 +50,8 @@ class Play extends Phaser.Scene {
             }
         })
 
-        // temp
-        localStorage.clear()
+        this.Load();
+        this.UpdateCellText();
     }
 
     update(time, delta){

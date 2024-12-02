@@ -9,7 +9,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.depth = 1 // render ordering
 
-        this.setScale(0.5); 
+        this.setScale(0.3); 
         this.body.setSize(this.width * 0.5, this.height * 0.5); 
 
         this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
