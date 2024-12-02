@@ -45,7 +45,7 @@ class Play extends Phaser.Scene {
         })
 
         // temp
-        this.view = this.GetArrayBuffer();
+        localStorage.clear()
     }
 
     update(time, delta){
@@ -61,8 +61,11 @@ class Play extends Phaser.Scene {
             this.emitter.emit("next-turn");
             this.UpdateCellText()
         }
-        if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // test button
-            this.SetGridFromArrayBuffer()
+        if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
+            this.Test()
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keyO)){ // loading
+            this.Test2()
             this.UpdateCellText();
         }
 
@@ -122,8 +125,16 @@ class Play extends Phaser.Scene {
         return newCell
     }
 
-    GetArrayBuffer() {
-        const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save, 2 = bytes)
+    UpdateCellText() {
+        for(let i = 0; i < this.grid.length ; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                this.grid[i][j].updateText();
+            }
+        }
+    }
+
+    GetArrayBufferFromGrid() {
+        const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save (sun,water,type,growth), 2 = bytes)
         const view = new DataView(buffer);
         let byteCount = 0
         for(let i = 0; i < this.grid.length ; i++){
@@ -137,11 +148,11 @@ class Play extends Phaser.Scene {
                 byteCount += 8
             }
         }
-        return view
+        return buffer
     }
 
-    SetGridFromArrayBuffer(view) {
-        //const view = JSON.parse(localStorage.getItem("test"))
+    SetGridFromArrayBuffer(buffer) {
+        const view = new DataView(buffer);
         let byteCount = 0
         for(let i = 0; i < this.grid.length ; i++){
             for(let j = 0; j < this.grid[i].length; j++){
@@ -152,16 +163,83 @@ class Play extends Phaser.Scene {
                     this.grid[i][j].plant.growth = view.getInt16(byteCount + 6)
                 }
                 byteCount += 8
-                this.grid[i][j].updateText();
             }
         }
     }
 
-    UpdateCellText() {
-        for(let i = 0; i < this.grid.length ; i++){
-            for(let j = 0; j < this.grid[i].length; j++){
-                this.grid[i][j].updateText();
-            }
+    GetArrayBufferFromPlayer() {
+        const buffer = new ArrayBuffer(3 * 2); // (position x,y and num seeds) * 2
+        const view = new DataView(buffer);
+        view.setInt16(0, this.player.x);
+        view.setInt16(2, this.player.y);
+        view.setInt16(4, this.player.seeds);
+        return buffer
+    }
+
+    SetPlayerFromArrayBuffer(buffer){
+        const view = new DataView(buffer);
+        this.player.x = view.getInt16(0);
+        this.player.y = view.getInt16(2);
+        this.player.seeds = view.getInt16(4);
+        return buffer
+    }
+
+    appendBuffer = function(buffer1, buffer2) {
+        //https://gist.github.com/72lions/4528834
+        var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
+        tmp.set(new Uint8Array(buffer1), 0);
+        tmp.set(new Uint8Array(buffer2), buffer1.byteLength);
+        return tmp.buffer;
+    };
+
+    arrayBufferToBase64(buffer){
+        //https://stackoverflow.com/questions/75577296/which-is-the-fastest-method-to-convert-array-buffer-to-base64
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
         }
+        return window.btoa(binary);
+    }
+    base64ToArrayBuffer(base64) {
+        //https://stackoverflow.com/questions/21797299/how-can-i-convert-a-base64-string-to-arraybuffer
+        var binaryString = atob(base64);
+        var bytes = new Uint8Array(binaryString.length);
+        for (var i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
+
+    Save() { // saves cell info. Now need to figure out how to save player info
+        const gridBuffer = this.GetArrayBufferFromGrid()
+        const encode = this.arrayBufferToBase64(gridBuffer)
+        localStorage.setItem("save", encode)
+    }
+
+    Load() {
+        const save = localStorage.getItem("save")
+        if(save){
+            const gridBuffer = this.base64ToArrayBuffer(save)
+            this.SetGridFromArrayBuffer(gridBuffer)
+        }
+        else
+            alert("null save")
+    }
+
+    Test(){
+        const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
+        const encode = this.arrayBufferToBase64(newBuffer)
+        localStorage.setItem("test", encode)
+    }
+
+    Test2(){
+        const decode = localStorage.getItem("test")
+        const buffer = this.base64ToArrayBuffer(decode)
+        const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
+        this.SetGridFromArrayBuffer(gridBuffer)
+        const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
+        this.SetPlayerFromArrayBuffer(playerBuffer)
     }
 }

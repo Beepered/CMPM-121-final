@@ -24,7 +24,6 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.ChangeWater();
         if(this.plant)
             this.plant.GiveNutrients(this, this.sun, this.water);
-        //this.updateText()
     }
 
     ChangeSun() {
