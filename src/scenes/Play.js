@@ -38,6 +38,12 @@ class Play extends Phaser.Scene {
         this.checkCellTime = 0.02;
         this.checkCellList = []
         
+        this.GameBehavior();
+        this.gameStateManager = new gameStateManager();
+        //starting State
+        const initialState = new stateInfo();
+        initialState.setPlayerInfo(this.player.x, this.player.y);
+        this.gameStateManager.gameStateChange(initialState);
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
             if(this.canSwitchCells){
                 this.checkCellList.push(cell)
@@ -58,7 +64,11 @@ class Play extends Phaser.Scene {
             this.checkCellTime = 0.02;
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
+            const prevState = new stateInfo();
+            prevState.setPlayerInfo(this.player.x, this.player.y)
             this.emitter.emit("next-turn");
+            this.gameStateManager.gameStateChange(prevState);
+
             this.UpdateCellText()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
@@ -69,14 +79,27 @@ class Play extends Phaser.Scene {
             this.UpdateCellText();
         }
 
-        // if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
-        //     this.player.gameStateManager.undo();
-        //     this.emitter.emit("undo"); //make later
-        // }
-        // if(Phaser.Input.Keyboard.JustDown(this.keyP)){ //Redo Btn
-        //     this.player.gameStateManager.redo();
-        //     this.emitter.emit("redo");//make later
-        // }
+        if(Phaser.Input.Keyboard.JustDown(this.keyM)){ //Undo Btn
+            const coords = this.gameStateManager.undo();
+            
+            if(coords && coords.playerInfo){
+                this.player.x = coords.playerInfo.playerX;
+                this.player.y = coords.playerInfo.playerY;
+                //console.log(this.player.x,this.player.y)
+                this.emitter.emit("undo"); //make later
+            }
+            
+        }
+        if(Phaser.Input.Keyboard.JustDown(this.keyN)){ //Redo Btn
+            const coords = this.gameStateManager.redo();
+            if(coords && coords.playerInfo){
+                this.player.x = coords.playerInfo.playerX;
+                this.player.y = coords.playerInfo.playerY;
+                this.emitter.emit("redo");//make later
+            }
+            
+            
+        }
     }
     switchState(state) {
         //somehow load the whole save state to the current

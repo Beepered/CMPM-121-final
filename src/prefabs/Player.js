@@ -69,6 +69,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 // Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
                 // Brendan: maybe make a border around the cell. Could be code or just its own sprite
                 this.Reap(this.cell);
+                this.emitter.emit("reap");
             }
         }
         
