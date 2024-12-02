@@ -183,9 +183,12 @@ class Play extends Phaser.Scene {
             for(let j = 0; j < this.grid[i].length; j++){
                 this.grid[i][j].sun = view.getInt16(byteCount)
                 this.grid[i][j].water = view.getInt16(byteCount + 2)
-                if(this.grid[i][j].plant != null){
-                    this.grid[i][j].plant.type = view.getInt16(byteCount + 4)
-                    this.grid[i][j].plant.growth = view.getInt16(byteCount + 6)
+                const plantType = view.getInt16(byteCount + 4)
+                if(plantType != 0){
+                    const plantGrowth = view.getInt16(byteCount + 6)
+                    this.grid[i][j].Plant(plantType)
+                    this.grid[i][j].plant.growth = plantGrowth
+                    this.grid[i][j].plant.updatePlant()
                 }
                 byteCount += 8
             }
