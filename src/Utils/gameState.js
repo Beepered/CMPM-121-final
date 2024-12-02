@@ -1,10 +1,13 @@
 class stateInfo{
     constructor(){
         this.playerInfo = null;
-        this.cellArray = null;
+        this.cellBuffer = null;
     }
     setPlayerInfo(posX, posY){
         this.playerInfo = {playerX: posX, playerY: posY};
+    }
+    setCellBuffer(buffer) {
+        this.cellBuffer = buffer;
     }
 }
 

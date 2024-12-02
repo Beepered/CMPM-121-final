@@ -45,6 +45,7 @@ class Play extends Phaser.Scene {
         //starting State
         const initialState = new stateInfo();
         initialState.setPlayerInfo(this.player.x, this.player.y);
+        initialState.setCellBuffer(this.GetArrayBufferFromGrid());
         this.gameStateManager.gameStateChange(initialState);
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
             if(this.canSwitchCells){
@@ -68,6 +69,7 @@ class Play extends Phaser.Scene {
         if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
             const prevState = new stateInfo();
             prevState.setPlayerInfo(this.player.x, this.player.y)
+            prevState.setCellBuffer(this.GetArrayBufferFromGrid());
             this.emitter.emit("next-turn");
             this.gameStateManager.gameStateChange(prevState);
 
@@ -82,24 +84,33 @@ class Play extends Phaser.Scene {
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.keyN)){ //Undo Btn
-            const coords = this.gameStateManager.undo();
+            const prevState = this.gameStateManager.undo();
             
-            if(coords && coords.playerInfo){
-                this.player.x = coords.playerInfo.playerX;
-                this.player.y = coords.playerInfo.playerY;
-                //console.log(this.player.x,this.player.y)
+            if([prevState]){
+                if(prevState.playerInfo){
+                    this.player.x = prevState.playerInfo.playerX;
+                    this.player.y = prevState.playerInfo.playerY;
+                }
+                if(prevState.cellBuffer){
+                    this.SetGridFromArrayBuffer(prevState.cellBuffer);
+                }
                 this.emitter.emit("undo"); //make later
             }
-            
+            this.UpdateCellText();
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyM)){ //Redo Btn
-            const coords = this.gameStateManager.redo();
-            if(coords && coords.playerInfo){
-                this.player.x = coords.playerInfo.playerX;
-                this.player.y = coords.playerInfo.playerY;
+            const nextState = this.gameStateManager.redo();
+            if(nextState){
+                if(nextState.playerInfo){
+                    this.player.x = nextState.playerInfo.playerX;
+                    this.player.y = nextState.playerInfo.playerY;
+                }
+                if(nextState.cellBuffer){
+                    this.SetGridFromArrayBuffer(nextState.cellBuffer);
+                }
                 this.emitter.emit("redo");//make later
             }
-            
+            this.UpdateCellText();
             
         }
     }
