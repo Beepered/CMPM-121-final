@@ -11,7 +11,7 @@ class stateInfo{
 
 class gameStateManager {
     constructor() {
-        this.undoStack = [];
+        this.undoStack = [{}];
         this.redoStack = [];
     }
 
@@ -23,18 +23,20 @@ class gameStateManager {
 
     undo() {
         if (this.undoStack.length > 0) {
-            const action = this.undoStack.pop();
-            this.redoStack.push(action);
-            return action;
+            const prevState = this.undoStack.pop();
+            this.redoStack.push(prevState);
+            return prevState;
         }
+        else return null;
     }
 
     redo() {
         if (this.redoStack.length > 0) {
-            const action = this.redoStack.pop();
-            this.undoStack.push(action);
-            return action;
+            const nextState = this.redoStack.pop();
+            this.undoStack.push(nextState);
+            return nextState;
         }
+        else return null;
     }
 }
 /*

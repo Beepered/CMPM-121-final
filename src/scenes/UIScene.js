@@ -18,6 +18,7 @@ class UIScene extends Phaser.Scene {
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
+        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
     }
     
     // absolutely terrible way to do this
@@ -32,30 +33,30 @@ class UIScene extends Phaser.Scene {
     }
 
     NextTurn(){
+        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
         this.seeds = 3;
         this.turnsTaken++;
-        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
-
+    
         this.updateUI();
     }
 
     Plant(){
+       // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
         this.seeds--;
-        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
         this.redoStack = [];
         
         this.updateUI();
     }
 
     Reap(){
-        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+       // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
         this.redoStack = [];
     }
 
     undo(){
         if(this.historyStack.length > 0){
             this.redoStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
-            const prevState = this.history.pop();
+            const prevState = this.historyStack.pop();
             this.seeds = prevState.seeds;
             this.turnsTaken = prevState.turnsTaken;
 

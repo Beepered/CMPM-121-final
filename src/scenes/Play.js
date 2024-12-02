@@ -39,6 +39,10 @@ class Play extends Phaser.Scene {
         
         this.GameBehavior();
         this.gameStateManager = new gameStateManager();
+        //starting State
+        const initialState = new stateInfo();
+        initialState.setPlayerInfo(this.player.x, this.player.y);
+        this.gameStateManager.gameStateChange(initialState);
     }
 
     update(delta){
@@ -59,8 +63,8 @@ class Play extends Phaser.Scene {
 
         if(Phaser.Input.Keyboard.JustDown(this.keyO)){ //Undo Btn
             const coords = this.gameStateManager.undo();
-            if(coords){
-                //console.log(this.player.x,this.player.y)
+            
+            if(coords && coords.playerInfo){
                 this.player.x = coords.playerInfo.playerX;
                 this.player.y = coords.playerInfo.playerY;
                 //console.log(this.player.x,this.player.y)
@@ -70,7 +74,7 @@ class Play extends Phaser.Scene {
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyP)){ //Redo Btn
             const coords = this.gameStateManager.redo();
-            if(coords){
+            if(coords && coords.playerInfo){
                 this.player.x = coords.playerInfo.playerX;
                 this.player.y = coords.playerInfo.playerY;
                 this.emitter.emit("redo");//make later
