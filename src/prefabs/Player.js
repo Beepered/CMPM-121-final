@@ -62,27 +62,27 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         if(this.cell){
             if(this.cell.plant == null && this.seeds > 0){
                 this.emitter.emit("plant")
-                this.Plant(this.cell, "testplant");
+                this.Plant();
                 this.seeds--;
             }
             else if(this.cell.plant != null && this.cell.plant.growth >= 3){
                 // Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
                 // Brendan: maybe make a border around the cell. Could be code or just its own sprite
-                this.Reap(this.cell);
+                this.Reap();
                 this.emitter.emit("reap");
             }
         }
         
     }
 
-    Plant(selectedCell, type) { // we can use "type" later when we store seeds but right now just using a random seed
+    Plant(type) { // we can use "type" later when we store seeds but right now just using a random seed
         const randSeed = Math.floor(Math.random() * 3) + 0;
-        selectedCell.plant = new Plant(this.scene, selectedCell.x, selectedCell.y, randSeed);
+        this.cell.Plant(randSeed)
     }
 
-    Reap(cell){
-        cell.plant.destroy();
-        cell.plant = null;
+    Reap(){
+        this.cell.plant.destroy();
+        this.cell.plant = null;
     }
 
     NextTurn(){

@@ -7,14 +7,12 @@ class UIScene extends Phaser.Scene {
         this.seeds = 3;
         this.winCon = 3;
 
-        this.turnsTaken = 0;
         this.historyStack =[];
         this.redoStack = [];
     }
 
     create (){
         this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
-        this.turnsText = this.add.text(gameWidth / 12, gameHeight / 7, `Turns: ${this.turnsTaken}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
@@ -35,7 +33,6 @@ class UIScene extends Phaser.Scene {
     NextTurn(){
         this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
         this.seeds = 3;
-        this.turnsTaken++;
     
         this.updateUI();
     }
@@ -88,7 +85,6 @@ class UIScene extends Phaser.Scene {
 
     updateUI(){
         this.seedText.text = `Seeds: ${this.seeds}`
-        this.turnsText.text = `Turns: ${this.turnsTaken}`
     }
     
 }
