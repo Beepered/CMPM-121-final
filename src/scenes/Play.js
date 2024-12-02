@@ -21,9 +21,12 @@ class Play extends Phaser.Scene {
     create(){
         this.scene.launch("uiScene")
         this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q) // testing
-        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) // testing
-        this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O)//Undo tmp button
-        this.keyP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P) // Redo tmp button
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) // save
+        this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O)//load
+        this.keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N) // Redo tmp button
+        this.keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M) // Redo tmp button
+        
+        
 
         this.gameObjects = this.add.group({
             runChildUpdate: true
@@ -38,7 +41,6 @@ class Play extends Phaser.Scene {
         this.checkCellTime = 0.02;
         this.checkCellList = []
         
-        this.GameBehavior();
         this.gameStateManager = new gameStateManager();
         //starting State
         const initialState = new stateInfo();
@@ -79,7 +81,7 @@ class Play extends Phaser.Scene {
             this.UpdateCellText();
         }
 
-        if(Phaser.Input.Keyboard.JustDown(this.keyM)){ //Undo Btn
+        if(Phaser.Input.Keyboard.JustDown(this.keyN)){ //Undo Btn
             const coords = this.gameStateManager.undo();
             
             if(coords && coords.playerInfo){
@@ -90,7 +92,7 @@ class Play extends Phaser.Scene {
             }
             
         }
-        if(Phaser.Input.Keyboard.JustDown(this.keyN)){ //Redo Btn
+        if(Phaser.Input.Keyboard.JustDown(this.keyM)){ //Redo Btn
             const coords = this.gameStateManager.redo();
             if(coords && coords.playerInfo){
                 this.player.x = coords.playerInfo.playerX;
