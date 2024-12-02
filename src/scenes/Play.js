@@ -1,6 +1,6 @@
 class Play extends Phaser.Scene {
     preload(){
-        this.load.image("player", "assets/PC_V3.png")
+        this.load.image("player", "assets/PlayerCharacter.png")
         this.load.image("grass", "assets/GrassV1.png")
 
         // flowers
@@ -50,7 +50,7 @@ class Play extends Phaser.Scene {
             }
         })
 
-        this.Load();
+        this.Load("save");
         this.UpdateCellText();
     }
 
@@ -72,10 +72,10 @@ class Play extends Phaser.Scene {
             this.UpdateCellText()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
-            this.Save()
+            this.Save("save")
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyO)){ // loading
-            this.Load()
+            this.Load("save")
             this.UpdateCellText();
         }
 
@@ -237,14 +237,14 @@ class Play extends Phaser.Scene {
         return bytes.buffer;
     }
 
-    Save() {
+    Save(fileName) {
         const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
         const encode = this.arrayBufferToBase64(newBuffer)
-        localStorage.setItem("save", encode)
+        localStorage.setItem(fileName, encode)
     }
 
-    Load() {
-        const save = localStorage.getItem("save")
+    Load(fileName) {
+        const save = localStorage.getItem(fileName)
         if(save){
             const buffer = this.base64ToArrayBuffer(save)
             const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
