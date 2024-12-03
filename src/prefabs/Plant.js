@@ -23,10 +23,10 @@ class Plant extends Phaser.GameObjects.Sprite{
 
         this.alpha = 0.4
         this.growth = 0;
+        this.updatePlant()
     }
-    
-    growPlant(lvl){
-        this.growth += lvl;
+
+    updatePlant(){
         if(this.growth == 1){
             this.alpha = 0.6
         }
@@ -44,25 +44,26 @@ class Plant extends Phaser.GameObjects.Sprite{
             switch(this.type){
                 case(0):
                     if(sun >= 2 && water >= 2){
-                        this.growPlant(1);
+                        this.growth += 1;
                         cell.water -= 2;
                     }
                     break;
                 case(1):
                     if(sun >= 1 && water >= 5){
-                        this.growPlant(1);
+                        this.growth += 1;
                         cell.water -= 5;
                     }
                     break;
                 case(2):
                     if(sun >= 4 && water >= 4){
-                        this.growPlant(1);
+                        this.growth += 1;
                         cell.water -= 4;
                     }
                     break;
                 default:
-                    this.growPlant(1);
+                    this.growth += 1;
             }
         }
+        this.updatePlant()
     }
 }

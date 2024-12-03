@@ -43,6 +43,10 @@ class Cell extends Phaser.GameObjects.Sprite {
         }
     }
 
+    Plant(seed) {
+        this.plant = new Plant(this.scene, this.x, this.y, seed);
+    }
+
     updateText() {
         this.sunText.text = this.sun.toString()
         this.waterText.text = this.water.toString()

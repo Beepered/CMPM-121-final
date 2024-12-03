@@ -1,27 +1,19 @@
-class OuterUI{
+class OuterUI {
     constructor(){
         const buttonPanel = document.createElement("div");
         document.body.append(buttonPanel);
-        this.buttons = [];
+        this.buttons = []; // not even used
+        this.addAllButtons()
     };
 
-    addSaveButton(){
-        const saveButton = document.createElement("button");
-        saveButton.textContent = "Save Game"; 
-        saveButton.addEventListener("click", () => {
+    addTurnButton(){
+        const turnButton = document.createElement("button");
+        turnButton.textContent = "Next Turn";
+        turnButton.addEventListener("click", () => {
             //here
         })
-        document.body.append(saveButton);
-        this.buttons.push(saveButton);
-    }
-    addRestoreButton(){
-        const restoreButton = document.createElement("button");
-        restoreButton.textContent = "Restore Save"; 
-        restoreButton.addEventListener("click", () => {
-            //here
-        })
-        document.body.append(restoreButton);
-        this.buttons.push(restoreButton);
+        document.body.append(turnButton);
+        this.buttons.push(turnButton);
     }
     addDoButtons(){
         const doButtons = Array.from(
@@ -38,32 +30,41 @@ class OuterUI{
             this.buttons.push(button);
         })
     }
-    addTurnButton(){
-        const turnButton = document.createElement("button");
-        turnButton.textContent = "Next Turn";
-        turnButton.addEventListener("click", () => {
-            //here
-        })
-        document.body.append(turnButton);
-        this.buttons.push(turnButton);
-    }
-    addLocalClearButton(){
-        const clearButton = document.createElement("button");
-        clearButton.textContent = "Clear Local Storage";
-        clearButton.addEventListener("click", () => {
-            //here
-        })
-        document.body.append(clearButton);
-        this.buttons.push(clearButton);
-    }
+    // addSaveButton(){
+    //     const saveButton = document.createElement("button");
+    //     saveButton.textContent = "Save Game"; 
+    //     saveButton.addEventListener("click", () => {
+    //         //here
+    //     })
+    //     document.body.append(saveButton);
+    //     this.buttons.push(saveButton);
+    // }
+    // addLoadButton(){
+    //     const loadButton = document.createElement("button");
+    //     loadButton.textContent = "Load Save"; 
+    //     loadButton.addEventListener("click", () => {
+    //         //here
+    //     })
+    //     document.body.append(loadButton);
+    //     this.buttons.push(loadButton);
+    // }
+    // addLocalClearButton(){
+    //     const clearButton = document.createElement("button");
+    //     clearButton.textContent = "Clear Local Storage";
+    //     clearButton.addEventListener("click", () => {
+    //         localStorage.clear()
+    //     })
+    //     document.body.append(clearButton);
+    //     this.buttons.push(clearButton);
+    // }
     addAllButtons(){
         this.addTurnButton();
         this.addDoButtons();
-        this.addSaveButton();
-        this.addRestoreButton();
-        this.addLocalClearButton();
-        
+        // this.addSaveButton();
+        // this.addLoadButton();
+        // this.addLocalClearButton();
     }
+
     //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
     doFunction(button, undo){}
 }

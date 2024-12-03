@@ -1,6 +1,6 @@
 class Play extends Phaser.Scene {
     preload(){
-        this.load.image("player", "assets/Player_Character.png")
+        this.load.image("player", "assets/PlayerCharacter.png")
         this.load.image("grass", "assets/GrassV1.png")
 
         // flowers
@@ -22,12 +22,10 @@ class Play extends Phaser.Scene {
         this.scene.launch("uiScene")
         this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q) // testing
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) // save
-        this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O)//load
-        this.keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N) // Redo tmp button
+        this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O) //load
+        this.keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N) // Undo tmp button
         this.keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M) // Redo tmp button
         
-        
-
         this.gameObjects = this.add.group({
             runChildUpdate: true
         })
@@ -53,8 +51,8 @@ class Play extends Phaser.Scene {
             }
         })
 
-        // temp
-        localStorage.clear()
+        this.Load("save");
+        this.UpdateCellText();
     }
 
     update(time, delta){
@@ -76,10 +74,10 @@ class Play extends Phaser.Scene {
             this.UpdateCellText()
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
-            this.Test()
+            this.Save("save")
         }
         if(Phaser.Input.Keyboard.JustDown(this.keyO)){ // loading
-            this.Test2()
+            this.Load("save")
             this.UpdateCellText();
         }
 
@@ -114,9 +112,6 @@ class Play extends Phaser.Scene {
             
         }
     }
-    switchState(state) {
-        //somehow load the whole save state to the current
-    };
     
     createCell(x, y){
         const cell = new Cell(this, x, y, "grass");
@@ -147,18 +142,23 @@ class Play extends Phaser.Scene {
     CalculatePlayerCell(){
         // checks all cells the player is colliding with
         // If cell contains original cell, just use that otherwise take the first cell
-        let newCell = this.player.cell
-        for(let i = 0; i < this.checkCellList.length; i++){
-            if(i == 0){
-                newCell = this.checkCellList[0]
-            }
-            else if(this.checkCellList[i] == this.player.cell){
-                newCell = this.player.cell
-                break;
-            }
+        if(this.checkCellList.length == 0){
+            return null;
         }
-        this.checkCellList = []
-        return newCell
+        else{
+            let newCell = this.player.cell
+            for(let i = 0; i < this.checkCellList.length; i++){
+                if(i == 0){
+                    newCell = this.checkCellList[0]
+                }
+                else if(this.checkCellList[i] == this.player.cell){
+                    newCell = this.player.cell
+                    break;
+                }
+            }
+            this.checkCellList = []
+            return newCell
+        }
     }
 
     UpdateCellText() {
@@ -190,15 +190,24 @@ class Play extends Phaser.Scene {
     SetGridFromArrayBuffer(buffer) {
         const view = new DataView(buffer);
         let byteCount = 0
-        for(let i = 0; i < this.grid.length ; i++){
-            for(let j = 0; j < this.grid[i].length; j++){
-                this.grid[i][j].sun = view.getInt16(byteCount)
-                this.grid[i][j].water = view.getInt16(byteCount + 2)
-                if(this.grid[i][j].plant != null){
-                    this.grid[i][j].plant.type = view.getInt16(byteCount + 4)
-                    this.grid[i][j].plant.growth = view.getInt16(byteCount + 6)
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+                this.grid[i][j].sun = view.getInt16(byteCount);
+                this.grid[i][j].water = view.getInt16(byteCount + 2);
+                const plantType = view.getInt16(byteCount + 4);
+                const plantGrowth = view.getInt16(byteCount + 6);
+                if (plantType !== 0) {
+                    // Ensure plant is re-initialized
+                    if (!this.grid[i][j].plant || this.grid[i][j].plant.type !== plantType) {
+                        this.grid[i][j].Plant(plantType); // Re-plant
+                    }
+                    this.grid[i][j].plant.growth = plantGrowth;
+                    this.grid[i][j].plant.updatePlant();
+                } else {
+                    // Clear plant if no type
+                    this.grid[i][j].removePlant?.();
                 }
-                byteCount += 8
+                byteCount += 8; // Advance the data index
             }
         }
     }
@@ -248,34 +257,31 @@ class Play extends Phaser.Scene {
         return bytes.buffer;
     }
 
-    Save() { // saves cell info. Now need to figure out how to save player info
-        const gridBuffer = this.GetArrayBufferFromGrid()
-        const encode = this.arrayBufferToBase64(gridBuffer)
-        localStorage.setItem("save", encode)
-    }
-
-    Load() {
-        const save = localStorage.getItem("save")
-        if(save){
-            const gridBuffer = this.base64ToArrayBuffer(save)
-            this.SetGridFromArrayBuffer(gridBuffer)
-        }
-        else
-            alert("null save")
-    }
-
-    Test(){
+    Save(fileName) {
         const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
         const encode = this.arrayBufferToBase64(newBuffer)
-        localStorage.setItem("test", encode)
+        console.log(`Saving data to slot: ${fileName}`);
+        console.log(`Encoded data: ${encode}`);
+
+        try {
+            localStorage.setItem(fileName, encode);
+            console.log("Save successful.");
+        } catch (error) {
+            console.error("Save failed:", error);
+        }
     }
 
-    Test2(){
-        const decode = localStorage.getItem("test")
-        const buffer = this.base64ToArrayBuffer(decode)
-        const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
-        this.SetGridFromArrayBuffer(gridBuffer)
-        const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
-        this.SetPlayerFromArrayBuffer(playerBuffer)
+    Load(fileName) {
+        const save = localStorage.getItem(fileName)
+        if(save){
+            const buffer = this.base64ToArrayBuffer(save)
+            const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
+            this.SetGridFromArrayBuffer(gridBuffer)
+            const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
+            this.SetPlayerFromArrayBuffer(playerBuffer)
+        }
+        else{
+            alert("null save")
+        } 
     }
 }
