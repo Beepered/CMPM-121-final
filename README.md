@@ -34,5 +34,6 @@ Progress was slow because everyone was given other projects in other classes to 
 - F1[b]. a
 - F1[c]. a
 - F1[d]. Actions currently pushes copies of the game's state to an undo stack, and clears the redo stack. Pressing n pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redostack which allow the player to redo actions. 
+![pic](https://github.com/user-attachments/assets/034aaeb7-30a6-4674-a5a7-44c31485e6c8)
 
 ## Reflection
