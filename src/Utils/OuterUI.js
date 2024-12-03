@@ -30,39 +30,39 @@ class OuterUI {
             this.buttons.push(button);
         })
     }
-    addSaveButton(){
-        const saveButton = document.createElement("button");
-        saveButton.textContent = "Save Game"; 
-        saveButton.addEventListener("click", () => {
-            //here
-        })
-        document.body.append(saveButton);
-        this.buttons.push(saveButton);
-    }
-    addLoadButton(){
-        const loadButton = document.createElement("button");
-        loadButton.textContent = "Load Save"; 
-        loadButton.addEventListener("click", () => {
-            //here
-        })
-        document.body.append(loadButton);
-        this.buttons.push(loadButton);
-    }
-    addLocalClearButton(){
-        const clearButton = document.createElement("button");
-        clearButton.textContent = "Clear Local Storage";
-        clearButton.addEventListener("click", () => {
-            localStorage.clear()
-        })
-        document.body.append(clearButton);
-        this.buttons.push(clearButton);
-    }
+    // addSaveButton(){
+    //     const saveButton = document.createElement("button");
+    //     saveButton.textContent = "Save Game"; 
+    //     saveButton.addEventListener("click", () => {
+    //         //here
+    //     })
+    //     document.body.append(saveButton);
+    //     this.buttons.push(saveButton);
+    // }
+    // addLoadButton(){
+    //     const loadButton = document.createElement("button");
+    //     loadButton.textContent = "Load Save"; 
+    //     loadButton.addEventListener("click", () => {
+    //         //here
+    //     })
+    //     document.body.append(loadButton);
+    //     this.buttons.push(loadButton);
+    // }
+    // addLocalClearButton(){
+    //     const clearButton = document.createElement("button");
+    //     clearButton.textContent = "Clear Local Storage";
+    //     clearButton.addEventListener("click", () => {
+    //         localStorage.clear()
+    //     })
+    //     document.body.append(clearButton);
+    //     this.buttons.push(clearButton);
+    // }
     addAllButtons(){
         this.addTurnButton();
         this.addDoButtons();
-        this.addSaveButton();
-        this.addLoadButton();
-        this.addLocalClearButton();
+        // this.addSaveButton();
+        // this.addLoadButton();
+        // this.addLocalClearButton();
     }
 
     //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
