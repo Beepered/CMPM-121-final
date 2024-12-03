@@ -190,18 +190,24 @@ class Play extends Phaser.Scene {
     SetGridFromArrayBuffer(buffer) {
         const view = new DataView(buffer);
         let byteCount = 0
-        for(let i = 0; i < this.grid.length ; i++){
-            for(let j = 0; j < this.grid[i].length; j++){
-                this.grid[i][j].sun = view.getInt16(byteCount)
-                this.grid[i][j].water = view.getInt16(byteCount + 2)
-                const plantType = view.getInt16(byteCount + 4)
-                if(plantType != 0){
-                    const plantGrowth = view.getInt16(byteCount + 6)
-                    this.grid[i][j].Plant(plantType)
-                    this.grid[i][j].plant.growth = plantGrowth
-                    this.grid[i][j].plant.updatePlant()
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+                this.grid[i][j].sun = view.getInt16(byteCount);
+                this.grid[i][j].water = view.getInt16(byteCount + 2);
+                const plantType = view.getInt16(byteCount + 4);
+                const plantGrowth = view.getInt16(byteCount + 6);
+                if (plantType !== 0) {
+                    // Ensure plant is re-initialized
+                    if (!this.grid[i][j].plant || this.grid[i][j].plant.type !== plantType) {
+                        this.grid[i][j].Plant(plantType); // Re-plant
+                    }
+                    this.grid[i][j].plant.growth = plantGrowth;
+                    this.grid[i][j].plant.updatePlant();
+                } else {
+                    // Clear plant if no type
+                    this.grid[i][j].removePlant?.();
                 }
-                byteCount += 8
+                byteCount += 8; // Advance the data index
             }
         }
     }
