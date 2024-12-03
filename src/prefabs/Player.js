@@ -92,4 +92,18 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     setListeners() {
         this.emitter.on("next-turn", this.NextTurn.bind(this));
     }
+
+    serialize() {
+        return {
+            x: this.x,
+            y: this.y,
+            seeds: this.seeds,
+        };
+    }
+
+    deserialize(data) {
+        this.x = data.x;
+        this.y = data.y;
+        this.seeds = data.seeds;
+    }
 }
