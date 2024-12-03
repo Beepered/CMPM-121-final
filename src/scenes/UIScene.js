@@ -121,6 +121,7 @@ class UIScene extends Phaser.Scene {
         this.dropdownMenu.visible = !this.dropdownMenu.visible;
     }
 
+
     createDropdownMenu() {
 
         this.dropdownMenu = this.add.container(0, 0);
@@ -142,22 +143,74 @@ class UIScene extends Phaser.Scene {
     }
 
     showSlotWindow(action) {
-        const saves = Object.keys(localStorage); // Get all keys in localStorage
-        let yPos = 10; // Initial position for buttons
-        this.slotWindow.removeAll(); // Clear any previous slot buttons
+        // Close the dropdown menu when the slot window is opened
+        this.dropdownMenu.visible = false;
+    
+        // Clear previous slot buttons
+        this.slotWindow.removeAll(true);
+    
+        // Centralize the Slot Window
+        const x = this.cameras.main.width / 2;
+        const y = this.cameras.main.height / 2;
+    
+        // Add background rectangle
+        const bg = this.add.rectangle(0, 0, 300, 200, 0x222222).setOrigin(0.5);
+        this.slotWindow.add(bg);
+    
+        // Add title text
+        const titleText = this.add.text(0, -80, `${action.toUpperCase()} SLOTS`, {
+            fontSize: "20px",
+            color: "#fff",
+        }).setOrigin(0.5);
+        this.slotWindow.add(titleText);
 
-        saves.forEach((slotName) => {
-            const slotButton = this.add.text(10, yPos, slotName, { fontSize: '16px', color: '#ffffff' }).setInteractive();
-            slotButton.on("pointerdown", () => this.handleSlotAction(action, slotName));
-            this.slotWindow.add(slotButton);
-            yPos += 40; // Position next button
+        const slots = ["slot1", "slot2", "slot3"];
+        slots.forEach((slot) => {
+            if (!localStorage.getItem(slot)) {
+                localStorage.setItem(slot, "Empty slot");
+            }
         });
-    }
+    
+        // Retrieve slots from localStorage
+        let yPos = -30;
+    slots.forEach((slot, index) => {
+        
+        const slotText = this.add.text(0, yPos, slot, {
+            fontSize: "18px",
+            color: "#fff",
+            backgroundColor: "#333",
+            padding: { x: 10, y: 5 },
+        }).setOrigin(0.5).setInteractive();
+
+        // Add interaction for the slot
+        slotText.on("pointerdown", () => this.handleSlotAction(action, slot, slotText));
+
+        this.slotWindow.add(slotText);
+        yPos += 40; // Move next button down
+    });
+
+    // Add a Close Button
+    const closeButton = this.add.text(0, 80, "Close", {
+        fontSize: "18px",
+        backgroundColor: "#cc0000",
+        color: "#fff",
+        padding: { x: 10, y: 5 },
+    }).setOrigin(0.5).setInteractive();
+
+    closeButton.on("pointerdown", () => this.slotWindow.removeAll(true));
+
+    this.slotWindow.add(closeButton);
+
+    // Position the slot window in the center of the screen
+    this.slotWindow.setPosition(x, y);
+    this.slotWindow.setVisible(true);
+}
 
     handleSlotAction(action, slot) {
         const playScene = this.scene.get("playScene");
         switch (action) {
             case "save":
+                console.log(`Attempting to save game slot: ${slot}`);
                 playScene.Save(slot); // Calls Play.js `Save` method
                 break;
             case "load":

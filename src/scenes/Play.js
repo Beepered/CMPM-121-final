@@ -254,7 +254,15 @@ class Play extends Phaser.Scene {
     Save(fileName) {
         const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
         const encode = this.arrayBufferToBase64(newBuffer)
-        localStorage.setItem(fileName, encode)
+        console.log(`Saving data to slot: ${fileName}`);
+        console.log(`Encoded data: ${encode}`);
+
+        try {
+            localStorage.setItem(fileName, encode);
+            console.log("Save successful.");
+        } catch (error) {
+            console.error("Save failed:", error);
+        }
     }
 
     Load(fileName) {
