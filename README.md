@@ -23,16 +23,16 @@ Progress was slow because everyone was given other projects in other classes to 
 
 ## Log 3 - Dec 3 2024
 ### How we satisfied the software requirements
-F0[a]. Player moves along a 3x3 grid of cells
-F0[b]. Pressing Q advances time
-F0[c]. Pressing space allows the player to plant/reap on cells
-F0[d]. Water is accumulated over turns while sunlight changes every turn
-F0[e]. Players randomly plant one of three plants which have threee levels of growth including freshly planted and fully grown
-F0[f]. Reaching certain water/sun levels allows the plant to grow in between turns
-F0[g]. The game is currently won when 3 plants are fully grown
-F1[a]. a
-F1[b]. a
-F1[c]. a
-F1[d]. Actions currently pushes copies of the game's state to an undo stack, and clears the redo stack. Pressing n pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redostack which allow the player to redo actions. 
+- F0[a]. Player moves along a 3x3 grid of cells
+- F0[b]. Pressing Q advances time
+- F0[c]. Pressing space allows the player to plant/reap on cells
+- F0[d]. Water is accumulated over turns while sunlight changes every turn
+- F0[e]. Players randomly plant one of three plants which have threee levels of growth including freshly planted and fully grown
+- F0[f]. Reaching certain water/sun levels allows the plant to grow in between turns
+- F0[g]. The game is currently won when 3 plants are fully grown
+- F1[a]. a
+- F1[b]. a
+- F1[c]. a
+- F1[d]. Actions currently pushes copies of the game's state to an undo stack, and clears the redo stack. Pressing n pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redostack which allow the player to redo actions. 
 
 ## Reflection
