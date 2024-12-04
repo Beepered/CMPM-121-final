@@ -4,7 +4,7 @@ class OuterUI {
         const buttonPanel = document.createElement("div");
         document.body.append(buttonPanel);
         this.buttons = []; // not even used
-        this.addAllButtons()
+        //this.addAllButtons()
     };
 
     addTurnButton(){

@@ -16,6 +16,8 @@ class Play extends Phaser.Scene {
 
         this.XTiles = 3;
         this.YTiles = 3;
+
+        this.addAllButtons();
     }
 
     create(){
@@ -283,5 +285,73 @@ class Play extends Phaser.Scene {
         else{
             alert("null save")
         } 
+    }
+
+    addTurnButton(){
+        const turnButton = document.createElement("button");
+        turnButton.textContent = "Next Turn";
+        turnButton.addEventListener("click", () => {
+            const prevState = new stateInfo();
+            prevState.setPlayerInfo(this.player.x, this.player.y)
+            prevState.setCellBuffer(this.GetArrayBufferFromGrid());
+            this.emitter.emit("next-turn");
+            this.gameStateManager.gameStateChange(prevState);
+
+            this.UpdateCellText()
+        })
+        document.body.append(turnButton);
+        //this.buttons.push(turnButton);
+    }
+    addDoButtons(){
+        const doButtons = Array.from(
+            { length: 2 },
+            () => document.createElement("button"),
+        );
+        const buttonTxt = ["undo", "redo"];
+        doButtons.forEach((button, i) => {
+            button.innerHTML = `${buttonTxt[i]}`;
+            button.addEventListener("click", () => {
+                this.doFunction(button, i == 0); //function needs to be filled
+            })
+            document.body.append(button);
+            //this.buttons.push(button);
+        })
+    }
+    addAllButtons(){
+        this.addTurnButton();
+        this.addDoButtons();
+    }
+
+    //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
+    doFunction(button, undo){
+        if(undo){
+            const prevState = this.gameStateManager.undo();
+            
+            if([prevState]){
+                if(prevState.playerInfo){
+                    this.player.x = prevState.playerInfo.playerX;
+                    this.player.y = prevState.playerInfo.playerY;
+                }
+                if(prevState.cellBuffer){
+                    this.SetGridFromArrayBuffer(prevState.cellBuffer);
+                }
+                this.emitter.emit("undo"); //make later
+            }
+            this.UpdateCellText();
+            
+        }else{
+            const nextState = this.gameStateManager.redo();
+            if(nextState){
+                if(nextState.playerInfo){
+                    this.player.x = nextState.playerInfo.playerX;
+                    this.player.y = nextState.playerInfo.playerY;
+                }
+                if(nextState.cellBuffer){
+                    this.SetGridFromArrayBuffer(nextState.cellBuffer);
+                }
+                this.emitter.emit("redo");//make later
+            }
+            this.UpdateCellText();
+        }
     }
 }
