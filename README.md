@@ -24,7 +24,7 @@ Progress was slow because everyone was given other projects in other classes to 
 ## Log 3 - Dec 3 2024
 ### How we satisfied the software requirements
 - F0[a]. Player moves along a 3x3 grid of cells
-- F0[b]. Pressing "Q" advances time
+- F0[b]. Pressing "NewTurn" advances time
 - F0[c]. Pressing "SPACE" allows the player to take an action when on a cell. Planting if there isn't a plant and reaping if there is a plant and the plant is fully grown.
 - F0[d]. Water is accumulated over turns to a max of 10 while sunlight changes between 1 - 10 every turn.
 - F0[e]. Players randomly plant one of three plants which have three levels of growth including freshly planted and fully grown
@@ -37,7 +37,7 @@ Progress was slow because everyone was given other projects in other classes to 
   - To load: First checks if a save exists and if so, gets the encoded save. Decode the save into 1 byte-array and split it into 2 based on the amount of bytes for the grid and bytes for the player. For the grid byte-array, a pointer is created and loops through the byte-array and sets the cell's water, sun, plant type, and plant growth. For the player byte-array, a pointer is created and loops through the byte-array and sets the player's x position, y position, and number of seeds.
 - F1[b]. By pressing the menu button in the top left with the mouse, users are able to save, load, and delete save states. 
 - F1[c]. Game automatically saves between each turn. When starting the game, users are asked whether they would like to attempt to load the autosave. 
-- F1[d]. Actions currently push copies of the game's state to an undo stack, and clears the redo stack. Pressing "n" pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redo stack which allow the player to redo actions. 
+- F1[d]. Actions currently push copies of the game's state to an undo stack, and clears the redo stack. Pressing "Undo" pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redo stack which allow the player to redo actions.  Pressing "redo" pops off the redo stack and also into the undostack. 
 
 
 ## Reflection
