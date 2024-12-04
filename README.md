@@ -35,7 +35,7 @@ Progress was slow because everyone was given other projects in other classes to 
   - To save: A byte-array is created for the grid and a pointer is created. The pointer loops through the byte-array and adds each cell's water, sun, plant type, and plant growth. Another byte is created for the player and a pointer loops through it adding the player's x position, y position, and number of seeds. Then both byte-arrays are combined into 1, encoded, then saved in local storage.
   - To load: First checks if a save exists and if so, gets the encoded save. Decode the save into 1 byte-array and split it into 2 based on the amount of bytes for the grid and bytes for the player. For the grid byte-array, a pointer is created and loops through the byte-array and sets the cell's water, sun, plant type, and plant growth. For the player byte-array, a pointer is created and loops through the byte-array and sets the player's x position, y position, and number of seeds.
 - F1[b]. By pressing the menu button in the top left with the mouse, users are able to save, load, and delete save states. 
-- F1[c]. 
+- F1[c]. Game automatically saves between each turn. When starting the game, users are asked whether they would like to attempt to load the autosave. 
 - F1[d]. Actions currently push copies of the game's state to an undo stack, and clears the redo stack. Pressing "n" pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redo stack which allow the player to redo actions. 
 
 
