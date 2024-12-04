@@ -4,7 +4,6 @@ class SaveManager {
   static emitter = EventDispatcher.getInstance();
 
   constructor() {
-    // this.emitter = EventDispatcher.getInstance();
 
     this.initializeSlots();
 

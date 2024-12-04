@@ -209,7 +209,6 @@ class Play extends Phaser.Scene {
         this.player.x = view.getInt16(0);
         this.player.y = view.getInt16(2);
         this.player.seeds = view.getInt16(4);
-        return buffer
     }
 
     appendBuffer = function(buffer1, buffer2) {

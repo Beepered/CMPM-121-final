@@ -2,12 +2,10 @@ class UIScene extends Phaser.Scene {
   constructor() {
     super("uiScene");
     this.emitter = EventDispatcher.getInstance();
-    this.setListeners();
+    //this.setListeners();
 
     this.seeds = 3;
     this.winCon = 3;
-
-    this.turnsTaken = 0;
   }
 
   create() {
@@ -17,13 +15,6 @@ class UIScene extends Phaser.Scene {
       `Seeds: ${this.seeds}`,
       { fontSize: "20px" }
     );
-    this.turnsText = this.add.text(
-      gameWidth / 12,
-      gameHeight / 7,
-      `Turns: ${this.turnsTaken}`,
-      { fontSize: "20px" }
-    );
-
     this.endText = this.add
       .text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, {
         fontSize: "60px",
@@ -91,7 +82,6 @@ class UIScene extends Phaser.Scene {
   }
 
   showSlotWindow(action) {
-    console.log(`Action triggered: ${action}`);
     this.dropdownMenu.setVisible(false);
 
     // Remove any existing slot window
@@ -120,16 +110,12 @@ class UIScene extends Phaser.Scene {
 
     const filteredSlots = slots.filter((slot) => {
       if (action === "save") return true; // Show all slots for saving
-      return saves[slot] !== "Empty Slot"; // Only show filled slots for load/delete
+      return saves[slot]; // Only show filled slots for load/delete
     });
     console.log("Filtered slots for display:", filteredSlots);
 
     if (filteredSlots.length === 0) {
-      const emptyText = this.add.text(0, -30, "No save slots found.", {
-          fontSize: "18px",
-          color: "#fff",
-        })
-        .setOrigin(0.5);
+      const emptyText = this.add.text(0, -30, "No save slots found.", {fontSize: "18px",color: "#fff",}).setOrigin(0.5);
 
       this.slotWindow.add([bg, title, emptyText]);
       console.log("No slots to display. Showing 'No save slots found.'");
@@ -138,8 +124,7 @@ class UIScene extends Phaser.Scene {
       let yOffset = -30;
       filteredSlots.forEach((slot) => {
         console.log(`Rendering slot: ${slot}, Data: ${saves[slot]}`);
-        const slotText =
-          saves[slot] === "Empty Slot" ? `${slot} (Empty)` : slot;
+        const slotText = saves[slot] === "Empty Slot" ? `${slot} (Empty)` : slot;
 
         const slotButton = this.add.text(0, yOffset, slotText, {
             fontSize: "18px",
@@ -173,7 +158,7 @@ class UIScene extends Phaser.Scene {
 
     this.slotWindow.add([bg, title, closeButton]);
   }
-
+  
   handleSlotAction(action, slot) {
     const saves = SaveManager.getallSaves();
 
@@ -185,13 +170,11 @@ class UIScene extends Phaser.Scene {
         ) {
           const gameState = this.getCurrentGameState();
           SaveManager.saveGame(slot, gameState);
-          console.log(`Game saved in ${slot}`);
         }
         break;
       case "load":
         if (saves[slot] !== "Empty Slot") {
           SaveManager.loadGame(slot);
-          console.log(`Game loaded from ${slot}`);
         }
         break;
       case "delete":
@@ -204,24 +187,21 @@ class UIScene extends Phaser.Scene {
         }
         break;
     }
-    console.log(`${action} executed on ${slot}`);
     if (this.slotWindow) {
       this.slotWindow.destroy();
     }
   }
-
+  
   getCurrentGameState() {
     return {
       player: this.scene.get("playScene").player.serialize(),
       grid: this.scene
         .get("playScene")
         .grid.map((row) => row.map((cell) => cell.serialize())),
-      turnsTaken: this.turnsTaken,
       seeds: this.seeds,
     };
   }
 
-  // absolutely terrible way to do this
   setListeners() {
     this.emitter.on("next-turn", this.NextTurn.bind(this));
     this.emitter.on("plant", this.Plant.bind(this));
@@ -231,9 +211,7 @@ class UIScene extends Phaser.Scene {
 
   NextTurn() {
     this.seeds = 3;
-    this.turnsTaken++;
     this.seedText.text = `Seeds: ${this.seeds}`;
-    this.turnsText.text = `Turns: ${this.turnsTaken}`;
   }
 
   Plant() {
@@ -243,16 +221,6 @@ class UIScene extends Phaser.Scene {
 
   endGame() {
     this.endText.visible = true;
-    /* // Brendan: not sure what this does but commented out
-        const scenes = this.scene.manager.getScenes(true); 
-        scenes.forEach(scene => {
-            if (scene.scene.key !== "creditScene") {
-                this.scene.stop(scene.scene.key); 
-            }
-        });
-    
-        this.scene.start("creditScene");
-        */
   }
 
   winCon() {
