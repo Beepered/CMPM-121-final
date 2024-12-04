@@ -16,6 +16,8 @@ class Play extends Phaser.Scene {
 
         this.XTiles = 3;
         this.YTiles = 3;
+
+        this.addAllButtons();
     }
 
     create(){
@@ -287,5 +289,64 @@ class Play extends Phaser.Scene {
         else{
             alert("null save")
         } 
+    }
+
+    addTurnButton(){
+        const turnButton = document.createElement("button");
+        turnButton.textContent = "Next Turn";
+        turnButton.addEventListener("click", () => {
+            const prevState = new stateInfo();
+            prevState.setPlayerInfo(this.player.x, this.player.y)
+            prevState.setCellBuffer(this.GetArrayBufferFromGrid());
+            this.emitter.emit("next-turn");
+            this.gameStateManager.gameStateChange(prevState);
+
+            this.UpdateCellText()
+        })
+        document.body.append(turnButton);
+        //this.buttons.push(turnButton);
+    }
+    addDoButtons(){
+        const doButtons = Array.from(
+            { length: 2 },
+            () => document.createElement("button"),
+        );
+        const buttonTxt = ["undo", "redo"];
+        doButtons.forEach((button, i) => {
+            button.innerHTML = `${buttonTxt[i]}`;
+            button.addEventListener("click", () => {
+                this.doFunction(button, i == 0); //function needs to be filled
+            })
+            document.body.append(button);
+            //this.buttons.push(button);
+        })
+    }
+    addAllButtons(){
+        this.addTurnButton();
+        this.addDoButtons();
+    }
+
+    //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
+    doFunction(button, undo){
+        let state;
+        let emitTxt;
+        if(undo){
+            state = this.gameStateManager.undo();
+            emitTxt = "undo";
+        }else{
+            state = this.gameStateManager.redo();
+            emitTxt = "redo";
+        }
+        if(state){
+            if(state.playerInfo){
+                this.player.x = state.playerInfo.playerX;
+                this.player.y = state.playerInfo.playerY;
+            }
+            if(state.cellBuffer){
+                this.SetGridFromArrayBuffer(state.cellBuffer);
+            }
+            this.emitter.emit(emitTxt);//make later
+        }
+        this.UpdateCellText();
     }
 }
