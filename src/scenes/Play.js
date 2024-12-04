@@ -84,7 +84,7 @@ class Play extends Phaser.Scene {
         if(Phaser.Input.Keyboard.JustDown(this.keyN)){ //Undo Btn
             const prevState = this.gameStateManager.undo();
             
-            if([prevState]){
+            if(prevState){
                 if(prevState.playerInfo){
                     this.player.x = prevState.playerInfo.playerX;
                     this.player.y = prevState.playerInfo.playerY;
