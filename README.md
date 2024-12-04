@@ -30,10 +30,11 @@ Progress was slow because everyone was given other projects in other classes to 
 - F0[e]. Players randomly plant one of three plants which have threee levels of growth including freshly planted and fully grown
 - F0[f]. Reaching certain water/sun levels allows the plant to grow in between turns
 - F0[g]. The game is currently won when 3 plants are fully grown
-- F1[a]. a
-- F1[b]. a
-- F1[c]. a
+- F1[a]. ![pic](https://github.com/user-attachments/assets/034aaeb7-30a6-4674-a5a7-44c31485e6c8)
+- F1[b]. By pressing the menu button in the top left with the mouse, users are able to save, load, and delete save states. 
+- F1[c]. 
 - F1[d]. Actions currently pushes copies of the game's state to an undo stack, and clears the redo stack. Pressing n pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redostack which allow the player to redo actions. 
-![pic](https://github.com/user-attachments/assets/034aaeb7-30a6-4674-a5a7-44c31485e6c8)
+
 
 ## Reflection
+  With various members traveling for Thanksgiving along with having other responsibilities come up, our F1 development came along very slowly. We have remained consistent in our use of phaser alongside javascript. Our role structure hasn't stuck very much and we are just coding to try to meet deadlines. On top of the software requirements, we have implemented clickable buttons to replace keybinds for saving,loading, undoing, redoing, and progressing turns. After initially having them to random keys on the keyboard we switched to buttons to make the program usable for new users. 
