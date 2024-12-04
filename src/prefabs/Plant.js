@@ -2,13 +2,13 @@ class Plant extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y, type = 0){
         let texture;
         switch(type){
-            case(0):
+            case(1):
                 texture = "pink"
                 break;
-            case(1):
+            case(2):
                 texture = "purple"
                 break;
-            case(2):
+            case(3):
                 texture = "red"
                 break;
             default:
