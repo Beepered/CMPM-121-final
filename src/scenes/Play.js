@@ -324,34 +324,25 @@ class Play extends Phaser.Scene {
 
     //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
     doFunction(button, undo){
+        let state;
+        let emitTxt;
         if(undo){
-            const prevState = this.gameStateManager.undo();
-            
-            if([prevState]){
-                if(prevState.playerInfo){
-                    this.player.x = prevState.playerInfo.playerX;
-                    this.player.y = prevState.playerInfo.playerY;
-                }
-                if(prevState.cellBuffer){
-                    this.SetGridFromArrayBuffer(prevState.cellBuffer);
-                }
-                this.emitter.emit("undo"); //make later
-            }
-            this.UpdateCellText();
-            
+            state = this.gameStateManager.undo();
+            emitTxt = "undo";
         }else{
-            const nextState = this.gameStateManager.redo();
-            if(nextState){
-                if(nextState.playerInfo){
-                    this.player.x = nextState.playerInfo.playerX;
-                    this.player.y = nextState.playerInfo.playerY;
-                }
-                if(nextState.cellBuffer){
-                    this.SetGridFromArrayBuffer(nextState.cellBuffer);
-                }
-                this.emitter.emit("redo");//make later
-            }
-            this.UpdateCellText();
+            state = this.gameStateManager.redo();
+            emitTxt = "redo";
         }
+        if(state){
+            if(state.playerInfo){
+                this.player.x = state.playerInfo.playerX;
+                this.player.y = state.playerInfo.playerY;
+            }
+            if(state.cellBuffer){
+                this.SetGridFromArrayBuffer(state.cellBuffer);
+            }
+            this.emitter.emit(emitTxt);//make later
+        }
+        this.UpdateCellText();
     }
 }
