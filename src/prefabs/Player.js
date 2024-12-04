@@ -76,7 +76,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Plant(type) { // we can use "type" later when we store seeds but right now just using a random seed
-        const randSeed = Math.floor(Math.random() * 3) + 0;
+        const randSeed = Math.floor(Math.random() * 3) + 1;
         this.cell.Plant(randSeed)
     }
 

@@ -16,15 +16,12 @@ class Play extends Phaser.Scene {
 
         this.XTiles = 3;
         this.YTiles = 3;
+
+        this.addAllButtons();
     }
 
     create(){
         this.scene.launch("uiScene")
-        this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q) // testing
-        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E) // save
-        this.keyO = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O) //load
-        this.keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N) // Undo tmp button
-        this.keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M) // Redo tmp button
         
         this.gameObjects = this.add.group({
             runChildUpdate: true
@@ -50,8 +47,10 @@ class Play extends Phaser.Scene {
                 this.checkCellList.push(cell)
             }
         })
-
-        this.Load("save");
+        let autoConfirm = confirm("Attempt to load Autosave?");
+        if(autoConfirm){
+            this.Load("autosave");
+        }
         this.UpdateCellText();
     }
 
@@ -63,53 +62,6 @@ class Play extends Phaser.Scene {
                 this.player.cell = this.CalculatePlayerCell();
             }
             this.checkCellTime = 0.02;
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keyQ)){ // test button
-            const prevState = new stateInfo();
-            prevState.setPlayerInfo(this.player.x, this.player.y)
-            prevState.setCellBuffer(this.GetArrayBufferFromGrid());
-            this.emitter.emit("next-turn");
-            this.gameStateManager.gameStateChange(prevState);
-
-            this.UpdateCellText()
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keyE)){ // saving
-            this.Save("save")
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keyO)){ // loading
-            this.Load("save")
-            this.UpdateCellText();
-        }
-
-        if(Phaser.Input.Keyboard.JustDown(this.keyN)){ //Undo Btn
-            const prevState = this.gameStateManager.undo();
-            
-            if([prevState]){
-                if(prevState.playerInfo){
-                    this.player.x = prevState.playerInfo.playerX;
-                    this.player.y = prevState.playerInfo.playerY;
-                }
-                if(prevState.cellBuffer){
-                    this.SetGridFromArrayBuffer(prevState.cellBuffer);
-                }
-                this.emitter.emit("undo"); //make later
-            }
-            this.UpdateCellText();
-        }
-        if(Phaser.Input.Keyboard.JustDown(this.keyM)){ //Redo Btn
-            const nextState = this.gameStateManager.redo();
-            if(nextState){
-                if(nextState.playerInfo){
-                    this.player.x = nextState.playerInfo.playerX;
-                    this.player.y = nextState.playerInfo.playerY;
-                }
-                if(nextState.cellBuffer){
-                    this.SetGridFromArrayBuffer(nextState.cellBuffer);
-                }
-                this.emitter.emit("redo");//make later
-            }
-            this.UpdateCellText();
-            
         }
     }
     
@@ -162,6 +114,7 @@ class Play extends Phaser.Scene {
     }
 
     UpdateCellText() {
+        console.log("updatecell")
         for(let i = 0; i < this.grid.length ; i++){
             for(let j = 0; j < this.grid[i].length; j++){
                 this.grid[i][j].updateText();
@@ -286,5 +239,66 @@ class Play extends Phaser.Scene {
 
     ParseData(){
         FetchData()
+    }
+
+    addTurnButton(){
+        const turnButton = document.createElement("button");
+        turnButton.textContent = "Next Turn";
+        turnButton.addEventListener("click", () => {
+            const prevState = new stateInfo();
+            this.Save("autosave")
+            prevState.setPlayerInfo(this.player.x, this.player.y)
+            prevState.setCellBuffer(this.GetArrayBufferFromGrid());
+            this.emitter.emit("next-turn");
+            this.gameStateManager.gameStateChange(prevState);
+
+            this.UpdateCellText()
+        })
+        document.body.append(turnButton);
+        //this.buttons.push(turnButton);
+    }
+    addDoButtons(){
+        const doButtons = Array.from(
+            { length: 2 },
+            () => document.createElement("button"),
+        );
+        const buttonTxt = ["undo", "redo"];
+        doButtons.forEach((button, i) => {
+            button.innerHTML = `${buttonTxt[i]}`;
+            button.addEventListener("click", () => {
+                this.doFunction(button, i == 0); //function needs to be filled
+            })
+            document.body.append(button);
+            //this.buttons.push(button);
+        })
+    }
+    addAllButtons(){
+        this.addTurnButton();
+        this.addDoButtons();
+    }
+
+    //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
+    doFunction(button, undo){
+        let state;
+        let emitTxt;
+        this.Save("autosave")
+        if(undo){
+            state = this.gameStateManager.undo();
+            emitTxt = "undo";
+        }else{
+            state = this.gameStateManager.redo();
+            emitTxt = "redo";
+        }
+        if(state){
+            if(state.playerInfo){
+                this.player.x = state.playerInfo.playerX;
+                this.player.y = state.playerInfo.playerY;
+            }
+            if(state.cellBuffer){
+                this.SetGridFromArrayBuffer(state.cellBuffer);
+            }
+            this.emitter.emit(emitTxt);
+        }
+        this.UpdateCellText();
     }
 }

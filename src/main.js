@@ -16,5 +16,4 @@ let game = new Phaser.Game(config);
 let gameHeight = game.config.height
 let gameWidth = game.config.width
 
-let OUI = new OuterUI();
-let DF = new DataFetcher();
+//let OUI = new OuterUI();

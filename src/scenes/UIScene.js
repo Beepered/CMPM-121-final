@@ -38,12 +38,6 @@ class UIScene extends Phaser.Scene {
     // Create the dropdown menu
     this.createDropdownMenu();
 
-    this.input.on("pointerdown", (pointer) => {
-        if (!this.mainButtonBounds.contains(pointer.x, pointer.y)) {
-          this.dropdownMenu.setVisible(false);
-        }
-      });
-
     }
     
     // absolutely terrible way to do this
@@ -100,6 +94,7 @@ class UIScene extends Phaser.Scene {
     }
 
     endGame() {
+        this.create();
         this.endText.visible = true
     }
 
@@ -228,6 +223,7 @@ class UIScene extends Phaser.Scene {
             case "load":
                 console.log(`Loading from slot: ${slot}`);
                 playScene.Load(slot); // Perform the load
+                playScene.UpdateCellText();
                 break;
     
             case "delete":
