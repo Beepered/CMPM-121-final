@@ -30,7 +30,8 @@ Progress was slow because everyone was given other projects in other classes to 
 - F0[e]. Players randomly plant one of three plants which have three levels of growth including freshly planted and fully grown
 - F0[f]. Reaching certain water/sun levels allows the plant to grow in between turns
 - F0[g]. The game is currently won when 3 plants are fully grown
-- F1[a]. ![pic](https://github.com/user-attachments/assets/034aaeb7-30a6-4674-a5a7-44c31485e6c8)
+- F1[a]. Saving and Loading:
+![pic](https://github.com/user-attachments/assets/034aaeb7-30a6-4674-a5a7-44c31485e6c8)
   - We used an array-of-structures approach to saving the game state.
   - To save: A byte-array is created for the grid and a pointer is created. The pointer loops through the byte-array and adds each cell's water, sun, plant type, and plant growth. Another byte is created for the player and a pointer loops through it adding the player's x position, y position, and number of seeds. Then both byte-arrays are combined into 1, encoded, then saved in local storage.
   - To load: First checks if a save exists and if so, gets the encoded save. Decode the save into 1 byte-array and split it into 2 based on the amount of bytes for the grid and bytes for the player. For the grid byte-array, a pointer is created and loops through the byte-array and sets the cell's water, sun, plant type, and plant growth. For the player byte-array, a pointer is created and loops through the byte-array and sets the player's x position, y position, and number of seeds.
