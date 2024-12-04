@@ -1,232 +1,242 @@
 class UIScene extends Phaser.Scene {
-  constructor() {
-    super("uiScene");
-    this.emitter = EventDispatcher.getInstance();
-    //this.setListeners();
+    constructor(){
+        super("uiScene")
+        this.emitter = EventDispatcher.getInstance();
+        this.setListeners();
 
-    this.seeds = 3;
-    this.winCon = 3;
-  }
+        this.seeds = 3;
+        this.winCon = 3;
 
-  create() {
-    this.seedText = this.add.text(
-      gameWidth / 12,
-      gameHeight / 12,
-      `Seeds: ${this.seeds}`,
-      { fontSize: "20px" }
-    );
-    this.endText = this.add
-      .text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, {
-        fontSize: "60px",
-      })
-      .setOrigin(0.5, 0.5);
-    this.endText.visible = false;
+        this.historyStack =[];
+        this.redoStack = [];
+    }
 
-    this.mainButton = this.add
-      .text(700, 10, "Menu", {
-        fontSize: "16px",
-        backgroundColor: "#555",
-        color: "#fff",
-        padding: { x: 10, y: 5 },
-      })
-      .setOrigin(-0.25, 0) // Align to the top-right corner
-      .setInteractive();
+    create (){
+        this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
 
-    // Dropdown menu (hidden by default)
-    this.dropdownMenu = this.add.container(670, 30).setVisible(false);
+        this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
+        this.endText.visible = false
+        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+
+        this.createDropdownMenu();
+        this.slotWindow = this.add.container(0, 0);
+
+        this.dropdownToggle = this.add.text(800, 10, "Menu", { fontSize: '16px', color: '#123456' }).setInteractive();
+    this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
+
+    // Position the button dynamically
+    this.dropdownToggle.setScrollFactor(0);
+    this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
+
+    // Handle resizing
+    this.scale.on('resize', (gameSize) => {
+        const { width, height } = gameSize;
+        this.cameras.main.setSize(width, height); // Resize the camera
+        this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 10, 10);
+    });
+
+    // Create the dropdown menu
     this.createDropdownMenu();
 
-    // Close dropdown if clicked outside
     this.input.on("pointerdown", (pointer) => {
-      if (!this.mainButton.getBounds().contains(pointer.x, pointer.y)) {
-        this.dropdownMenu.setVisible(false);
-      }
-    });
+        if (!this.mainButtonBounds.contains(pointer.x, pointer.y)) {
+          this.dropdownMenu.setVisible(false);
+        }
+      });
 
-    this.mainButton.on("pointerdown", () => {
-      this.dropdownMenu.setVisible(!this.dropdownMenu.visible);
-    });
-  }
-
-  createDropdownMenu() {
-    const dropdownBg = this.add
-      .rectangle(0, 0, 150, 100, 0x0000ff)
-      .setOrigin(0);
-
-    const saveButton = this.add
-      .text(45, 10, "Save", {
-        fontSize: "16px",
-        color: "#fff",
-      })
-      .setInteractive();
-
-    const loadButton = this.add
-      .text(45, 40, "Load", {
-        fontSize: "16px",
-        color: "#fff",
-      })
-      .setInteractive();
-
-    const deleteButton = this.add
-      .text(37, 70, "Delete", {
-        fontSize: "16px",
-        color: "#fff",
-      })
-      .setInteractive();
-
-    saveButton.on("pointerdown", () => this.showSlotWindow("save"));
-    loadButton.on("pointerdown", () => this.showSlotWindow("load"));
-    deleteButton.on("pointerdown", () => this.showSlotWindow("delete"));
-
-    this.dropdownMenu.add([dropdownBg, saveButton, loadButton, deleteButton]);
-  }
-
-  showSlotWindow(action) {
-    this.dropdownMenu.setVisible(false);
-
-    // Remove any existing slot window
-    if (this.slotWindow) {
-      this.slotWindow.destroy();
-      console.log("Existing slot window destroyed.");
+    }
+    
+    // absolutely terrible way to do this
+    setListeners() {
+        this.emitter.on("next-turn", this.NextTurn.bind(this));
+        this.emitter.on("plant", this.Plant.bind(this));
+        this.emitter.on("reap", this.Reap.bind(this));
+        this.emitter.on("end-game", this.endGame.bind(this));
+        this.emitter.on("fully-grown", this.winCon.bind(this));
+        this.emitter.on("undo", this.undo.bind(this));
+        this.emitter.on("redo", this.redo.bind(this));
     }
 
-    // Create slot window container
-    this.slotWindow = this.add.container(400, 200); // Center the save window
-    const bg = this.add.rectangle(0, 0, 300, 200, 0x222222).setOrigin(0.5);
-    bg.setDepth(0);
-    this.slotWindow.add(bg);
-    const title = this.add.text(0, -80, `${action.toUpperCase()} SLOTS`, {
-        fontSize: "20px",
-        color: "#fff",
-      })
-      .setOrigin(0.5)
-      .setDepth(1);
+    NextTurn(){
+        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+        this.seeds = 3;
+    
+        this.updateUI();
+    }
 
-    // Display slots based on action
-    const saves = SaveManager.getallSaves(); // Retrieve save data
-    console.log("All saves fetched for display:", saves);
-    const slots = Object.keys(saves); // Extract slot names
-    console.log("Slot names extracted:", slots);
+    Plant(){
+       // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+        this.seeds--;
+        this.redoStack = [];
+        
+        this.updateUI();
+    }
 
-    const filteredSlots = slots.filter((slot) => {
-      if (action === "save") return true; // Show all slots for saving
-      return saves[slot]; // Only show filled slots for load/delete
-    });
-    console.log("Filtered slots for display:", filteredSlots);
+    Reap(){
+       // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+        this.redoStack = [];
+    }
 
-    if (filteredSlots.length === 0) {
-      const emptyText = this.add.text(0, -30, "No save slots found.", {fontSize: "18px",color: "#fff",}).setOrigin(0.5);
+    undo(){
+        if(this.historyStack.length > 0){
+            this.redoStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+            const prevState = this.historyStack.pop();
+            this.seeds = prevState.seeds;
+            this.turnsTaken = prevState.turnsTaken;
 
-      this.slotWindow.add([bg, title, emptyText]);
-      console.log("No slots to display. Showing 'No save slots found.'");
-    } else {
-      // Display slots based on action
-      let yOffset = -30;
-      filteredSlots.forEach((slot) => {
-        console.log(`Rendering slot: ${slot}, Data: ${saves[slot]}`);
-        const slotText = saves[slot] === "Empty Slot" ? `${slot} (Empty)` : slot;
+            this.updateUI();
+        }
+    }
+    
+    redo(){
+        if (this.redoStack.length > 0) {
+            this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+            const nextState = this.redoStack.pop();
+            this.seeds = nextState.seeds;
+            this.turnsTaken = nextState.turnsTaken;
 
-        const slotButton = this.add.text(0, yOffset, slotText, {
+            this.updateUI();
+        }
+    }
+
+    endGame() {
+        this.endText.visible = true
+    }
+
+    winCon(){
+        this.winCon--;
+        if(this.winCon <= 0){
+            this.emitter.emit("end-game");
+        }
+    }
+
+    updateUI(){
+        this.seedText.text = `Seeds: ${this.seeds}`
+    }
+
+    toggleDropdownMenu() {
+        const menuButtonBounds = this.dropdownToggle.getBounds();
+
+        // Set the position of the dropdown menu to open below the button
+        this.dropdownMenu.setPosition(
+            menuButtonBounds.x - 110,
+            menuButtonBounds.y + 15
+        );
+
+        // Toggle visibility
+        this.dropdownMenu.visible = !this.dropdownMenu.visible;
+    }
+
+
+    createDropdownMenu() {
+
+        this.dropdownMenu = this.add.container(0, 0);
+        this.dropdownMenu.setDepth(10);
+        const dropdownBg = this.add.rectangle(0, 0, 150, 100, 0x333333).setOrigin(0);
+        dropdownBg.setDepth(2);
+    
+        const saveButton = this.add.text(55, 10, "Save").setInteractive();
+        const loadButton = this.add.text(55, 40, "Load").setInteractive();
+        const deleteButton = this.add.text(47, 70, "Delete").setInteractive();
+    
+        // Event handlers for each button
+        saveButton.on("pointerdown", () => this.showSlotWindow("save"));
+        loadButton.on("pointerdown", () => this.showSlotWindow("load"));
+        deleteButton.on("pointerdown", () => this.showSlotWindow("delete"));
+    
+        this.dropdownMenu.add([dropdownBg, saveButton, loadButton, deleteButton]);
+        this.dropdownMenu.visible = false;
+    }
+
+    showSlotWindow(action) {
+        // Close the dropdown menu
+        this.dropdownMenu.visible = false;
+    
+        // Clear any existing slot buttons
+        this.slotWindow.removeAll(true);
+    
+        // Centralize the slot window
+        const x = this.cameras.main.width / 2;
+        const y = this.cameras.main.height / 2;
+    
+        // Add background
+        const bg = this.add.rectangle(0, 0, 300, 200, 0x222222).setOrigin(0.5);
+        this.slotWindow.add(bg);
+    
+        // Add title text
+        const titleText = this.add.text(0, -80, `${action.toUpperCase()} SLOTS`, {
+            fontSize: "20px",
+            color: "#fff",
+        }).setOrigin(0.5);
+        this.slotWindow.add(titleText);
+    
+        // Define slots
+        const slots = ["slot1", "slot2", "slot3"];
+        let yPos = -30; // Position for the first button
+    
+        slots.forEach((slot) => {
+            // Get data from localStorage
+            const slotData = localStorage.getItem(slot);
+    
+            // Determine button text and color
+            const isEmpty = !slotData || slotData === "Empty slot";
+            const slotText = isEmpty ? "Empty slot" : `${slot} - Saved`;
+            const slotColor = isEmpty ? "#333" : "#228B22";
+    
+            // Create slot button
+            const slotButton = this.add.text(0, yPos, slotText, {
+                fontSize: "18px",
+                color: "#fff",
+                backgroundColor: slotColor,
+                padding: { x: 10, y: 5 },
+            }).setOrigin(0.5).setInteractive();
+    
+            // Add click functionality
+            slotButton.on("pointerdown", () => this.handleSlotAction(action, slot, slotButton));
+            this.slotWindow.add(slotButton);
+    
+            yPos += 40; // Move the next button down
+        });
+    
+        // Add Close Button
+        const closeButton = this.add.text(0, 80, "Close", {
             fontSize: "18px",
-            backgroundColor:
-              saves[slot] === "Empty Slot" ? "#555555" : "#0077cc",
+            backgroundColor: "#cc0000",
             color: "#fff",
             padding: { x: 10, y: 5 },
-          })
-          .setOrigin(0.5)
-          .setInteractive()
-          .setDepth(10);
-
-        slotButton.on("pointerdown", () => this.handleSlotAction(action, slot));
-        this.slotWindow.add(slotButton);
-        yOffset += 40;
-      });
-      console.log("Rendered all slots successfully.");
+        }).setOrigin(0.5).setInteractive();
+    
+        closeButton.on("pointerdown", () => this.slotWindow.removeAll(true));
+        this.slotWindow.add(closeButton);
+    
+        // Position and display the slot window
+        this.slotWindow.setPosition(x, y);
+        this.slotWindow.setVisible(true);
     }
 
-    const closeButton = this.add
-      .text(0, 80, "Close", {
-        fontSize: "18px",
-        backgroundColor: "#cc0000",
-        color: "#fff",
-        padding: { x: 10, y: 5 },
-      })
-      .setOrigin(0.5)
-      .setInteractive();
-
-    closeButton.on("pointerdown", () => this.slotWindow.destroy());
-
-    this.slotWindow.add([bg, title, closeButton]);
-  }
-  
-  handleSlotAction(action, slot) {
-    const saves = SaveManager.getallSaves();
-
-    switch (action) {
-      case "save":
-        if (
-          saves[slot] === "Empty Slot" ||
-          confirm("This slot already contains a save. Overwrite?")
-        ) {
-          const gameState = this.getCurrentGameState();
-          SaveManager.saveGame(slot, gameState);
+    handleSlotAction(action, slot, slotButton) {
+        const playScene = this.scene.get("playScene"); // Get Play.js methods
+        switch (action) {
+            case "save":
+                console.log(`Saving to slot: ${slot}`);
+                playScene.Save(slot); // Perform the save
+                // Dynamically update button text and color
+                slotButton.setText(`${slot} - Saved`);
+                slotButton.setStyle({ backgroundColor: "#228B22" });
+                break;
+    
+            case "load":
+                console.log(`Loading from slot: ${slot}`);
+                playScene.Load(slot); // Perform the load
+                break;
+    
+            case "delete":
+                console.log(`Deleting slot: ${slot}`);
+                localStorage.removeItem(slot); // Delete the slot
+                // Reset button text and color
+                slotButton.setText("Empty slot");
+                slotButton.setStyle({ backgroundColor: "#333" });
+                break;
         }
-        break;
-      case "load":
-        if (saves[slot] !== "Empty Slot") {
-          SaveManager.loadGame(slot);
-        }
-        break;
-      case "delete":
-        if (
-          saves[slot] !== "Empty Slot" &&
-          confirm("Are you sure you want to delete this save?")
-        ) {
-          SaveManager.deleteSave(slot);
-          console.log(`Deleted save from ${slot}`);
-        }
-        break;
     }
-    if (this.slotWindow) {
-      this.slotWindow.destroy();
-    }
-  }
-  
-  getCurrentGameState() {
-    return {
-      player: this.scene.get("playScene").player.serialize(),
-      grid: this.scene
-        .get("playScene")
-        .grid.map((row) => row.map((cell) => cell.serialize())),
-      seeds: this.seeds,
-    };
-  }
-
-  setListeners() {
-    this.emitter.on("next-turn", this.NextTurn.bind(this));
-    this.emitter.on("plant", this.Plant.bind(this));
-    this.emitter.on("end-game", this.endGame.bind(this));
-    this.emitter.on("fully-grown", this.winCon.bind(this));
-  }
-
-  NextTurn() {
-    this.seeds = 3;
-    this.seedText.text = `Seeds: ${this.seeds}`;
-  }
-
-  Plant() {
-    this.seeds--;
-    this.seedText.text = `Seeds: ${this.seeds}`;
-  }
-
-  endGame() {
-    this.endText.visible = true;
-  }
-
-  winCon() {
-    this.winCon--;
-    if (this.winCon <= 0) {
-      this.emitter.emit("end-game");
-    }
-  }
 }
