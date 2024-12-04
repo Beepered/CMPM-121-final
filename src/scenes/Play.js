@@ -298,6 +298,7 @@ class Play extends Phaser.Scene {
             const prevState = new stateInfo();
             prevState.setPlayerInfo(this.player.x, this.player.y)
             prevState.setCellBuffer(this.GetArrayBufferFromGrid());
+            this.Save("autosave");
             this.emitter.emit("next-turn");
             this.gameStateManager.gameStateChange(prevState);
 
@@ -345,7 +346,7 @@ class Play extends Phaser.Scene {
             if(state.cellBuffer){
                 this.SetGridFromArrayBuffer(state.cellBuffer);
             }
-            this.emitter.emit(emitTxt);//make later
+            this.emitter.emit(emitTxt);
         }
         this.UpdateCellText();
     }
