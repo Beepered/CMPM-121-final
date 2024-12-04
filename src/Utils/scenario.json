@@ -1,0 +1,8 @@
+{
+    "player-x": 0,
+    "player-y": 0,
+    "player-seeds": 3,	
+    "grid-x": 3,
+    "grid-y": 3,
+    "win-condition": 3
+}

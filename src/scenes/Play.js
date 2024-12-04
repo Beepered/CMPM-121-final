@@ -281,6 +281,10 @@ class Play extends Phaser.Scene {
         }
         else{
             alert("null save")
-        } 
+        }
+    }
+
+    ParseData(){
+        FetchData()
     }
 }
