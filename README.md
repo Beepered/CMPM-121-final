@@ -24,17 +24,20 @@ Progress was slow because everyone was given other projects in other classes to 
 ## Log 3 - Dec 3 2024
 ### How we satisfied the software requirements
 - F0[a]. Player moves along a 3x3 grid of cells
-- F0[b]. Pressing Q advances time
-- F0[c]. Pressing space allows the player to plant/reap on cells
-- F0[d]. Water is accumulated over turns while sunlight changes every turn
-- F0[e]. Players randomly plant one of three plants which have threee levels of growth including freshly planted and fully grown
+- F0[b]. Pressing "Q" advances time
+- F0[c]. Pressing "SPACE" allows the player to take an action when on a cell. Planting if there isn't a plant and reaping if there is a plant and the plant is fully grown.
+- F0[d]. Water is accumulated over turns to a max of 10 while sunlight changes between 1 - 10 every turn.
+- F0[e]. Players randomly plant one of three plants which have three levels of growth including freshly planted and fully grown
 - F0[f]. Reaching certain water/sun levels allows the plant to grow in between turns
 - F0[g]. The game is currently won when 3 plants are fully grown
 - F1[a]. ![pic](https://github.com/user-attachments/assets/034aaeb7-30a6-4674-a5a7-44c31485e6c8)
+  - We used an array-of-structures approach to saving the game state.
+  - To save: A byte-array is created for the grid and a pointer is created. The pointer loops through the byte-array and adds each cell's water, sun, plant type, and plant growth. Another byte is created for the player and a pointer loops through it adding the player's x position, y position, and number of seeds. Then both byte-arrays are combined into 1, encoded, then saved in local storage.
+  - To load: First checks if a save exists and if so, gets the encoded save. Decode the save into 1 byte-array and split it into 2 based on the amount of bytes for the grid and bytes for the player. For the grid byte-array, a pointer is created and loops through the byte-array and sets the cell's water, sun, plant type, and plant growth. For the player byte-array, a pointer is created and loops through the byte-array and sets the player's x position, y position, and number of seeds.
 - F1[b]. By pressing the menu button in the top left with the mouse, users are able to save, load, and delete save states. 
 - F1[c]. 
-- F1[d]. Actions currently pushes copies of the game's state to an undo stack, and clears the redo stack. Pressing n pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redostack which allow the player to redo actions. 
+- F1[d]. Actions currently push copies of the game's state to an undo stack, and clears the redo stack. Pressing "n" pops a state off the stack and applies it. Undoing also pushes copies of the state onto the redo stack which allow the player to redo actions. 
 
 
 ## Reflection
-  With various members traveling for Thanksgiving along with having other responsibilities come up, our F1 development came along very slowly. We have remained consistent in our use of phaser alongside javascript. Our role structure hasn't stuck very much and we are just coding to try to meet deadlines. On top of the software requirements, we have implemented clickable buttons to replace keybinds for saving,loading, undoing, redoing, and progressing turns. After initially having them to random keys on the keyboard we switched to buttons to make the program usable for new users. 
+  With various members traveling for Thanksgiving along with having other responsibilities come up, our F1 development came along very slowly. We have remained consistent in our use of Phaser alongside JavaScript. Our role structure hasn't stuck very much and we are just coding to try to meet deadlines. On top of the software requirements, we have implemented clickable buttons to replace keybinds for saving, loading, undoing, redoing, and progressing turns. After initially having them to random keys on the keyboard we switched to buttons to make the program usable for new users. Overal, progress has been really slow because of Thanksgiving and trying to manage another class' project at the same time.
