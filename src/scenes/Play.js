@@ -50,8 +50,10 @@ class Play extends Phaser.Scene {
                 this.checkCellList.push(cell)
             }
         })
-
-        this.Load("save");
+        let autoConfirm = confirm("Attempt to load Autosave?");
+        if(autoConfirm){
+            this.Load("autosave");
+        }
         this.UpdateCellText();
     }
 
@@ -68,6 +70,7 @@ class Play extends Phaser.Scene {
             const prevState = new stateInfo();
             prevState.setPlayerInfo(this.player.x, this.player.y)
             prevState.setCellBuffer(this.GetArrayBufferFromGrid());
+            this.Save("autosave");
             this.emitter.emit("next-turn");
             this.gameStateManager.gameStateChange(prevState);
 
