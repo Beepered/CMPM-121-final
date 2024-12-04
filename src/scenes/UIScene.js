@@ -100,7 +100,8 @@ class UIScene extends Phaser.Scene {
     }
 
     endGame() {
-        //this.endText.visible = true
+        this.create();
+        this.endText.visible = true
     }
 
     winCon(){
