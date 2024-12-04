@@ -100,7 +100,7 @@ class UIScene extends Phaser.Scene {
     }
 
     endGame() {
-        this.endText.visible = true
+        //this.endText.visible = true
     }
 
     winCon(){
@@ -228,6 +228,7 @@ class UIScene extends Phaser.Scene {
             case "load":
                 console.log(`Loading from slot: ${slot}`);
                 playScene.Load(slot); // Perform the load
+                playScene.UpdateCellText();
                 break;
     
             case "delete":

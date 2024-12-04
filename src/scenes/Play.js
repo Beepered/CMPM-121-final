@@ -162,6 +162,7 @@ class Play extends Phaser.Scene {
     }
 
     UpdateCellText() {
+        console.log("updatecell")
         for(let i = 0; i < this.grid.length ; i++){
             for(let j = 0; j < this.grid[i].length; j++){
                 this.grid[i][j].updateText();
