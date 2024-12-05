@@ -3,15 +3,12 @@ class OuterUI {
         this.emitter = EventDispatcher.getInstance();
         const buttonPanel = document.createElement("div");
         document.body.append(buttonPanel);
-        this.buttons = []; // not even used
-        //this.addAllButtons()
     };
 
     addTurnButton(){
         const turnButton = document.createElement("button");
         turnButton.textContent = "Next Turn";
         turnButton.addEventListener("click", () => {
-            //here
             this.emitter.emit("next-turn");
         })
         document.body.append(turnButton);

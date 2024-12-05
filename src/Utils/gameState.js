@@ -21,7 +21,6 @@ class gameStateManager {
     gameStateChange(action) {
         this.undoStack.push(action);
         this.redoStack = []; 
-       // action.redo(); 
     }
 
     undo() {
@@ -42,14 +41,3 @@ class gameStateManager {
         else return null;
     }
 }
-/*
-Game state objects need to contain
-Cell array 
-    Cell sun/water levels
-    Cell plant type/growth
-
-Player 
-    turn count 
-    player Seed count
-    player position
- */

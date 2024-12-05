@@ -59,7 +59,6 @@ class UIScene extends Phaser.Scene {
     }
 
     Plant(){
-       // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
         this.seeds--;
         this.redoStack = [];
         
@@ -67,7 +66,6 @@ class UIScene extends Phaser.Scene {
     }
 
     Reap(){
-       // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
         this.redoStack = [];
     }
 
