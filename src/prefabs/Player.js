@@ -24,33 +24,53 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.SPACE = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
-        this.moveSpeed = 5
+        this.moveSpeed = 300
         this.seeds = 3;
         this.cell = null;
+
+        this.canSwitchCells = true
+        this.checkCellTime = 0.02;
+        this.checkCellList = []
 
         this.playersTurn = true;
 
         this.setListeners()
     }
 
-    update(){
+    update(time, delta){
         if(this.playersTurn){
             this.controls();
+        }
+
+        this.checkCellTime -= delta
+        if(this.checkCellTime <= 0){
+            this.canSwitchCells = !this.canSwitchCells
+            if(this.canSwitchCells == true){
+                this.cell = this.CalculatePlayerCell();
+            }
+            this.checkCellTime = 0.02;
         }
     }
 
     controls(){
         if(this.keyUP.isDown || this.keyW.isDown){
-            this.y -= this.moveSpeed
+            this.body.velocity.y = -this.moveSpeed
         }
+        else if(this.keyDOWN.isDown || this.keyS.isDown){
+            this.body.velocity.y = this.moveSpeed
+        }
+        else {
+            this.body.velocity.y = 0
+        }
+
         if(this.keyLEFT.isDown || this.keyA.isDown){
-            this.x -= this.moveSpeed
+            this.body.velocity.x = -this.moveSpeed
         }
-        if(this.keyDOWN.isDown || this.keyS.isDown){
-            this.y += this.moveSpeed
+        else if(this.keyRIGHT.isDown || this.keyD.isDown){
+            this.body.velocity.x = this.moveSpeed
         }
-        if(this.keyRIGHT.isDown || this.keyD.isDown){
-            this.x += this.moveSpeed
+        else {
+            this.body.velocity.x = 0
         }
         
         if(Phaser.Input.Keyboard.JustDown(this.SPACE)){
@@ -89,8 +109,13 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.seeds = 3;
     }
 
+    EndGame(){
+        this.playersTurn = false;
+    }
+
     setListeners() {
         this.emitter.on("next-turn", this.NextTurn.bind(this));
+        this.emitter.on("end-game", this.EndGame.bind(this));
     }
 
     serialize() {
@@ -105,5 +130,27 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.x = data.x;
         this.y = data.y;
         this.seeds = data.seeds;
+    }
+
+    // checks all cells the player is colliding with
+    // If cell contains original cell, just use that otherwise take the first cell
+    CalculatePlayerCell(){
+        if(this.checkCellList.length == 0){
+            return null;
+        }
+        else{
+            let newCell = this.cell
+            for(let i = 0; i < this.checkCellList.length; i++){
+                if(i == 0){
+                    newCell = this.checkCellList[0]
+                }
+                else if(this.checkCellList[i] == this.cell){
+                    newCell = this.cell
+                    break;
+                }
+            }
+            this.checkCellList = []
+            return newCell
+        }
     }
 }

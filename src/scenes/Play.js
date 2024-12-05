@@ -6,6 +6,9 @@ class Play extends Phaser.Scene {
         this.XTiles = 3;
         this.YTiles = 3;
 
+        this.winCondition = 3;
+        this.flowersGrown = 0;
+
         this.addAllButtons();
     }
 
@@ -34,21 +37,19 @@ class Play extends Phaser.Scene {
         this.cellGroup = this.add.group()
         this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
 
-        this.canSwitchCells = true
-        this.checkCellTime = 0.02;
-        this.checkCellList = []
-        
         this.gameStateManager = new gameStateManager();
 
         const initialState = new stateInfo();
         initialState.setPlayerInfo(this.player.x, this.player.y);
         initialState.setCellBuffer(this.GetArrayBufferFromGrid());
         this.gameStateManager.gameStateChange(initialState);
+        
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
-            if(this.canSwitchCells){
-                this.checkCellList.push(cell)
+            if(this.player.canSwitchCells){
+                this.player.checkCellList.push(cell)
             }
         })
+
         let autoConfirm = confirm("Attempt to load Autosave?");
         if(autoConfirm){
             this.Load("autosave");
@@ -57,17 +58,11 @@ class Play extends Phaser.Scene {
 
         
         this.setInfoFromData();
+        this.setListeners();
     }
 
-    update(time, delta){
-        this.checkCellTime -= delta
-        if(this.checkCellTime <= 0){
-            this.canSwitchCells = !this.canSwitchCells
-            if(this.canSwitchCells == true){
-                this.player.cell = this.CalculatePlayerCell();
-            }
-            this.checkCellTime = 0.02;
-        }
+    beef(){
+        console.log("hehe")
     }
     
     createCell(x, y){
@@ -94,28 +89,6 @@ class Play extends Phaser.Scene {
             }
         }
         return cellGrid;
-    }
-
-    CalculatePlayerCell(){
-        // checks all cells the player is colliding with
-        // If cell contains original cell, just use that otherwise take the first cell
-        if(this.checkCellList.length == 0){
-            return null;
-        }
-        else{
-            let newCell = this.player.cell
-            for(let i = 0; i < this.checkCellList.length; i++){
-                if(i == 0){
-                    newCell = this.checkCellList[0]
-                }
-                else if(this.checkCellList[i] == this.player.cell){
-                    newCell = this.player.cell
-                    break;
-                }
-            }
-            this.checkCellList = []
-            return newCell
-        }
     }
 
     UpdateCellText() {
@@ -309,10 +282,22 @@ class Play extends Phaser.Scene {
         this.UpdateCellText();
     }
 
+    FlowerGrown() {
+        this.flowersGrown++;
+        if(this.flowersGrown >= this.winCondition){
+            this.emitter.emit("end-game");
+        }
+    }
+
     setInfoFromData(){
         const data = this.cache.json.get('json')
         this.player.x = data.playerX;
         this.player.y = data.playerY;
         this.player.seeds = data.numSeeds;
+        this.winCondition = data.winCondition;
+    }
+
+    setListeners(){
+        this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
     }
 }

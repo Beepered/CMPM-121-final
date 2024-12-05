@@ -46,7 +46,6 @@ class UIScene extends Phaser.Scene {
         this.emitter.on("plant", this.Plant.bind(this));
         this.emitter.on("reap", this.Reap.bind(this));
         this.emitter.on("end-game", this.endGame.bind(this));
-        this.emitter.on("fully-grown", this.winCon.bind(this));
         this.emitter.on("undo", this.undo.bind(this));
         this.emitter.on("redo", this.redo.bind(this));
     }
@@ -92,15 +91,8 @@ class UIScene extends Phaser.Scene {
     }
 
     endGame() {
-        this.create();
+        //this.create();
         this.endText.visible = true
-    }
-
-    winCon(){
-        this.winCon--;
-        if(this.winCon <= 0){
-            this.emitter.emit("end-game");
-        }
     }
 
     updateUI(){
