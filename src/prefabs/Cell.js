@@ -12,8 +12,8 @@ class Cell extends Phaser.GameObjects.Sprite {
 
         this.plant = null;
 
-        this.sun = 5;
-        this.water = 5;
+        this.sun = 3;
+        this.water = 3;
 
         this.sunText = scene.add.text(x - 60, y - 60, this.sun.toString(), { fontSize: '18px', color:'yellow' })
         this.waterText = scene.add.text(x - 40, y - 60, this.water.toString(), { fontSize: '18px', color:'blue' })
@@ -28,16 +28,44 @@ class Cell extends Phaser.GameObjects.Sprite {
     }
 
     ChangeSun() {
-        const minSun = 1;
-        const maxSun = 10;
+        let minSun = 0;
+        let maxSun = 0;
+        switch(weather){
+            case WEATHER.sunny:
+                minSun = 6
+                maxSun = 10
+                break;
+            case WEATHER.cloudy:
+                minSun = 3;
+                maxSun = 5;
+                break;
+            case WEATHER.rainy:
+                minSun = 1;
+                maxSun = 3;
+                break;
+        }
         this.sun = Math.floor(Math.random() * maxSun) + minSun; // Immediate use of sun or it will be reset
     }
 
     ChangeWater() {
-        const minWater = 1;
-        const maxWater = 3;
+        let minWater = 0;
+        let maxWater = 0;
+        switch(weather){
+            case WEATHER.sunny:
+                minWater = 0;
+                maxWater = 0;
+                break;
+            case WEATHER.cloudy:
+                minWater = 1;
+                maxWater = 2;
+                break;
+            case WEATHER.rainy:
+                minWater = 2;
+                maxWater = 3;
+                break;
+        }
         const WaterPower = Math.floor(Math.random() * maxWater) + minWater;
-        this.water = this.water + WaterPower // Collect the water
+        this.water = this.water + WaterPower;
         if(this.water > 10){ // max water cell can hold is 10
             this.water = 10;
         }

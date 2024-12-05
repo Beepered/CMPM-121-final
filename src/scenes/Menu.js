@@ -24,14 +24,12 @@ class Menu extends Phaser.Scene {
                 bottom: 5
             },
         }
-        this.add.text(gameWidth / 2, gameHeight / 2.5, "TITLE", titleConfig).setOrigin(0.5)
-        this.add.text(gameWidth / 2, gameHeight / 2, "press UP to PLAY", textConfig).setOrigin(0.5)
-        this.add.text(gameWidth / 2, gameHeight / 1.8, "press DOWN for CREDITS", textConfig).setOrigin(0.5)
+        this.add.text(gameWidth / 2, gameHeight / 2.5, "We Plantin'", titleConfig).setOrigin(0.5)
+        this.add.text(gameWidth / 2, gameHeight / 1.8, "press UP to PLAY", textConfig).setOrigin(0.5)
+        this.add.text(gameWidth / 2, gameHeight / 1.6, "press DOWN for CREDITS", textConfig).setOrigin(0.5)
         
         this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-
-        this.scene.switch("playScene")
     }
 
     update(){

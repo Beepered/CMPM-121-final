@@ -3,7 +3,7 @@ let config = {
     physics:{
         default: "arcade",
         arcade:{
-            debug:true
+            debug:false
         }
     },
     width: 800,
@@ -16,4 +16,12 @@ let game = new Phaser.Game(config);
 let gameHeight = game.config.height
 let gameWidth = game.config.width
 
-//let OUI = new OuterUI();
+let maxSeeds = 3;
+let seeds = 3;
+
+const WEATHER = {
+    sunny: "sunny",
+    cloudy: "cloudy",
+    rainy: "rainy"
+};
+let weather = WEATHER.sunny

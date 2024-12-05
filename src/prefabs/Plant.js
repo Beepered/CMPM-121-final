@@ -17,12 +17,15 @@ class Plant extends Phaser.GameObjects.Sprite{
         super(scene, x, y, texture);
         scene.add.existing(this);
 
-        this.type = type
-
         this.emitter = EventDispatcher.getInstance();
 
-        this.alpha = 0.4
+        this.type = type
+
         this.growth = 0;
+        this.maxGrowth = 3;
+
+        this.alpha = 0.4
+
         this.updatePlant()
     }
 
@@ -33,14 +36,14 @@ class Plant extends Phaser.GameObjects.Sprite{
         else if(this.growth == 2){
             this.alpha = 0.8
         }
-        else if(this.growth == 3){
+        else if(this.growth == this.maxGrowth){
             this.alpha = 1
             this.emitter.emit("fully-grown");
         }
     }
 
     GiveNutrients(cell, sun, water){
-        if(this.growth < 3){
+        if(this.growth < this.maxGrowth){
             switch(this.type){
                 case(0):
                     if(sun >= 2 && water >= 2){
@@ -63,7 +66,7 @@ class Plant extends Phaser.GameObjects.Sprite{
                 default:
                     this.growth += 1;
             }
+            this.updatePlant()
         }
-        this.updatePlant()
     }
 }

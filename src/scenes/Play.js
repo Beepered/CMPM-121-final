@@ -1,4 +1,18 @@
 class Play extends Phaser.Scene {
+    constructor(){
+        super("playScene")
+        this.emitter = EventDispatcher.getInstance();
+
+        this.XTiles = 3;
+        this.YTiles = 3;
+
+        this.winCondition = 3;
+        this.flowersGrown = 0;
+
+        this.addAllButtons();
+        this.setListeners();
+    }
+
     preload(){
         this.load.image("player", "assets/PlayerCharacter.png")
         this.load.image("grass", "assets/GrassV1.png")
@@ -8,16 +22,8 @@ class Play extends Phaser.Scene {
         this.load.image("pink", "assets/Pink_Flower.png")
         this.load.image("purple", "assets/Purple_Flower.png")
         this.load.image("red", "assets/Red_Flower.png")
-    }
 
-    constructor(){
-        super("playScene")
-        this.emitter = EventDispatcher.getInstance();
-
-        this.XTiles = 3;
-        this.YTiles = 3;
-
-        this.addAllButtons();
+        this.load.json('json', 'src/Utils/scenario.json')
     }
 
     create(){
@@ -32,32 +38,25 @@ class Play extends Phaser.Scene {
         this.cellGroup = this.add.group()
         this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
 
-        this.canSwitchCells = true
-        this.checkCellTime = 0.02;
-        this.checkCellList = []
-        
         this.gameStateManager = new gameStateManager();
+
+        const initialState = new stateInfo();
+        initialState.setPlayerInfo(this.player.x, this.player.y);
+        initialState.setCellBuffer(this.GetArrayBufferFromGrid());
+        this.gameStateManager.gameStateChange(initialState);
+
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
-            if(this.canSwitchCells){
-                this.checkCellList.push(cell)
-            }
+            this.player.checkCellList.push(cell)
         })
+
         let autoConfirm = confirm("Attempt to load Autosave?");
         if(autoConfirm){
             this.Load("autosave");
         }
-        this.UpdateCellText();
-    }
 
-    update(time, delta){
-        this.checkCellTime -= delta
-        if(this.checkCellTime <= 0){
-            this.canSwitchCells = !this.canSwitchCells
-            if(this.canSwitchCells == true){
-                this.player.cell = this.CalculatePlayerCell();
-            }
-            this.checkCellTime = 0.02;
-        }
+        this.setInfoFromData();
+
+        this.UpdateCellText();
     }
     
     createCell(x, y){
@@ -86,33 +85,18 @@ class Play extends Phaser.Scene {
         return cellGrid;
     }
 
-    CalculatePlayerCell(){
-        // checks all cells the player is colliding with
-        // If cell contains original cell, just use that otherwise take the first cell
-        if(this.checkCellList.length == 0){
-            return null;
-        }
-        else{
-            let newCell = this.player.cell
-            for(let i = 0; i < this.checkCellList.length; i++){
-                if(i == 0){
-                    newCell = this.checkCellList[0]
-                }
-                else if(this.checkCellList[i] == this.player.cell){
-                    newCell = this.player.cell
-                    break;
-                }
-            }
-            this.checkCellList = []
-            return newCell
-        }
-    }
-
     UpdateCellText() {
-        console.log("updatecell")
         for(let i = 0; i < this.grid.length ; i++){
             for(let j = 0; j < this.grid[i].length; j++){
                 this.grid[i][j].updateText();
+            }
+        }
+    }
+
+    *gridCells() {
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+                yield this.grid[i][j];
             }
         }
     }
@@ -121,42 +105,38 @@ class Play extends Phaser.Scene {
         const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save (sun,water,type,growth), 2 = bytes)
         const view = new DataView(buffer);
         let byteCount = 0
-        for(let i = 0; i < this.grid.length ; i++){
-            for(let j = 0; j < this.grid[i].length; j++){
-                view.setInt16(byteCount, this.grid[i][j].sun);
-                view.setInt16(byteCount + 2, this.grid[i][j].water);
-                if(this.grid[i][j].plant != null){
-                    view.setInt16(byteCount + 4, this.grid[i][j].plant.type);
-                    view.setInt16(byteCount + 6, this.grid[i][j].plant.growth);
-                }
-                byteCount += 8
+        for(const cell of this.gridCells()) {
+            view.setInt16(byteCount, cell.sun);
+            view.setInt16(byteCount + 2, cell.water);
+            if(cell.plant != null){
+                view.setInt16(byteCount + 4, cell.plant.type);
+                view.setInt16(byteCount + 6, cell.plant.growth);
             }
+            byteCount += 8
         }
         return buffer
-    }
+    } 
 
     SetGridFromArrayBuffer(buffer) {
         const view = new DataView(buffer);
         let byteCount = 0
-        for (let i = 0; i < this.grid.length; i++) {
-            for (let j = 0; j < this.grid[i].length; j++) {
-                this.grid[i][j].sun = view.getInt16(byteCount);
-                this.grid[i][j].water = view.getInt16(byteCount + 2);
-                const plantType = view.getInt16(byteCount + 4);
+        for(const cell of this.gridCells()) {
+            cell.sun = view.getInt16(byteCount);
+            cell.water = view.getInt16(byteCount + 2);
+            const plantType = view.getInt16(byteCount + 4);
+            if (plantType !== 0) {
+                // Ensure plant is re-initialized
                 const plantGrowth = view.getInt16(byteCount + 6);
-                if (plantType !== 0) {
-                    // Ensure plant is re-initialized
-                    if (!this.grid[i][j].plant || this.grid[i][j].plant.type !== plantType) {
-                        this.grid[i][j].Plant(plantType); // Re-plant
-                    }
-                    this.grid[i][j].plant.growth = plantGrowth;
-                    this.grid[i][j].plant.updatePlant();
-                } else {
-                    // Clear plant if no type
-                    this.grid[i][j].removePlant?.();
+                if (!cell.plant || cell.plant.type !== plantType) {
+                    cell.Plant(plantType); // Re-plant
                 }
-                byteCount += 8; // Advance the data index
+                cell.plant.growth = plantGrowth;
+                cell.plant.updatePlant();
+            } else {
+                // Clear plant if no type
+                cell.removePlant?.();
             }
+            byteCount += 8; // Advance the data index
         }
     }
 
@@ -174,7 +154,6 @@ class Play extends Phaser.Scene {
         this.player.x = view.getInt16(0);
         this.player.y = view.getInt16(2);
         this.player.seeds = view.getInt16(4);
-        return buffer
     }
 
     appendBuffer = function(buffer1, buffer2) {
@@ -230,23 +209,27 @@ class Play extends Phaser.Scene {
         }
         else{
             alert("null save")
-        } 
+        }
+    }
+
+    ParseData(){
+        FetchData()
     }
 
     addTurnButton(){
         const turnButton = document.createElement("button");
         turnButton.textContent = "Next Turn";
         turnButton.addEventListener("click", () => {
+            const prevState = new stateInfo();
             this.Save("autosave")
-            const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
-            const encode = this.arrayBufferToBase64(newBuffer)
-            this.gameStateManager.gameStateChange(encode);
+            prevState.setPlayerInfo(this.player.x, this.player.y)
+            prevState.setCellBuffer(this.GetArrayBufferFromGrid());
             this.emitter.emit("next-turn");
+            this.gameStateManager.gameStateChange(prevState);
 
             this.UpdateCellText()
         })
         document.body.append(turnButton);
-        //this.buttons.push(turnButton);
     }
     addDoButtons(){
         const doButtons = Array.from(
@@ -260,7 +243,6 @@ class Play extends Phaser.Scene {
                 this.doFunction(button, i == 0); //function needs to be filled
             })
             document.body.append(button);
-            //this.buttons.push(button);
         })
     }
     addAllButtons(){
@@ -281,13 +263,47 @@ class Play extends Phaser.Scene {
             emitTxt = "redo";
         }
         if(state){
-            const buffer = this.base64ToArrayBuffer(state)
-            const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
-            this.SetGridFromArrayBuffer(gridBuffer)
-            const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
-            this.SetPlayerFromArrayBuffer(playerBuffer)
+            if(state.playerInfo){
+                this.player.x = state.playerInfo.playerX;
+                this.player.y = state.playerInfo.playerY;
+            }
+            if(state.cellBuffer){
+                this.SetGridFromArrayBuffer(state.cellBuffer);
+            }
+            this.emitter.emit(emitTxt);
         }
         this.UpdateCellText();
     }
 
+    FlowerGrown() {
+        this.flowersGrown++;
+        if(this.flowersGrown >= this.winCondition){
+            this.emitter.emit("end-game");
+        }
+    }
+
+    NextTurn(){
+        seeds = maxSeeds;
+
+        //random weather value
+        const values = Object.keys(WEATHER);
+        const enumKey = values[Math.floor(Math.random() * values.length)];
+        weather = WEATHER[enumKey];
+    }
+
+    setInfoFromData(){
+        const data = this.cache.json.get('json')
+        this.player.x = data.playerX;
+        this.player.y = data.playerY;
+        maxSeeds = data.maxSeeds;
+        seeds = data.numSeeds;
+        this.winCondition = data.winCondition;
+        weather = data.weather;
+        this.emitter.emit("update-ui");
+    }
+
+    setListeners(){
+        this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
+        this.emitter.on("next-turn", this.NextTurn.bind(this));
+    }
 }
