@@ -7,48 +7,44 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
         this.emitter = EventDispatcher.getInstance();
 
-        this.depth = 1 // render ordering
+        this.depth = 1;
 
         this.setScale(0.6); 
-        this.body.setSize(this.width * 0.5, this.height * 0.5); 
+        this.body.setSize(this.width * 0.5, this.height * 0.5);
 
-        this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
-        this.keyA = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
-        this.keyS = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
-        this.keyD = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+        this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.keyA = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyS = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.keyD = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         
-        this.keyUP = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
-        this.keyLEFT = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
-        this.keyDOWN = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
-        this.keyRIGHT = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+        this.keyUP = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.keyLEFT = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.keyDOWN = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.keyRIGHT = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
-        this.SPACE = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+        this.SPACE = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.moveSpeed = 300
+        this.moveSpeed = 300;
         this.seeds = 3;
         this.cell = null;
 
-        this.canSwitchCells = true
-        this.checkCellTime = 0.02;
-        this.checkCellList = []
-
         this.playersTurn = true;
 
-        this.setListeners()
+        this.checkCellList = [];
+        
+        this.setListeners();
     }
 
-    update(time, delta){
+    update(){
         if(this.playersTurn){
             this.controls();
         }
 
-        this.checkCellTime -= delta
-        if(this.checkCellTime <= 0){
-            this.canSwitchCells = !this.canSwitchCells
-            if(this.canSwitchCells == true){
-                this.cell = this.CalculatePlayerCell();
-            }
-            this.checkCellTime = 0.02;
+        if (this.body.embedded && this.checkCellList.length > 0) {
+            this.cell = this.CalculatePlayerCell();
+        }
+        if (this.body.touching.none && !this.body.wasTouching.none) {
+            this.cell = null;
         }
     }
 
@@ -132,25 +128,19 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.seeds = data.seeds;
     }
 
-    // checks all cells the player is colliding with
-    // If cell contains original cell, just use that otherwise take the first cell
+    // Check every cell the player is overlapping
+    // IF one of the cells is the cell the player was already standing on just use that one
     CalculatePlayerCell(){
-        if(this.checkCellList.length == 0){
-            return null;
-        }
-        else{
-            let newCell = this.cell
-            for(let i = 0; i < this.checkCellList.length; i++){
-                if(i == 0){
-                    newCell = this.checkCellList[0]
-                }
-                else if(this.checkCellList[i] == this.cell){
-                    newCell = this.cell
-                    break;
-                }
+        let newCell = this.cell
+        this.checkCellList.every(cell => {
+            if(cell == this.cell){
+                newCell = this.cell;
+                return false;
             }
-            this.checkCellList = []
-            return newCell
-        }
+            newCell = cell;
+            return true
+        });
+        this.checkCellList = []
+        return newCell
     }
 }

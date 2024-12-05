@@ -43,26 +43,20 @@ class Play extends Phaser.Scene {
         initialState.setPlayerInfo(this.player.x, this.player.y);
         initialState.setCellBuffer(this.GetArrayBufferFromGrid());
         this.gameStateManager.gameStateChange(initialState);
-        
+
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
-            if(this.player.canSwitchCells){
-                this.player.checkCellList.push(cell)
-            }
+            this.player.checkCellList.push(cell)
         })
 
         let autoConfirm = confirm("Attempt to load Autosave?");
         if(autoConfirm){
             this.Load("autosave");
         }
-        this.UpdateCellText();
 
-        
         this.setInfoFromData();
         this.setListeners();
-    }
 
-    beef(){
-        console.log("hehe")
+        this.UpdateCellText();
     }
     
     createCell(x, y){
@@ -295,6 +289,8 @@ class Play extends Phaser.Scene {
         this.player.y = data.playerY;
         this.player.seeds = data.numSeeds;
         this.winCondition = data.winCondition;
+
+        console.log(this.winCondition)
     }
 
     setListeners(){

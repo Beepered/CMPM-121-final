@@ -5,7 +5,6 @@ class UIScene extends Phaser.Scene {
         this.setListeners();
 
         this.seeds = 3;
-        this.winCon = 3;
 
         this.historyStack =[];
         this.redoStack = [];
@@ -22,22 +21,21 @@ class UIScene extends Phaser.Scene {
         this.slotWindow = this.add.container(0, 0);
 
         this.dropdownToggle = this.add.text(800, 10, "Menu", { fontSize: '16px', color: '#123456' }).setInteractive();
-    this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
+        this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
 
-    // Position the button dynamically
-    this.dropdownToggle.setScrollFactor(0);
-    this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
+        // Position the button dynamically
+        this.dropdownToggle.setScrollFactor(0);
+        this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
 
-    // Handle resizing
-    this.scale.on('resize', (gameSize) => {
-        const { width, height } = gameSize;
-        this.cameras.main.setSize(width, height); // Resize the camera
-        this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 10, 10);
-    });
+        // Handle resizing
+        this.scale.on('resize', (gameSize) => {
+            const { width, height } = gameSize;
+            this.cameras.main.setSize(width, height); // Resize the camera
+            this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 10, 10);
+        });
 
-    // Create the dropdown menu
-    this.createDropdownMenu();
-
+        // Create the dropdown menu
+        this.createDropdownMenu();
     }
     
     // absolutely terrible way to do this
@@ -91,7 +89,6 @@ class UIScene extends Phaser.Scene {
     }
 
     endGame() {
-        //this.create();
         this.endText.visible = true
     }
 

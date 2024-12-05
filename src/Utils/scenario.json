@@ -2,5 +2,5 @@
     "playerX": 0,
     "playerY": 0,
     "numSeeds": 3,
-    "winCondition": 3
+    "winCondition": 5
 }
