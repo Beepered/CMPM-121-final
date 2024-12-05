@@ -16,7 +16,7 @@ class UIScene extends Phaser.Scene {
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
-        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+        // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
 
         this.createDropdownMenu();
         this.slotWindow = this.add.container(0, 0);
@@ -47,19 +47,19 @@ class UIScene extends Phaser.Scene {
         this.emitter.on("reap", this.Reap.bind(this));
         this.emitter.on("end-game", this.endGame.bind(this));
         this.emitter.on("fully-grown", this.winCon.bind(this));
-        this.emitter.on("undo", this.undo.bind(this));
+        //this.emitter.on("undo", this.undo.bind(this));
         this.emitter.on("redo", this.redo.bind(this));
     }
 
     NextTurn(){
-        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+        this.historyStack.push(this.seeds);
         this.seeds = 3;
     
         this.updateUI();
     }
 
     Plant(){
-       // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+        this.historyStack.push(this.seeds);
         this.seeds--;
         this.redoStack = [];
         
@@ -67,7 +67,7 @@ class UIScene extends Phaser.Scene {
     }
 
     Reap(){
-       // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+        this.historyStack.push(this.seeds);
         this.redoStack = [];
     }
 

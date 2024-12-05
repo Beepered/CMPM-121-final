@@ -59,8 +59,12 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Action(){
+        console.log("space")
+        console.log(this.cell)
         if(this.cell){
+            console.log("cell reg")
             if(this.cell.plant == null && this.seeds > 0){
+                console.log("plant")
                 this.emitter.emit("plant")
                 this.Plant();
                 this.seeds--;
