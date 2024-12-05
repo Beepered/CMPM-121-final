@@ -10,6 +10,7 @@ class Play extends Phaser.Scene {
         this.flowersGrown = 0;
 
         this.addAllButtons();
+        this.setListeners();
     }
 
     preload(){
@@ -54,7 +55,6 @@ class Play extends Phaser.Scene {
         }
 
         this.setInfoFromData();
-        this.setListeners();
 
         this.UpdateCellText();
     }
@@ -134,7 +134,6 @@ class Play extends Phaser.Scene {
                 cell.plant.updatePlant();
             } else {
                 // Clear plant if no type
-                console.log("remove")
                 cell.removePlant?.();
             }
             byteCount += 8; // Advance the data index
@@ -287,13 +286,13 @@ class Play extends Phaser.Scene {
         const data = this.cache.json.get('json')
         this.player.x = data.playerX;
         this.player.y = data.playerY;
-        this.player.seeds = data.numSeeds;
+        maxSeeds = data.numSeeds;
         this.winCondition = data.winCondition;
-
-        console.log(this.winCondition)
+        //this.emitter.emit("update-ui");
     }
 
     setListeners(){
         this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
+        this.emitter.on("next-turn", ()=>{ seeds = maxSeeds });
     }
 }

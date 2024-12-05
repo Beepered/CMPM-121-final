@@ -4,18 +4,16 @@ class UIScene extends Phaser.Scene {
         this.emitter = EventDispatcher.getInstance();
         this.setListeners();
 
-        this.seeds = 3;
-
         this.historyStack =[];
         this.redoStack = [];
     }
 
     create (){
-        this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
+        this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${seeds}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
-        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+        this.historyStack.push({seeds: seeds});
 
         this.createDropdownMenu();
         this.slotWindow = this.add.container(0, 0);
@@ -36,6 +34,8 @@ class UIScene extends Phaser.Scene {
 
         // Create the dropdown menu
         this.createDropdownMenu();
+
+        this.updateUI();
     }
     
     // absolutely terrible way to do this
@@ -46,17 +46,16 @@ class UIScene extends Phaser.Scene {
         this.emitter.on("end-game", this.endGame.bind(this));
         this.emitter.on("undo", this.undo.bind(this));
         this.emitter.on("redo", this.redo.bind(this));
+        this.emitter.on("update-ui", this.updateUI.bind(this));
     }
 
     NextTurn(){
-        this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
-        this.seeds = 3;
+        this.historyStack.push({seeds: seeds});
     
         this.updateUI();
     }
 
     Plant(){
-        this.seeds--;
         this.redoStack = [];
         
         this.updateUI();
@@ -67,22 +66,23 @@ class UIScene extends Phaser.Scene {
     }
 
     undo(){
+        console.log(this.historyStack.length)
         if(this.historyStack.length > 0){
-            this.redoStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+            this.redoStack.push({seeds: seeds});
             const prevState = this.historyStack.pop();
-            this.seeds = prevState.seeds;
-            this.turnsTaken = prevState.turnsTaken;
-
+            seeds = prevState.seeds;
             this.updateUI();
+        }
+        else{
+            
         }
     }
     
     redo(){
         if (this.redoStack.length > 0) {
-            this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+            this.historyStack.push({seeds: seeds});
             const nextState = this.redoStack.pop();
-            this.seeds = nextState.seeds;
-            this.turnsTaken = nextState.turnsTaken;
+            seeds = nextState.seeds;
 
             this.updateUI();
         }
@@ -93,7 +93,7 @@ class UIScene extends Phaser.Scene {
     }
 
     updateUI(){
-        this.seedText.text = `Seeds: ${this.seeds}`
+        this.seedText.text = `Seeds: ${seeds}`
     }
 
     toggleDropdownMenu() {

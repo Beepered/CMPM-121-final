@@ -31,7 +31,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.playersTurn = true;
 
         this.checkCellList = [];
-        
+
         this.setListeners();
     }
 
@@ -43,7 +43,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         if (this.body.embedded && this.checkCellList.length > 0) {
             this.cell = this.CalculatePlayerCell();
         }
-        if (this.body.touching.none && !this.body.wasTouching.none) {
+        else if (this.body.touching.none && !this.body.wasTouching.none) {
             this.cell = null;
         }
     }
@@ -76,14 +76,12 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     Action(){
         if(this.cell){
-            if(this.cell.plant == null && this.seeds > 0){
+            if(this.cell.plant == null && seeds > 0){
+                seeds--;
                 this.emitter.emit("plant")
                 this.Plant();
-                this.seeds--;
             }
             else if(this.cell.plant != null && this.cell.plant.growth >= 3){
-                // Need a visual indicator/safecheck to make sure the wrong plant isn't reaped
-                // Brendan: maybe make a border around the cell. Could be code or just its own sprite
                 this.Reap();
                 this.emitter.emit("reap");
             }
@@ -91,7 +89,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         
     }
 
-    Plant(type) { // we can use "type" later when we store seeds but right now just using a random seed
+    Plant() {
         const randSeed = Math.floor(Math.random() * 3) + 1;
         this.cell.Plant(randSeed)
     }
@@ -99,33 +97,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     Reap(){
         this.cell.plant.destroy();
         this.cell.plant = null;
-    }
-
-    NextTurn(){
-        this.seeds = 3;
-    }
-
-    EndGame(){
-        this.playersTurn = false;
-    }
-
-    setListeners() {
-        this.emitter.on("next-turn", this.NextTurn.bind(this));
-        this.emitter.on("end-game", this.EndGame.bind(this));
-    }
-
-    serialize() {
-        return {
-            x: this.x,
-            y: this.y,
-            seeds: this.seeds,
-        };
-    }
-
-    deserialize(data) {
-        this.x = data.x;
-        this.y = data.y;
-        this.seeds = data.seeds;
     }
 
     // Check every cell the player is overlapping
@@ -142,5 +113,23 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         });
         this.checkCellList = []
         return newCell
+    }
+
+    setListeners() {
+        this.emitter.on("end-game", ()=>{ this.playersTurn = false });
+    }
+
+    serialize() {
+        return {
+            x: this.x,
+            y: this.y,
+            seeds: this.seeds,
+        };
+    }
+
+    deserialize(data) {
+        this.x = data.x;
+        this.y = data.y;
+        this.seeds = data.seeds;
     }
 }

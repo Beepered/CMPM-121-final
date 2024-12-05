@@ -1,6 +1,6 @@
 {
     "playerX": 0,
     "playerY": 0,
-    "numSeeds": 3,
+    "numSeeds": 5,
     "winCondition": 5
 }
