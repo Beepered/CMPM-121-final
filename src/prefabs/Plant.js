@@ -69,8 +69,4 @@ class Plant extends Phaser.GameObjects.Sprite{
             this.updatePlant()
         }
     }
-
-    CheckNearbyCell(){
-        
-    }
 }
