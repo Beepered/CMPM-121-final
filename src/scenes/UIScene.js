@@ -9,7 +9,8 @@ class UIScene extends Phaser.Scene {
     }
 
     create (){
-        this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${seeds}`, { fontSize: '20px' })
+        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${seeds}`, { fontSize: '20px' })
+        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 8, `Weather: ${weather}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
@@ -66,15 +67,11 @@ class UIScene extends Phaser.Scene {
     }
 
     undo(){
-        console.log(this.historyStack.length)
         if(this.historyStack.length > 0){
             this.redoStack.push({seeds: seeds});
             const prevState = this.historyStack.pop();
             seeds = prevState.seeds;
             this.updateUI();
-        }
-        else{
-            
         }
     }
     
@@ -95,6 +92,7 @@ class UIScene extends Phaser.Scene {
     updateUI(){
         try{
             this.seedText.text = `Seeds: ${seeds}`
+            this.weatherText.text = `Weather: ${weather}`
         }
         catch{
             console.log("failed updating seedText. probably didn't exist yet")

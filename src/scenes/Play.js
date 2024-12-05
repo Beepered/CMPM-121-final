@@ -282,6 +282,13 @@ class Play extends Phaser.Scene {
         }
     }
 
+    NextTurn(){
+        seeds = maxSeeds;
+        const values = Object.keys(WEATHER);
+        const enumKey = values[Math.floor(Math.random() * values.length)];
+        weather = WEATHER[enumKey];
+    }
+
     setInfoFromData(){
         const data = this.cache.json.get('json')
         this.player.x = data.playerX;
@@ -294,6 +301,6 @@ class Play extends Phaser.Scene {
 
     setListeners(){
         this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
-        this.emitter.on("next-turn", ()=>{ seeds = maxSeeds });
+        this.emitter.on("next-turn", this.NextTurn.bind(this));
     }
 }

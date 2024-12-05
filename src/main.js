@@ -3,7 +3,7 @@ let config = {
     physics:{
         default: "arcade",
         arcade:{
-            debug:true
+            debug:false
         }
     },
     width: 800,
@@ -18,3 +18,10 @@ let gameWidth = game.config.width
 
 let maxSeeds = 3;
 let seeds = 3;
+
+const WEATHER = {
+    sunny: "sunny",
+    cloudy: "cloudy",
+    rainy: "rainy"
+};
+let weather = WEATHER.sunny

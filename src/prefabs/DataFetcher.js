@@ -1,4 +1,5 @@
 // UNUSED: just here as an example of extracting from JSON
+// If you want to use it make sure to attach the code in index.html
 
 class DataFetcher {
     preload(){

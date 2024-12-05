@@ -17,13 +17,15 @@ class Plant extends Phaser.GameObjects.Sprite{
         super(scene, x, y, texture);
         scene.add.existing(this);
 
-        this.type = type
-
         this.emitter = EventDispatcher.getInstance();
 
-        this.alpha = 0.4
+        this.type = type
+
         this.growth = 0;
         this.maxGrowth = 3;
+
+        this.alpha = 0.4
+
         this.updatePlant()
     }
 
@@ -66,5 +68,9 @@ class Plant extends Phaser.GameObjects.Sprite{
             }
             this.updatePlant()
         }
+    }
+
+    CheckNearbyCell(){
+        
     }
 }
