@@ -93,7 +93,12 @@ class UIScene extends Phaser.Scene {
     }
 
     updateUI(){
-        this.seedText.text = `Seeds: ${seeds}`
+        try{
+            this.seedText.text = `Seeds: ${seeds}`
+        }
+        catch{
+            console.log("failed updating seedText. probably didn't exist yet")
+        }
     }
 
     toggleDropdownMenu() {

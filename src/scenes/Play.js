@@ -287,8 +287,9 @@ class Play extends Phaser.Scene {
         this.player.x = data.playerX;
         this.player.y = data.playerY;
         maxSeeds = data.numSeeds;
+        seeds = maxSeeds;
         this.winCondition = data.winCondition;
-        //this.emitter.emit("update-ui");
+        this.emitter.emit("update-ui");
     }
 
     setListeners(){
