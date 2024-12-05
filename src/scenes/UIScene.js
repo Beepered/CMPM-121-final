@@ -4,15 +4,17 @@ class UIScene extends Phaser.Scene {
         this.emitter = EventDispatcher.getInstance();
         this.setListeners();
 
+        // get rid of this
         this.seeds = 3;
-        this.winCon = 3;
 
         this.historyStack =[];
         this.redoStack = [];
     }
 
     create (){
-        this.seedText = this.add.text(gameWidth / 12, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
+        // use seeds not this.seeds
+        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
+        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `Weather: ${weather}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
@@ -22,36 +24,35 @@ class UIScene extends Phaser.Scene {
         this.slotWindow = this.add.container(0, 0);
 
         this.dropdownToggle = this.add.text(800, 10, "Menu", { fontSize: '16px', color: '#123456' }).setInteractive();
-    this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
+        this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
 
-    // Position the button dynamically
-    this.dropdownToggle.setScrollFactor(0);
-    this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
+        // Position the button dynamically
+        this.dropdownToggle.setScrollFactor(0);
+        this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
 
-    // Handle resizing
-    this.scale.on('resize', (gameSize) => {
-        const { width, height } = gameSize;
-        this.cameras.main.setSize(width, height); // Resize the camera
-        this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 10, 10);
-    });
+        // Handle resizing
+        this.scale.on('resize', (gameSize) => {
+            const { width, height } = gameSize;
+            this.cameras.main.setSize(width, height); // Resize the camera
+            this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 10, 10);
+        });
 
-    // Create the dropdown menu
-    this.createDropdownMenu();
+        // Create the dropdown menu
+        this.createDropdownMenu();
 
     }
     
-    // absolutely terrible way to do this
     setListeners() {
         this.emitter.on("next-turn", this.NextTurn.bind(this));
         this.emitter.on("plant", this.Plant.bind(this));
         this.emitter.on("reap", this.Reap.bind(this));
         this.emitter.on("end-game", this.endGame.bind(this));
-        this.emitter.on("fully-grown", this.winCon.bind(this));
-        //this.emitter.on("undo", this.undo.bind(this));
+        //this.emitter.on("undo", this.undo.bind(this)); // why is this commented?
         this.emitter.on("redo", this.redo.bind(this));
     }
 
     NextTurn(){
+        // change to seeds
         this.historyStack.push(this.seeds);
         this.seeds = 3;
     
@@ -59,6 +60,7 @@ class UIScene extends Phaser.Scene {
     }
 
     Plant(){
+        // change to seeds
         this.historyStack.push(this.seeds);
         this.seeds--;
         this.redoStack = [];
@@ -67,12 +69,14 @@ class UIScene extends Phaser.Scene {
     }
 
     Reap(){
+        // change to seeds
         this.historyStack.push(this.seeds);
         this.redoStack = [];
     }
 
     undo(){
         if(this.historyStack.length > 0){
+            // change to seeds. get rid of turnsTaken
             this.redoStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
             const prevState = this.historyStack.pop();
             this.seeds = prevState.seeds;
@@ -84,6 +88,7 @@ class UIScene extends Phaser.Scene {
     
     redo(){
         if (this.redoStack.length > 0) {
+            // change to seeds. get rid of turnsTaken
             this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
             const nextState = this.redoStack.pop();
             this.seeds = nextState.seeds;
@@ -98,15 +103,10 @@ class UIScene extends Phaser.Scene {
         this.endText.visible = true
     }
 
-    winCon(){
-        this.winCon--;
-        if(this.winCon <= 0){
-            this.emitter.emit("end-game");
-        }
-    }
-
     updateUI(){
+        // change to seeds
         this.seedText.text = `Seeds: ${this.seeds}`
+        this.weatherText.text = `Weather: ${weather}`
     }
 
     toggleDropdownMenu() {
