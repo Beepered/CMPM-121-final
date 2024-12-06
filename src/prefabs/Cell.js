@@ -83,4 +83,10 @@ class Cell extends Phaser.GameObjects.Sprite {
     setListeners() {
         this.emitter.on("next-turn", this.NextTurn.bind(this));
     }
+    removePlant(){
+        if(this.plant){
+            this.plant.destroy();
+        }
+        this.plant = null;
+    }
 }

@@ -125,11 +125,16 @@ class Play extends Phaser.Scene {
                 if (!cell.plant || cell.plant.type !== plantType) {
                     cell.Plant(plantType); // Re-plant
                 }
-                cell.plant.growth = plantGrowth;
-                cell.plant.updatePlant();
+                if(plantGrowth == 0){
+                    cell.removePlant();
+                }
+                else{
+                    cell.plant.growth = plantGrowth;
+                    cell.plant.updatePlant();
+                }
             } else {
                 // Clear plant if no type
-                cell.removePlant?.();
+                cell.removePlant();
             }
             byteCount += 8; // Advance the data index
         }
@@ -257,6 +262,7 @@ class Play extends Phaser.Scene {
             emitTxt = "redo";
         }
         if(state){
+            console.log("do")
             const buffer = this.base64ToArrayBuffer(state)
             const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
             this.SetGridFromArrayBuffer(gridBuffer)
