@@ -11,7 +11,7 @@ class UIScene extends Phaser.Scene {
     create (){
         // use seeds not this.seeds
         this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${seeds}`, { fontSize: '20px' })
-        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `Weather: ${weather}`, { fontSize: '20px' })
+        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `Forecast: ${weatherList[0]}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
@@ -100,7 +100,7 @@ class UIScene extends Phaser.Scene {
     updateUI(){
         // change to seeds
         this.seedText.text = `Seeds: ${seeds}`
-        this.weatherText.text = `Weather: ${weather}`
+        this.weatherText.text = `Forecast: ${weatherList[0]}`
     }
 
     toggleDropdownMenu() {
