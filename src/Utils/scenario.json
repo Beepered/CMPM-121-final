@@ -4,5 +4,5 @@
     "maxSeeds": 3,
     "numSeeds": 3,
     "winCondition": 5,
-    "weather": "sunny"
+    "Forecast": ["sunny", "sunny", "sunny"]
 }

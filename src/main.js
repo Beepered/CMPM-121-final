@@ -21,7 +21,7 @@ let seeds = 3;
 const WEATHER = {
     sunny: "sunny",
     cloudy: "cloudy",
-    rainy: "rainy"
+    rainy: "rainy",
 };
 
 let currentWeather = WEATHER.sunny;

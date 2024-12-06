@@ -93,7 +93,6 @@ class UIScene extends Phaser.Scene {
     }
 
     endGame() {
-        this.create();
         this.endText.visible = true
     }
 

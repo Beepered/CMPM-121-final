@@ -307,7 +307,7 @@ class Play extends Phaser.Scene {
         maxSeeds = data.maxSeeds;
         seeds = data.numSeeds;
         this.winCondition = data.winCondition;
-        currentWeather = data.weather;
+        weatherList = data.Forecast;
         this.emitter.emit("update-ui");
     }
 
