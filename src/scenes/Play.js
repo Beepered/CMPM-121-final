@@ -125,9 +125,6 @@ class Play extends Phaser.Scene {
                 if (!cell.plant || cell.plant.type !== plantType) {
                     cell.Plant(plantType); // Re-plant
                 }
-                if(plantGrowth == 0){
-                    cell.removePlant();
-                }
                 else{
                     cell.plant.growth = plantGrowth;
                     cell.plant.updatePlant();
@@ -258,7 +255,9 @@ class Play extends Phaser.Scene {
             state = this.gameStateManager.undo();
             emitTxt = "undo";
         }else{
+            console.log(this.gameStateManager.redoStack.length);
             state = this.gameStateManager.redo();
+            console.log(this.gameStateManager.redoStack.length);
             emitTxt = "redo";
         }
         if(state){

@@ -5,8 +5,13 @@ class gameStateManager {
     }
 
     gameStateChange(state) {
+        console.log("stackPush")
         this.undoStack.push(state);
         this.redoStack = []; 
+    }
+
+    redoStackChange(state) {
+        this.redoStack.push(state);
     }
 
     undo() {
