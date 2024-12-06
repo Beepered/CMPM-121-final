@@ -39,12 +39,7 @@ class Play extends Phaser.Scene {
         this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
 
         this.gameStateManager = new gameStateManager();
-
-        const initialState = new stateInfo();
-        initialState.setPlayerInfo(this.player.x, this.player.y);
-        initialState.setCellBuffer(this.GetArrayBufferFromGrid());
-        this.gameStateManager.gameStateChange(initialState);
-
+        
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
             this.player.checkCellList.push(cell)
         })
@@ -220,12 +215,11 @@ class Play extends Phaser.Scene {
         const turnButton = document.createElement("button");
         turnButton.textContent = "Next Turn";
         turnButton.addEventListener("click", () => {
-            const prevState = new stateInfo();
             this.Save("autosave")
-            prevState.setPlayerInfo(this.player.x, this.player.y)
-            prevState.setCellBuffer(this.GetArrayBufferFromGrid());
+            const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
+            const encode = this.arrayBufferToBase64(newBuffer)
+            this.gameStateManager.gameStateChange(encode);
             this.emitter.emit("next-turn");
-            this.gameStateManager.gameStateChange(prevState);
 
             this.UpdateCellText()
         })
@@ -263,14 +257,11 @@ class Play extends Phaser.Scene {
             emitTxt = "redo";
         }
         if(state){
-            if(state.playerInfo){
-                this.player.x = state.playerInfo.playerX;
-                this.player.y = state.playerInfo.playerY;
-            }
-            if(state.cellBuffer){
-                this.SetGridFromArrayBuffer(state.cellBuffer);
-            }
-            this.emitter.emit(emitTxt);
+            const buffer = this.base64ToArrayBuffer(state)
+            const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
+            this.SetGridFromArrayBuffer(gridBuffer)
+            const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
+            this.SetPlayerFromArrayBuffer(playerBuffer)
         }
         this.UpdateCellText();
     }
