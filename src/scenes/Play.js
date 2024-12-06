@@ -36,7 +36,7 @@ class Play extends Phaser.Scene {
         this.gameObjects.add(this.player);
 
         this.cellGroup = this.add.group()
-        this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
+        this.grid = this.MakeCellGrid(300, 100, this.XTiles, this.YTiles);
 
         this.gameStateManager = new gameStateManager(this);
         
@@ -68,13 +68,15 @@ class Play extends Phaser.Scene {
         return arr
     }
 
-    MakeCellGrid(x, y){
-        const minXPos = 100;
-        const minYPos = 70;
-        var cellGrid = this.Make2DArray(x, y);
-        for(let i = 0; i < x ; i++){
-            for(let j = 0; j < y; j++){
-                cellGrid[i][j] = this.createCell(minXPos + gameWidth / this.XTiles * i, minYPos + gameHeight / this.YTiles * j);
+    MakeCellGrid(xPos, yPos, xAmt, yAmt){
+        var cellGrid = this.Make2DArray(xAmt, yAmt);
+
+        const cellWidth = 128, cellHeight = 128; // space cells by cellWidth and cellHeight
+        const xSpacing = 10, ySpacing = 10;
+
+        for(let i = 0; i < xAmt ; i++){
+            for(let j = 0; j < yAmt; j++){
+                cellGrid[i][j] = this.createCell(xPos + ((cellWidth + xSpacing) * i), yPos + ((cellHeight + ySpacing) * j));
             }
         }
         return cellGrid;
