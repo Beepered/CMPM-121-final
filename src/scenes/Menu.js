@@ -6,27 +6,20 @@ class Menu extends Phaser.Scene {
     create(){
         let titleConfig = {
             fontFamily: "Montserrat",
-            fontSize: "60px",
+            fontSize: "80px",
             color: "#FF0000",
-            align: "center",
-            padding: {
-                top: 5,
-                bottom: 5
-            },
         }
         let textConfig = {
             fontFamily: "Montserrat",
             fontSize: "22px",
-            color: "#FFFFFF",
-            align: "center",
-            padding: {
-                top: 5,
-                bottom: 5
-            },
         }
         this.add.text(gameWidth / 2, gameHeight / 2.5, "We Plantin'", titleConfig).setOrigin(0.5)
         this.add.text(gameWidth / 2, gameHeight / 1.8, "press UP to PLAY", textConfig).setOrigin(0.5)
         this.add.text(gameWidth / 2, gameHeight / 1.6, "press DOWN for CREDITS", textConfig).setOrigin(0.5)
+
+        this.add.text(gameWidth / 2, gameHeight / 1.25, "Instructions:", {fontSize: "18px", fontStyle: "bold"}).setOrigin(0.5)
+        this.add.text(gameWidth / 2, gameHeight / 1.17, "Move with WASD or Arrow Keys", {fontSize: "16px"}).setOrigin(0.5)
+        this.add.text(gameWidth / 2, gameHeight / 1.12, "Plant or Reap plants with SPACEBAR", {fontSize: "16px"}).setOrigin(0.5)
         
         this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
