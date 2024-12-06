@@ -30,7 +30,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     ChangeSun() {
         let minSun = 0;
         let maxSun = 0;
-        switch(weather){
+        switch(currentWeather){
             case WEATHER.sunny:
                 minSun = 6;
                 maxSun = 10;
@@ -50,7 +50,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     ChangeWater() {
         let minWater = 0;
         let maxWater = 0;
-        switch(weather){
+        switch(currentWeather){
             case WEATHER.sunny:
                 minWater = 0;
                 maxWater = 0;

@@ -282,10 +282,14 @@ class Play extends Phaser.Scene {
     NextTurn(){
         seeds = maxSeeds;
 
-        //random weather value
+        currentWeather = weatherList.shift()
+
+        // random weather value
+        // setting the next weather
         const values = Object.keys(WEATHER);
         const enumKey = values[Math.floor(Math.random() * values.length)];
-        weather = WEATHER[enumKey];
+        weatherList.push(WEATHER[enumKey]);
+
     }
 
     setInfoFromData(){
@@ -295,7 +299,7 @@ class Play extends Phaser.Scene {
         maxSeeds = data.maxSeeds;
         seeds = data.numSeeds;
         this.winCondition = data.winCondition;
-        weather = data.weather;
+        currentWeather = data.weather;
         this.emitter.emit("update-ui");
     }
 

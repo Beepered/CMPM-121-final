@@ -10,11 +10,11 @@ class Credits extends Phaser.Scene {
             "Brendan Trieu\n\n" +
             "Ian Liu\n\n" +
             "Izaiah Lozano", { fontSize: '20px' }).setOrigin(0.5)
-        this.SPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     }
 
     update(){
-        if(Phaser.Input.Keyboard.JustDown(this.SPACE)){ 
+        if(Phaser.Input.Keyboard.JustDown(this.keyUP)){ 
             this.scene.switch("menuScene")
         }
     }

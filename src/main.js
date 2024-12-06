@@ -24,4 +24,6 @@ const WEATHER = {
     cloudy: "cloudy",
     rainy: "rainy"
 };
-let weather = WEATHER.sunny
+
+let currentWeather = WEATHER.sunny;
+let weatherList = [WEATHER.sunny, WEATHER.sunny];
