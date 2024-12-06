@@ -15,7 +15,11 @@ class Play extends Phaser.Scene {
 
     preload(){
         this.load.image("player", "assets/PlayerCharacter.png")
-        this.load.image("grass", "assets/GrassV1.png")
+        this.load.image("grass1", "assets/GrassV1.png")
+        this.load.image("grass2", "assets/GrassV2.png")
+        this.load.image("grass3", "assets/GrassV3.png")
+        this.load.image("grass4", "assets/GrassV4.png")
+        this.load.image("grass5", "assets/GrassV5.png")
 
         // flowers
         this.load.image("testplant", "assets/testplant.png")
@@ -36,7 +40,7 @@ class Play extends Phaser.Scene {
         this.gameObjects.add(this.player);
 
         this.cellGroup = this.add.group()
-        this.grid = this.MakeCellGrid(300, 100, this.XTiles, this.YTiles);
+        this.grid = this.MakeCellGrid(250, 110, this.XTiles, this.YTiles);
 
         this.gameStateManager = new gameStateManager(this);
         
@@ -55,7 +59,11 @@ class Play extends Phaser.Scene {
     }
     
     createCell(x, y){
-        const cell = new Cell(this, x, y, "grass");
+        // random grass image
+        const randNum = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+        const textureText = "grass" + randNum.toString()
+
+        const cell = new Cell(this, x, y, textureText);
         this.cellGroup.add(cell);
         return cell;
     }

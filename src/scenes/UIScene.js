@@ -9,9 +9,8 @@ class UIScene extends Phaser.Scene {
     }
 
     create (){
-        // use seeds not this.seeds
-        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${seeds}`, { fontSize: '20px' })
-        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `Forecast: ${weatherList[0]}`, { fontSize: '20px' })
+        this.seedText = this.add.text(20, 20, `Seeds: ${seeds}`, { fontSize: '20px' })
+        this.weatherText = this.add.text(20, 35, `Forecast: ${weatherList[0]}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
