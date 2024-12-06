@@ -91,7 +91,7 @@ class Play extends Phaser.Scene {
     *neighboringCells(x, y) {
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
-                if(i == 0 && j == 0 || (i < 0 || i > this.XTiles) || (j < 0 || j > this.YTiles))
+                if((i == 0 && j == 0) || (x+i < 0 || x+i > this.XTiles) || (y+j < 0 || y+j > this.YTiles))
                     continue;
                 yield this.grid[x + i][y + j];
             }

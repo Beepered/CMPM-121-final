@@ -2,9 +2,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
         scene.add.rectangle(x, y, this.displayWidth + 5, this.displayHeight + 5, 0x000000); // border
-
         scene.add.existing(this)
-        
         scene.physics.add.existing(this)
 
         this.emitter = EventDispatcher.getInstance();
@@ -67,6 +65,12 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.water += Math.floor(Math.random() * (maxWater - minWater + 1)) + minWater;
         if(this.water > 10){ // max water cell can hold is 10
             this.water = 10;
+        }
+    }
+
+    CheckNeighbors() {
+        for(const cell of this.scene.neighboringCells(this.gridX, this.gridY)){
+            
         }
     }
 
