@@ -3,8 +3,8 @@ class Credits extends Phaser.Scene {
         super("creditScene")
     }
     create(){
-        this.add.text(gameWidth / 2, 50, "CREDITS", { fontSize: '40px' }).setOrigin(0.5)
-        this.add.text(gameWidth / 2, 90, "Press SPACEBAR for MENU", { fontSize: '30px' }).setOrigin(0.5)
+        this.add.text(gameWidth / 2, 80, "CREDITS", { fontSize: '40px', fontFamily: "Montserrat" }).setOrigin(0.5)
+        this.add.text(gameWidth / 2, 120, "Press UP for MENU", { fontSize: '30px' }).setOrigin(0.5)
         this.add.text(gameWidth / 2, gameHeight / 2, 
             "Andrew Byi\n\n" +
             "Brendan Trieu\n\n" +

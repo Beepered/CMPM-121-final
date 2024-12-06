@@ -19,12 +19,13 @@ class UIScene extends Phaser.Scene {
         this.createDropdownMenu();
         this.slotWindow = this.add.container(0, 0);
 
-        this.dropdownToggle = this.add.text(800, 10, "Menu", { fontSize: '16px', color: '#123456' }).setInteractive();
-        this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
+        const menuButton = this.add.rectangle(this.cameras.main.width - 90, 0, 90, 30, 0x404040).setOrigin(0).setInteractive()
+        menuButton.on("pointerdown", () => this.toggleDropdownMenu());
+        this.dropdownToggle = this.add.text(800, 10, "Menu", { fontSize: '16px', color: '#ffffff' })
 
         // Position the button dynamically
         this.dropdownToggle.setScrollFactor(0);
-        this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
+        this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 25, 8);
 
         // Handle resizing
         this.scale.on('resize', (gameSize) => {
@@ -117,22 +118,25 @@ class UIScene extends Phaser.Scene {
 
 
     createDropdownMenu() {
-
         this.dropdownMenu = this.add.container(0, 0);
         this.dropdownMenu.setDepth(10);
-        const dropdownBg = this.add.rectangle(0, 0, 150, 100, 0x333333).setOrigin(0);
+        const dropdownBg = this.add.rectangle(0, 0, 150, 110, 0x333333).setOrigin(0);
         dropdownBg.setDepth(2);
     
-        const saveButton = this.add.text(55, 10, "Save").setInteractive();
-        const loadButton = this.add.text(55, 40, "Load").setInteractive();
-        const deleteButton = this.add.text(47, 70, "Delete").setInteractive();
-    
+        const saveButton = this.add.rectangle(0, 0, 150, 100 / 3, 0x404040).setInteractive().setOrigin(0)
+        const loadButton = this.add.rectangle(0, 40, 150, 100 / 3, 0x404040).setInteractive().setOrigin(0)
+        const deleteButton = this.add.rectangle(0, 80, 150, 100 / 3, 0x404040).setInteractive().setOrigin(0)
+
         // Event handlers for each button
         saveButton.on("pointerdown", () => this.showSlotWindow("save"));
         loadButton.on("pointerdown", () => this.showSlotWindow("load"));
         deleteButton.on("pointerdown", () => this.showSlotWindow("delete"));
+
+        const saveText = this.add.text(55, 10, "Save").setOrigin(0)
+        const loadText = this.add.text(55, 50, "Load").setOrigin(0)
+        const deleteText = this.add.text(47, 90, "Delete").setOrigin(0)
     
-        this.dropdownMenu.add([dropdownBg, saveButton, loadButton, deleteButton]);
+        this.dropdownMenu.add([dropdownBg, saveButton, saveText, loadButton, loadText, deleteButton, deleteText]);
         this.dropdownMenu.visible = false;
     }
 
