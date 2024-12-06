@@ -2,7 +2,7 @@ class Play extends Phaser.Scene {
     constructor(){
         super("playScene")
         this.emitter = EventDispatcher.getInstance();
-
+        
         this.XTiles = 3;
         this.YTiles = 3;
 
@@ -38,12 +38,12 @@ class Play extends Phaser.Scene {
         this.cellGroup = this.add.group()
         this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
 
-        this.gameStateManager = new gameStateManager();
+        this.gameStateManager = new gameStateManager(this);
         
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
             this.player.checkCellList.push(cell)
         })
-
+        
         let autoConfirm = confirm("Attempt to load Autosave?");
         if(autoConfirm){
             this.Load("autosave");
@@ -260,23 +260,22 @@ class Play extends Phaser.Scene {
     doFunction(button, undo){
         let state;
         let emitTxt;
-        this.Save("autosave")
         if(undo){
             state = this.gameStateManager.undo();
             emitTxt = "undo";
         }else{
-            console.log(this.gameStateManager.redoStack.length);
             state = this.gameStateManager.redo();
-            console.log(this.gameStateManager.redoStack.length);
             emitTxt = "redo";
         }
         if(state){
-            console.log("do")
+            this.Save("autosave")
             const buffer = this.base64ToArrayBuffer(state)
             const gridBuffer = new Uint8Array(buffer.slice(0, (this.XTiles * this.YTiles) * 8)).buffer;
             this.SetGridFromArrayBuffer(gridBuffer)
             const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
             this.SetPlayerFromArrayBuffer(playerBuffer)
+            console.log(emitTxt);
+            this.emitter.emit(emitTxt)
         }
         this.UpdateCellText();
     }
