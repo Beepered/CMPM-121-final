@@ -1,23 +1,21 @@
 class gameStateManager {
-    constructor() {
+    constructor(playScene) {
         this.undoStack = [];
         this.redoStack = [];
+        this.playScene = playScene;
     }
 
     gameStateChange(state) {
-        console.log("stackPush")
         this.undoStack.push(state);
         this.redoStack = []; 
     }
 
-    redoStackChange(state) {
-        this.redoStack.push(state);
-    }
-
     undo() {
         if (this.undoStack.length > 0) {
+            const newBuffer = this.playScene.appendBuffer(this.playScene.GetArrayBufferFromGrid(), this.playScene.GetArrayBufferFromPlayer())
+            const currentState = this.playScene.arrayBufferToBase64(newBuffer)
+            this.redoStack.push(currentState);
             const prevState = this.undoStack.pop();
-            this.redoStack.push(prevState);
             return prevState;
         }
         else return null;
@@ -25,8 +23,10 @@ class gameStateManager {
 
     redo() {
         if (this.redoStack.length > 0) {
+            const newBuffer = this.playScene.appendBuffer(this.playScene.GetArrayBufferFromGrid(), this.playScene.GetArrayBufferFromPlayer())
+            const currentState = this.playScene.arrayBufferToBase64(newBuffer)
+            this.undoStack.push(currentState);
             const nextState = this.redoStack.pop();
-            this.undoStack.push(nextState);
             return nextState;
         }
         else return null;

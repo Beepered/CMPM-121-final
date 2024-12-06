@@ -2,7 +2,7 @@
     "playerX": 0,
     "playerY": 0,
     "maxSeeds": 3,
-    "numSeeds": 1,
+    "numSeeds": 3,
     "winCondition": 5,
     "weather": "sunny"
 }

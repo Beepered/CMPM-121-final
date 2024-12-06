@@ -4,21 +4,17 @@ class UIScene extends Phaser.Scene {
         this.emitter = EventDispatcher.getInstance();
         this.setListeners();
 
-        // get rid of this
-        this.seeds = 3;
-
         this.historyStack =[];
         this.redoStack = [];
     }
 
     create (){
         // use seeds not this.seeds
-        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
+        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${seeds}`, { fontSize: '20px' })
         this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `Weather: ${weather}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
-        // this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
 
         this.createDropdownMenu();
         this.slotWindow = this.add.container(0, 0);
@@ -45,42 +41,41 @@ class UIScene extends Phaser.Scene {
     setListeners() {
         this.emitter.on("next-turn", this.NextTurn.bind(this));
         this.emitter.on("plant", this.Plant.bind(this));
-        this.emitter.on("reap", this.Reap.bind(this));
+        // this.emitter.on("reap", this.Reap.bind(this));
         this.emitter.on("end-game", this.endGame.bind(this));
-        //this.emitter.on("undo", this.undo.bind(this)); // why is this commented?
+        this.emitter.on("undo", this.undo.bind(this)); // why is this commented?
         this.emitter.on("redo", this.redo.bind(this));
     }
 
     NextTurn(){
         // change to seeds
-        this.historyStack.push(this.seeds);
-        this.seeds = 3;
+        const tmp = seeds;
+        this.historyStack.push(tmp);
+        seeds = 3;
     
         this.updateUI();
     }
 
     Plant(){
-        // change to seeds
-        this.historyStack.push(this.seeds);
-        this.seeds--;
+        const tmp = seeds;
+        this.historyStack.push(tmp);
         this.redoStack = [];
-        
+        seeds--;
+
         this.updateUI();
     }
 
     Reap(){
-        // change to seeds
-        this.historyStack.push(this.seeds);
+        this.historyStack.push(seeds);
         this.redoStack = [];
     }
 
     undo(){
         if(this.historyStack.length > 0){
-            // change to seeds. get rid of turnsTaken
-            this.redoStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+            const tmp = seeds;
+            this.redoStack.push(tmp);
             const prevState = this.historyStack.pop();
-            this.seeds = prevState.seeds;
-            this.turnsTaken = prevState.turnsTaken;
+            seeds = prevState;
 
             this.updateUI();
         }
@@ -88,11 +83,10 @@ class UIScene extends Phaser.Scene {
     
     redo(){
         if (this.redoStack.length > 0) {
-            // change to seeds. get rid of turnsTaken
-            this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+            this.historyStack.push(seeds);
             const nextState = this.redoStack.pop();
-            this.seeds = nextState.seeds;
-            this.turnsTaken = nextState.turnsTaken;
+            console.log(nextState)
+            seeds = nextState;
 
             this.updateUI();
         }
@@ -105,7 +99,7 @@ class UIScene extends Phaser.Scene {
 
     updateUI(){
         // change to seeds
-        this.seedText.text = `Seeds: ${this.seeds}`
+        this.seedText.text = `Seeds: ${seeds}`
         this.weatherText.text = `Weather: ${weather}`
     }
 
