@@ -44,7 +44,7 @@ class UIScene extends Phaser.Scene {
         this.emitter.on("plant", this.Plant.bind(this));
         this.emitter.on("reap", this.Reap.bind(this));
         this.emitter.on("end-game", this.endGame.bind(this));
-        //this.emitter.on("undo", this.undo.bind(this)); // why is this commented?
+        this.emitter.on("undo", this.undo.bind(this)); // why is this commented?
         this.emitter.on("redo", this.redo.bind(this));
     }
 
@@ -73,7 +73,7 @@ class UIScene extends Phaser.Scene {
 
     undo(){
         if(this.historyStack.length > 0){
-            // change to seeds. get rid of turnsTaken
+            // change to seeds
             this.redoStack.push({seeds: seeds});
             const prevState = this.historyStack.pop();
             console.log(prevState)
@@ -85,7 +85,7 @@ class UIScene extends Phaser.Scene {
     
     redo(){
         if (this.redoStack.length > 0) {
-            // change to seeds. get rid of turnsTaken
+            // change to seeds
             this.historyStack.push({seeds: seeds});
             const nextState = this.redoStack.pop();
             seeds = nextState.seeds;
@@ -100,7 +100,6 @@ class UIScene extends Phaser.Scene {
     }
 
     updateUI(){
-        // change to seeds
         this.seedText.text = `Seeds: ${seeds}`
         this.weatherText.text = `Weather: ${weatherList[0]}`
     }

@@ -88,6 +88,16 @@ class Play extends Phaser.Scene {
         }
     }
 
+    *neighboringCells(x, y) {
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                if(i == 0 && j == 0 || (i < 0 || i > this.XTiles) || (j < 0 || j > this.YTiles))
+                    continue;
+                yield this.grid[x + i][y + j];
+            }
+        }
+    }
+
     *gridCells() {
         for (let i = 0; i < this.grid.length; i++) {
             for (let j = 0; j < this.grid[i].length; j++) {
