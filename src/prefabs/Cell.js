@@ -32,8 +32,8 @@ class Cell extends Phaser.GameObjects.Sprite {
         let maxSun = 0;
         switch(weather){
             case WEATHER.sunny:
-                minSun = 6
-                maxSun = 10
+                minSun = 6;
+                maxSun = 10;
                 break;
             case WEATHER.cloudy:
                 minSun = 3;
@@ -44,7 +44,7 @@ class Cell extends Phaser.GameObjects.Sprite {
                 maxSun = 3;
                 break;
         }
-        this.sun = Math.floor(Math.random() * maxSun) + minSun; // Immediate use of sun or it will be reset
+        this.sun = Math.floor(Math.random() * (maxSun - minSun + 1)) + minSun; // Immediate use of sun or it will be reset
     }
 
     ChangeWater() {
@@ -64,8 +64,7 @@ class Cell extends Phaser.GameObjects.Sprite {
                 maxWater = 3;
                 break;
         }
-        const WaterPower = Math.floor(Math.random() * maxWater) + minWater;
-        this.water = this.water + WaterPower;
+        this.water += Math.floor(Math.random() * (maxWater - minWater + 1)) + minWater;
         if(this.water > 10){ // max water cell can hold is 10
             this.water = 10;
         }

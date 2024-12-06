@@ -4,16 +4,13 @@ class UIScene extends Phaser.Scene {
         this.emitter = EventDispatcher.getInstance();
         this.setListeners();
 
-        // get rid of this
-        this.seeds = 3;
-
         this.historyStack =[];
         this.redoStack = [];
     }
 
     create (){
         // use seeds not this.seeds
-        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${this.seeds}`, { fontSize: '20px' })
+        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${seeds}`, { fontSize: '20px' })
         this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `Weather: ${weather}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
@@ -53,16 +50,16 @@ class UIScene extends Phaser.Scene {
 
     NextTurn(){
         // change to seeds
-        this.historyStack.push(this.seeds);
-        this.seeds = 3;
+        this.historyStack.push(seeds);
     
         this.updateUI();
     }
 
     Plant(){
         // change to seeds
-        this.historyStack.push(this.seeds);
-        this.seeds--;
+        this.historyStack.push(seeds);
+        console.log(this.historyStack)
+        seeds--;
         this.redoStack = [];
         
         this.updateUI();
@@ -70,17 +67,17 @@ class UIScene extends Phaser.Scene {
 
     Reap(){
         // change to seeds
-        this.historyStack.push(this.seeds);
+        this.historyStack.push(seeds);
         this.redoStack = [];
     }
 
     undo(){
         if(this.historyStack.length > 0){
             // change to seeds. get rid of turnsTaken
-            this.redoStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+            this.redoStack.push({seeds: seeds});
             const prevState = this.historyStack.pop();
-            this.seeds = prevState.seeds;
-            this.turnsTaken = prevState.turnsTaken;
+            console.log(prevState)
+            seeds = prevState.seeds;
 
             this.updateUI();
         }
@@ -89,10 +86,9 @@ class UIScene extends Phaser.Scene {
     redo(){
         if (this.redoStack.length > 0) {
             // change to seeds. get rid of turnsTaken
-            this.historyStack.push({seeds: this.seeds, turnsTaken: this.turnsTaken});
+            this.historyStack.push({seeds: seeds});
             const nextState = this.redoStack.pop();
-            this.seeds = nextState.seeds;
-            this.turnsTaken = nextState.turnsTaken;
+            seeds = nextState.seeds;
 
             this.updateUI();
         }
@@ -105,7 +101,7 @@ class UIScene extends Phaser.Scene {
 
     updateUI(){
         // change to seeds
-        this.seedText.text = `Seeds: ${this.seeds}`
+        this.seedText.text = `Seeds: ${seeds}`
         this.weatherText.text = `Weather: ${weather}`
     }
 
