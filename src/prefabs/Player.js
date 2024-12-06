@@ -78,7 +78,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         if(this.cell){
             if(this.cell.plant == null && seeds > 0){
                 this.undoRedo();
-                seeds--;
                 this.emitter.emit("plant")
                 this.Plant();
             }
