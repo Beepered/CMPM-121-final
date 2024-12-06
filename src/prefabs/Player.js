@@ -25,6 +25,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.SPACE = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         this.moveSpeed = 300;
+        this.seeds = 3;
         this.cell = null;
 
         this.playersTurn = true;
@@ -76,11 +77,13 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     Action(){
         if(this.cell){
             if(this.cell.plant == null && seeds > 0){
-                // seeds--;
+                this.undoRedo();
+                seeds--;
                 this.emitter.emit("plant")
                 this.Plant();
             }
             else if(this.cell.plant != null && this.cell.plant.growth >= 3){
+                this.undoRedo();
                 this.Reap();
                 this.emitter.emit("reap");
             }
@@ -122,13 +125,21 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         return {
             x: this.x,
             y: this.y,
-            seeds: seeds,
+            seeds: this.seeds,
         };
     }
 
     deserialize(data) {
         this.x = data.x;
         this.y = data.y;
-        seeds = data.seeds;
+        this.seeds = data.seeds;
     }
+    undoRedo(){
+        const playScene = this.scene.scene.get("playScene"); 
+        const newBuffer = playScene.appendBuffer(playScene.GetArrayBufferFromGrid(), playScene.GetArrayBufferFromPlayer())
+        const encode = playScene.arrayBufferToBase64(newBuffer)
+        playScene.gameStateManager.gameStateChange(encode);
+        playScene.UpdateCellText()
+    }
+
 }
