@@ -1,0 +1,11 @@
+{
+    "selected": 0,
+    "format": ["English", "Chinese", "Japanese", "French", "Spanish", "Latin"],
+    "autoConfirmtxt": ["Attempt to load Autosave?", 
+        "尝试加载自动保存吗？", 
+        "自動保存をロードしますか?",
+        "Tenter de charger la sauvegarde automatique ?", 
+        "¿Intentar cargar el guardado automático?",
+        "Onerantes Autosave conantur?"]
+    
+}

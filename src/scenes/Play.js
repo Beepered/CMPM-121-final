@@ -24,6 +24,7 @@ class Play extends Phaser.Scene {
         this.load.image("red", "assets/Red_Flower.png")
 
         this.load.json('json', 'src/Utils/scenario.json')
+        this.load.json('language', 'src/Utils/language.json')
     }
 
     create(){
@@ -43,8 +44,8 @@ class Play extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
             this.player.checkCellList.push(cell)
         })
-        
-        let autoConfirm = confirm("Attempt to load Autosave?");
+        const txt = this.cache.json.get('language');
+        let autoConfirm = confirm(txt.autoConfirmtxt[txt.selected]);
         if(autoConfirm){
             this.Load("autosave");
         }
