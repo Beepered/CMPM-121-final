@@ -52,6 +52,7 @@ Progress was slow because everyone was given other projects in other classes to 
 - F1 changes:
   - F1[a]. Various bug fixes. (explain later and maybe show off by giving code changes)
   - F1[b]. Changed buttons so the player clicks on rectangles instead of text, making it easier to click on menu buttons.
+  - F1[d]. Reworked undo/redo system to utilize the array buffer from f1.a. Also reworked the redo logic to function properly. Undo/redo now properly works for all actions including, new turns, reaping, and planting. 
 ### External DSL for Scenario Design
 Created a JSON file that the play scene parses through on start that changes various values. Changing Forecast to ["rainy", "rainy", "cloudy", "sunny"] will change the weather to rainy for 2 turns, cloudy for 1 turn, and sunny for 1 turn. Had to change the seeds variable to be global so that the UI scene could take from a possibly different value instead of always assuming it will be 3.
 ```
