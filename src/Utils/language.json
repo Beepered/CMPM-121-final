@@ -6,6 +6,9 @@
         "自動保存をロードしますか?",
         "Tenter de charger la sauvegarde automatique ?", 
         "¿Intentar cargar el guardado automático?",
-        "Onerantes Autosave conantur?"]
-    
+        "Onerantes Autosave conantur?"],
+    "savingtxt": ["Saving data to slot: " ],
+    "encodedtxt": ["Encoded data: "],
+    "saveSuccess": ["Save successful."],
+    "saveFailed": ["Save failed:"]
 }
