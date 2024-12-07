@@ -13,8 +13,8 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.sun = 3;
         this.water = 3;
 
-        this.sunText = scene.add.text(x - 60, y - 60, this.sun.toString(), { fontSize: '18px', color:'yellow' })
-        this.waterText = scene.add.text(x - 40, y - 60, this.water.toString(), { fontSize: '18px', color:'blue' })
+        this.sunText = scene.add.text(x - 60, y - 60, this.sun.toString(), { fontSize: '18px', fontStyle: 'bold', color:'yellow' }).setDepth(2)
+        this.waterText = scene.add.text(x - 35, y - 60, this.water.toString(), { fontSize: '18px', fontStyle: 'bold', color:'blue' }).setDepth(2)
     }
 
     NextTurn(){
