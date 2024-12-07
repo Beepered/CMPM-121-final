@@ -125,10 +125,8 @@ class Play extends Phaser.Scene {
                 if (!cell.plant || cell.plant.type !== plantType) {
                     cell.Plant(plantType); // Re-plant
                 }
-                else{
                     cell.plant.growth = plantGrowth;
                     cell.plant.updatePlant();
-                }
             } else {
                 // Clear plant if no type
                 cell.removePlant();
