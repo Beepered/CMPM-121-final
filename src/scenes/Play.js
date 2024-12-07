@@ -122,11 +122,10 @@ class Play extends Phaser.Scene {
             if (plantType !== 0) {
                 // Ensure plant is re-initialized
                 const plantGrowth = view.getInt16(byteCount + 6);
-                if (!cell.plant || cell.plant.type !== plantType) {
-                    cell.Plant(plantType); // Re-plant
-                }
-                    cell.plant.growth = plantGrowth;
-                    cell.plant.updatePlant();
+                cell.removePlant(); 
+                cell.Plant(plantType);
+                cell.plant.growth = plantGrowth;
+                cell.plant.updatePlant();
             } else {
                 // Clear plant if no type
                 cell.removePlant();
