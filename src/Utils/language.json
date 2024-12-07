@@ -14,5 +14,8 @@
     "nullSavetxt": ["null save"],
     "nextTurn": ["Next Turn"],
     "undoTxt": ["undo"],
-    "redoTxt": ["redo"]
+    "redoTxt": ["redo"],
+    "Title": ["We Plantin'"],
+    "startPlayTxt": ["press UP to PLAY"],
+    "creditsTxt": ["press DOWN for CREDITS"]
 }
