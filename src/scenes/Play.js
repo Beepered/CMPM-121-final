@@ -112,9 +112,17 @@ class Play extends Phaser.Scene {
         return buffer
     } 
 
+    FlowerGrown() {
+        this.flowersGrown++;
+        if(this.flowersGrown >= this.winCondition){
+            this.emitter.emit("end-game");
+        }
+    }
+
     SetGridFromArrayBuffer(buffer) {
         const view = new DataView(buffer);
         let byteCount = 0
+        this.flowersGrown = 0;
         for(const cell of this.gridCells()) {
             cell.sun = view.getInt16(byteCount);
             cell.water = view.getInt16(byteCount + 2);
@@ -125,6 +133,9 @@ class Play extends Phaser.Scene {
                 cell.removePlant(); 
                 cell.Plant(plantType);
                 cell.plant.growth = plantGrowth;
+                if(cell.plant.growth == 3){ //Could change to be dynamic
+                    this.FlowerGrown();
+                }
                 cell.plant.updatePlant();
             } else {
                 // Clear plant if no type
@@ -265,13 +276,6 @@ class Play extends Phaser.Scene {
             this.emitter.emit(emitTxt)
         }
         this.UpdateCellText();
-    }
-
-    FlowerGrown() {
-        this.flowersGrown++;
-        if(this.flowersGrown >= this.winCondition){
-            this.emitter.emit("end-game");
-        }
     }
 
     NextTurn(){
