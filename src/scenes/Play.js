@@ -9,7 +9,7 @@ class Play extends Phaser.Scene {
         this.winCondition = 3;
         this.flowersGrown = 0;
 
-        this.addAllButtons();
+        
         this.setListeners();
     }
 
@@ -28,6 +28,8 @@ class Play extends Phaser.Scene {
     }
 
     create(){
+
+        this.addAllButtons();
         this.scene.launch("uiScene")
         
         this.gameObjects = this.add.group({
@@ -49,7 +51,7 @@ class Play extends Phaser.Scene {
         if(autoConfirm){
             this.Load("autosave");
         }
-
+        
         this.setInfoFromData();
 
         this.UpdateCellText();
@@ -207,7 +209,8 @@ class Play extends Phaser.Scene {
             this.SetPlayerFromArrayBuffer(playerBuffer)
         }
         else{
-            alert("null save")
+            const txt = this.cache.json.get('language');
+            alert(txt.nullSavetxt[txt.selected]);
         }
     }
 
@@ -216,8 +219,9 @@ class Play extends Phaser.Scene {
     }
 
     addTurnButton(){
+        const txt = this.cache.json.get('language');
         const turnButton = document.createElement("button");
-        turnButton.textContent = "Next Turn";
+        turnButton.textContent = txt.nextTurn[txt.selected];
         turnButton.addEventListener("click", () => {
             this.Save("autosave")
             const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
@@ -234,11 +238,12 @@ class Play extends Phaser.Scene {
             { length: 2 },
             () => document.createElement("button"),
         );
-        const buttonTxt = ["undo", "redo"];
+        const txt = this.cache.json.get('language');
+        const buttonTxt = [txt.undoTxt[txt.selected], txt.redoTxt[txt.selected]];
         doButtons.forEach((button, i) => {
             button.innerHTML = `${buttonTxt[i]}`;
             button.addEventListener("click", () => {
-                this.doFunction(button, i == 0); //function needs to be filled
+                this.doFunction(buttonTxt, i == 0); //function needs to be filled
             })
             document.body.append(button);
         })
@@ -249,15 +254,12 @@ class Play extends Phaser.Scene {
     }
 
     //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
-    doFunction(button, undo){
+    doFunction(buttonTxt, undo){
         let state;
-        let emitTxt;
         if(undo){
             state = this.gameStateManager.undo();
-            emitTxt = "undo";
         }else{
             state = this.gameStateManager.redo();
-            emitTxt = "redo";
         }
         if(state){
             this.Save("autosave")
@@ -266,8 +268,8 @@ class Play extends Phaser.Scene {
             this.SetGridFromArrayBuffer(gridBuffer)
             const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
             this.SetPlayerFromArrayBuffer(playerBuffer)
-            console.log(emitTxt);
-            this.emitter.emit(emitTxt)
+            console.log(buttonTxt);
+            this.emitter.emit(buttonTxt)
         }
         this.UpdateCellText();
     }

@@ -10,5 +10,9 @@
     "savingtxt": ["Saving data to slot: " ],
     "encodedtxt": ["Encoded data: "],
     "saveSuccess": ["Save successful."],
-    "saveFailed": ["Save failed:"]
+    "saveFailed": ["Save failed:"],
+    "nullSavetxt": ["null save"],
+    "nextTurn": ["Next Turn"],
+    "undoTxt": ["undo"],
+    "redoTxt": ["redo"]
 }
