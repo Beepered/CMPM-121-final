@@ -7,13 +7,18 @@ class UIScene extends Phaser.Scene {
         this.historyStack =[];
         this.redoStack = [];
     }
+    
+    preload(){
+        this.load.json('language', 'src/Utils/language.json')
+    }
 
     create (){
+        const txt = this.cache.json.get('language');
         // use seeds not this.seeds
-        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `Seeds: ${seeds}`, { fontSize: '20px' })
-        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `Weather: ${weather}`, { fontSize: '20px' })
+        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `${txt.Seeds[txt.selected]}: ${seeds}`, { fontSize: '20px' })
+        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `${txt.Weather[txt.selected]}: ${weather}`, { fontSize: '20px' })
 
-        this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `GAME FINISHED`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
+        this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `${txt.GAMEFINISHED[txt.selected]}`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
 
         this.createDropdownMenu();
@@ -98,9 +103,10 @@ class UIScene extends Phaser.Scene {
     }
 
     updateUI(){
+        const txt = this.cache.json.get('language');
         // change to seeds
-        this.seedText.text = `Seeds: ${seeds}`
-        this.weatherText.text = `Weather: ${weather}`
+        this.seedText.text = `${txt.Seeds[txt.selected]}: ${seeds}`
+        this.weatherText.text = `${txt.Weather[txt.selected]}: ${weather}`
     }
 
     toggleDropdownMenu() {

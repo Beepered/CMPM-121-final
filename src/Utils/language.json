@@ -1,5 +1,5 @@
 {
-    "selected": 0,
+    "selected": 1,
     "format": ["English", "Chinese", "Japanese", "French", "Spanish", "Latin"],
     "autoConfirmtxt": ["Attempt to load Autosave?", 
         "尝试加载自动保存吗？", 
@@ -7,15 +7,19 @@
         "Tenter de charger la sauvegarde automatique ?", 
         "¿Intentar cargar el guardado automático?",
         "Onerantes Autosave conantur?"],
-    "savingtxt": ["Saving data to slot: " ],
-    "encodedtxt": ["Encoded data: "],
-    "saveSuccess": ["Save successful."],
-    "saveFailed": ["Save failed:"],
-    "nullSavetxt": ["null save"],
-    "nextTurn": ["Next Turn"],
-    "undoTxt": ["undo"],
-    "redoTxt": ["redo"],
-    "Title": ["We Plantin'"],
-    "startPlayTxt": ["press UP to PLAY"],
-    "creditsTxt": ["press DOWN for CREDITS"]
+    "savingtxt": ["Saving data to slot: ", "保存数据至插槽："],
+    "encodedtxt": ["Encoded data: ", "编码数据："],
+    "saveSuccess": ["Save successful. ", "保存成功。"],
+    "saveFailed": ["Save failed: ", "保存失败："],
+    "nullSavetxt": ["null save", "空存储"],
+    "nextTurn": ["Next Turn", "下一回合"],
+    "undoTxt": ["undo", "撤消"],
+    "redoTxt": ["redo", "重做"],
+    "Title": ["We Plantin'", "我们种植"],
+    "startPlayTxt": ["press UP to PLAY", "按“上键”键播放"],
+    "creditsTxt": ["press DOWN for CREDITS", "按下“下键”键获取积分"],
+    "Seeds": ["Seeds", "种子"],
+    "Weather": ["Weather", "天气"],
+    "GAMEFINISHED": ["GAME FINISHED", "结束"]
+    
 }
