@@ -115,6 +115,7 @@ class Play extends Phaser.Scene {
     SetGridFromArrayBuffer(buffer) {
         const view = new DataView(buffer);
         let byteCount = 0
+        this.flowersGrown = 0;
         for(const cell of this.gridCells()) {
             cell.sun = view.getInt16(byteCount);
             cell.water = view.getInt16(byteCount + 2);
@@ -122,6 +123,9 @@ class Play extends Phaser.Scene {
             if (plantType !== 0) {
                 // Ensure plant is re-initialized
                 const plantGrowth = view.getInt16(byteCount + 6);
+                if (plantGrowth == 3){ //Change to be dynamically set later
+                    this.FlowerGrown();
+                }
                 if (!cell.plant || cell.plant.type !== plantType) {
                     cell.Plant(plantType); // Re-plant
                 }
