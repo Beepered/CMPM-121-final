@@ -1,6 +1,7 @@
 class InternalPlantType{
     fullName = "";
-    nextLevel(){}
+    texture = "";
+    nextLevel(){};
 }
 
 function plantTypeParser(program){
@@ -8,6 +9,9 @@ function plantTypeParser(program){
     const dsl = {
         name(name){
             internalPlantType.fullName = name
+        },
+        texture(texture){
+            internalPlantType.texture = texture
         },
         growsWhen(growsWhen){
             internalPlantType.nextLevel = (ctx) => {
@@ -20,6 +24,3 @@ function plantTypeParser(program){
 }
 
 const allInternalPlantTypes = allPlantDefinition.map(plantTypeParser);
-allInternalPlantTypes.forEach((plant) => {
-    console.log(plant.fullName)
-})

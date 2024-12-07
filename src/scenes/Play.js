@@ -108,7 +108,7 @@ class Play extends Phaser.Scene {
         }
     }
 
-    *GetNeighborsByCell(cell) {
+    GetNeighborsByCell(cell) {
         let x, y;
         for (let i = 0; i < this.grid.length; i++) {
             for (let j = 0; j < this.grid[i].length; j++) {
@@ -118,18 +118,20 @@ class Play extends Phaser.Scene {
                 }
             }
         }
+        const neighbors =  []
         if(!x && !y) {
             for (let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
                     if((i == 0 && j == 0) || (x+i < 0 || x+i > this.XTiles) || (y+j < 0 || y+j > this.YTiles))
                         continue;
-                    yield this.grid[x + i][y + j];
+                    neighbors.push(this.grid[x + i][y + j]);
                 }
             }
         }
         else{
             console.error("can't find cell")
         }
+        return neighbors
     }
 
     *gridCells() {
@@ -348,15 +350,5 @@ class Play extends Phaser.Scene {
     setListeners(){
         this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
         this.emitter.on("next-turn", this.NextTurn.bind(this));
-    }
-
-
-    // giving plant cell information
-    GiveInformation(cell){
-        const info = {
-            cell: cell,
-            neighbors: this.GetNeighborsByCell(cell),
-        }
-        return info
     }
 }
