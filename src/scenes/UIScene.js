@@ -87,12 +87,13 @@ class UIScene extends Phaser.Scene {
     }
 
     undo(){
+        console.log("UNDOCALLED")
         if(this.historyStack.length > 0){
             const tmp = seeds;
             this.redoStack.push(tmp);
             const prevState = this.historyStack.pop();
             seeds = prevState;
-
+            console.log("Seeds: " + seeds);
             this.updateUI();
         }
     }

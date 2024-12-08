@@ -194,7 +194,7 @@ class Play extends Phaser.Scene {
         const view = new DataView(buffer);
         view.setInt16(0, this.player.x);
         view.setInt16(2, this.player.y);
-        view.setInt16(4, this.player.seeds);
+        view.setInt16(4, seeds);
         return buffer
     }
 
@@ -202,7 +202,7 @@ class Play extends Phaser.Scene {
         const view = new DataView(buffer);
         this.player.x = view.getInt16(0);
         this.player.y = view.getInt16(2);
-        this.player.seeds = view.getInt16(4);
+        seeds = view.getInt16(4);
     }
 
     appendBuffer = function(buffer1, buffer2) {
@@ -295,7 +295,7 @@ class Play extends Phaser.Scene {
         doButtons.forEach((button, i) => {
             button.innerHTML = `${buttonTxt[i]}`;
             button.addEventListener("click", () => {
-                this.doFunction(buttonTxt, i == 0); //function needs to be filled
+                this.doFunction(buttonTxt[i], i == 0); //function needs to be filled
             })
             document.body.append(button);
         })
@@ -320,7 +320,7 @@ class Play extends Phaser.Scene {
             this.SetGridFromArrayBuffer(gridBuffer)
             const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
             this.SetPlayerFromArrayBuffer(playerBuffer)
-            console.log(buttonTxt);
+            console.log("Button: " + buttonTxt);
             this.emitter.emit(buttonTxt)
         }
         this.UpdateCellText();
