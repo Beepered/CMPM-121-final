@@ -1,3 +1,4 @@
+
 let config = {
     type: Phaser.CANVAS,
     physics:{
