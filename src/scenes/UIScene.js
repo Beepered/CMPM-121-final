@@ -24,7 +24,7 @@ class UIScene extends Phaser.Scene {
         this.createDropdownMenu();
         this.slotWindow = this.add.container(0, 0);
 
-        this.dropdownToggle = this.add.text(800, 10, "Menu", { fontSize: '16px', color: '#123456' }).setInteractive();
+        this.dropdownToggle = this.add.text(800, 10, txt.Menu[txt.selected], { fontSize: '16px', color: '#123456' }).setInteractive();
         this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
 
         // Position the button dynamically
@@ -124,15 +124,15 @@ class UIScene extends Phaser.Scene {
 
 
     createDropdownMenu() {
-
+        const txt = this.cache.json.get('language');
         this.dropdownMenu = this.add.container(0, 0);
         this.dropdownMenu.setDepth(10);
         const dropdownBg = this.add.rectangle(0, 0, 150, 100, 0x333333).setOrigin(0);
         dropdownBg.setDepth(2);
     
-        const saveButton = this.add.text(55, 10, "Save").setInteractive();
-        const loadButton = this.add.text(55, 40, "Load").setInteractive();
-        const deleteButton = this.add.text(47, 70, "Delete").setInteractive();
+        const saveButton = this.add.text(55, 10, txt.Save[txt.selected]).setInteractive();
+        const loadButton = this.add.text(55, 40, txt.Load[txt.selected]).setInteractive();
+        const deleteButton = this.add.text(47, 70, txt.Delete[txt.selected]).setInteractive();
     
         // Event handlers for each button
         saveButton.on("pointerdown", () => this.showSlotWindow("save"));
@@ -144,6 +144,7 @@ class UIScene extends Phaser.Scene {
     }
 
     showSlotWindow(action) {
+        const txt = this.cache.json.get('language');
         // Close the dropdown menu
         this.dropdownMenu.visible = false;
     
@@ -157,16 +158,24 @@ class UIScene extends Phaser.Scene {
         // Add background
         const bg = this.add.rectangle(0, 0, 300, 200, 0x222222).setOrigin(0.5);
         this.slotWindow.add(bg);
+        let actiontxt;
+        if(action == "save"){
+            actiontxt = txt.Save[txt.selected][0]
+        }else if(action == "load"){
+            actiontxt = txt.Load[txt.selected]
+        }else if(action == "delete"){
+            actiontxt = txt.Delete[txt.selected]
+        }
     
         // Add title text
-        const titleText = this.add.text(0, -80, `${action.toUpperCase()} SLOTS`, {
+        const titleText = this.add.text(0, -80, `${actiontxt} ${txt.Slot[txt.selected][1]}`, {
             fontSize: "20px",
             color: "#fff",
         }).setOrigin(0.5);
         this.slotWindow.add(titleText);
     
         // Define slots
-        const slots = ["slot1", "slot2", "slot3"];
+        const slots = [txt.Slot[txt.selected][0] + "1", txt.Slot[txt.selected][0] + "2", txt.Slot[txt.selected][0] + "3"];
         let yPos = -30; // Position for the first button
     
         slots.forEach((slot) => {
@@ -174,8 +183,8 @@ class UIScene extends Phaser.Scene {
             const slotData = localStorage.getItem(slot);
     
             // Determine button text and color
-            const isEmpty = !slotData || slotData === "Empty slot";
-            const slotText = isEmpty ? "Empty slot" : `${slot} - Saved`;
+            const isEmpty = !slotData || slotData === `${txt.Empty[txt.selected]} ${txt.Slot[txt.selected][0]}`;
+            const slotText = isEmpty ? `${txt.Empty[txt.selected]} ${txt.Slot[txt.selected][0]}` : `${slot} - ${txt.Save[txt.selected][1]}`;
             const slotColor = isEmpty ? "#333" : "#228B22";
     
             // Create slot button
@@ -194,7 +203,7 @@ class UIScene extends Phaser.Scene {
         });
     
         // Add Close Button
-        const closeButton = this.add.text(0, 80, "Close", {
+        const closeButton = this.add.text(0, 80, txt.Close[txt.selected], {
             fontSize: "18px",
             backgroundColor: "#cc0000",
             color: "#fff",
@@ -216,7 +225,7 @@ class UIScene extends Phaser.Scene {
                 console.log(`Saving to slot: ${slot}`);
                 playScene.Save(slot); // Perform the save
                 // Dynamically update button text and color
-                slotButton.setText(`${slot} - Saved`);
+                slotButton.setText(`${slot} - ${txt.Save[txt.selected][1]}`);
                 slotButton.setStyle({ backgroundColor: "#228B22" });
                 break;
     
@@ -230,7 +239,7 @@ class UIScene extends Phaser.Scene {
                 console.log(`Deleting slot: ${slot}`);
                 localStorage.removeItem(slot); // Delete the slot
                 // Reset button text and color
-                slotButton.setText("Empty slot");
+                slotButton.setText(`${txt.Empty[txt.selected]} ${txt.Slot[txt.selected][0]}`);
                 slotButton.setStyle({ backgroundColor: "#333" });
                 break;
         }

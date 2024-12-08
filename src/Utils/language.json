@@ -1,5 +1,5 @@
 {
-    "selected": 1,
+    "selected": 0,
     "format": ["English", "Chinese", "Japanese", "French", "Spanish", "Latin"],
     "autoConfirmtxt": ["Attempt to load Autosave?", 
         "尝试加载自动保存吗？", 
@@ -20,6 +20,16 @@
     "creditsTxt": ["press DOWN for CREDITS", "按下“下键”键获取积分"],
     "Seeds": ["Seeds", "种子"],
     "Weather": ["Weather", "天气"],
-    "GAMEFINISHED": ["GAME FINISHED", "结束"]
-    
+    "GAMEFINISHED": ["GAME FINISHED", "结束"],
+    "sunny": ["sunny", "阳光"],
+    "cloudy": ["cloudy", "多云"],
+    "rainy": ["rainy", "下雨"],
+    "Menu": ["Menu", "菜单"],
+    "Save": [["Save", "Saved"], ["保存", "已保存"]],
+    "Load": ["Load", "加载"],
+    "Delete": ["Delete", "删除"],
+    "Slot": [["Slot ", "SLOTS"], ["槽", "插槽"]],
+    "Empty": ["Empty ", "空"],
+    "Close": ["Close", "关闭"],
+    "gameSavedIn": ["Game saved in", "保存于"]
 }
