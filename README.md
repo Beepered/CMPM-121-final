@@ -69,7 +69,7 @@ Created a JSON file that the play scene parses through on start that changes var
 Ahahaha
 
 ### Switch to Alternate Platform
-Switching to TypeScript from JavaScript
+Our port from javascript to typescript started by installing node into our existing project. Using Node we installed typescript, phaser and ESLint. Because of the similarities between javascript and typescript, we didn't have to change too many things. The biggest changes came from strongly typing all of our variables along with changing a bunch of syntax. Notable syntax chnages included changing references in SaveManager to work properly with static typing. The cleanup process also allowed us to delete legacy code that no longer had functionality. 
 
 ## Reflection
 We knew we couldn't finish the project because the save and load from F1 was constantly breaking and managing other projects. Eventually the roles didn't matter too much as everyone was just trying to do as much as they can. Brendan started focusing on making small user experience changes and implementing new ideas (player movement and cell checking, weather, JSON), while Ian focused on fixing the save/load and undo/redo.
