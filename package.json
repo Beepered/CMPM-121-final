@@ -1,0 +1,15 @@
+{
+  "name": "cmpm-121-final",
+  "version": "1.0.0",
+  "description": "## Log 1 - Nov 14 2024 ### Team - Brendan Trieu will be working under the name Beepered and be responsible for creating reusable functions and template code such as classes - Ian Liu will be responsible for researching the primary and alternate engines.  - Andrew Byi will be responsible for establishing standard of organizing the code.  - Izaiah Lozano will be responsible for Game art and music/soundFX",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
