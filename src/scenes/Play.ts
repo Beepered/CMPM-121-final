@@ -1,15 +1,4 @@
-class PlayScene extends Phaser.Scene {
-    emitter: any;
-    XTiles: number;
-    YTiles: number;
-    winCondition: number;
-    flowersGrown: number;
-    gameObjects: Phaser.GameObjects.Group | undefined;
-    player: Player | undefined;
-    cellGroup: Phaser.GameObjects.Group | undefined;
-    grid: any[][] | undefined;
-    gameStateManager: gameStateManager | undefined;
-
+class Play extends Phaser.Scene {
     constructor(){
         super("playScene")
         this.emitter = EventDispatcher.getInstance();
@@ -52,7 +41,7 @@ class PlayScene extends Phaser.Scene {
         this.gameStateManager = new gameStateManager(this);
         
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
-            this.player!.checkCellList.push(cell)
+            this.player.checkCellList.push(cell)
         })
         
         let autoConfirm = confirm("Attempt to load Autosave?");
@@ -64,17 +53,14 @@ class PlayScene extends Phaser.Scene {
 
         this.UpdateCellText();
     }
-    // YTiles(XTiles: number, YTiles: any): any[][] {
-    //     throw new Error("Method not implemented.");
-    // }
     
-    createCell(x: number, y: number){
+    createCell(x, y){
         const cell = new Cell(this, x, y, "grass");
-        this.cellGroup!.add(cell);
+        this.cellGroup.add(cell);
         return cell;
     }
 
-    Make2DArray(x: number, y: number){
+    Make2DArray(x, y){
         var arr = []; // make 2d array
         for(let i = 0; i < y; i++) {
             arr.push(new Array(x));
@@ -82,7 +68,7 @@ class PlayScene extends Phaser.Scene {
         return arr
     }
 
-    MakeCellGrid(x: number, y: number){
+    MakeCellGrid(x, y){
         const minXPos = 100;
         const minYPos = 70;
         var cellGrid = this.Make2DArray(x, y);
@@ -95,17 +81,17 @@ class PlayScene extends Phaser.Scene {
     }
 
     UpdateCellText() {
-        for(let i = 0; i < this.grid!.length ; i++){
-            for(let j = 0; j < this.grid![i].length; j++){
-                this.grid![i][j].updateText();
+        for(let i = 0; i < this.grid.length ; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                this.grid[i][j].updateText();
             }
         }
     }
 
     *gridCells() {
-        for (let i = 0; i < this.grid!.length; i++) {
-            for (let j = 0; j < this.grid![i].length; j++) {
-                yield this.grid![i][j];
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+                yield this.grid[i][j];
             }
         }
     }
@@ -133,7 +119,7 @@ class PlayScene extends Phaser.Scene {
         }
     }
 
-    SetGridFromArrayBuffer(buffer: ArrayBuffer) {
+    SetGridFromArrayBuffer(buffer) {
         const view = new DataView(buffer);
         let byteCount = 0
         this.flowersGrown = 0;
@@ -162,17 +148,17 @@ class PlayScene extends Phaser.Scene {
     GetArrayBufferFromPlayer() {
         const buffer = new ArrayBuffer(3 * 2); // (position x,y and num seeds) * 2
         const view = new DataView(buffer);
-        view.setInt16(0, this.player!.x);
-        view.setInt16(2, this.player!.y);
-        view.setInt16(4, seeds);
+        view.setInt16(0, this.player.x);
+        view.setInt16(2, this.player.y);
+        view.setInt16(4, this.player.seeds);
         return buffer
     }
 
-    SetPlayerFromArrayBuffer(buffer: ArrayBuffer){
+    SetPlayerFromArrayBuffer(buffer){
         const view = new DataView(buffer);
-        this.player!.x = view.getInt16(0);
-        this.player!.y = view.getInt16(2);
-        seeds = view.getInt16(4);
+        this.player.x = view.getInt16(0);
+        this.player.y = view.getInt16(2);
+        this.player.seeds = view.getInt16(4);
     }
 
     appendBuffer = function(buffer1, buffer2) {
@@ -193,7 +179,7 @@ class PlayScene extends Phaser.Scene {
         }
         return window.btoa(binary);
     }
-    base64ToArrayBuffer(base64: string) {
+    base64ToArrayBuffer(base64) {
         //https://stackoverflow.com/questions/21797299/how-can-i-convert-a-base64-string-to-arraybuffer
         var binaryString = atob(base64);
         var bytes = new Uint8Array(binaryString.length);
@@ -203,7 +189,7 @@ class PlayScene extends Phaser.Scene {
         return bytes.buffer;
     }
 
-    Save(fileName: string) {
+    Save(fileName) {
         const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
         const encode = this.arrayBufferToBase64(newBuffer)
         console.log(`Saving data to slot: ${fileName}`);
@@ -217,7 +203,7 @@ class PlayScene extends Phaser.Scene {
         }
     }
 
-    Load(fileName: string) {
+    Load(fileName) {
         const save = localStorage.getItem(fileName)
         if(save){
             const buffer = this.base64ToArrayBuffer(save)
@@ -231,9 +217,9 @@ class PlayScene extends Phaser.Scene {
         }
     }
 
-    // ParseData(){
-    //     FetchData()
-    // }
+    ParseData(){
+        FetchData()
+    }
 
     addTurnButton(){
         const turnButton = document.createElement("button");
@@ -242,7 +228,7 @@ class PlayScene extends Phaser.Scene {
             this.Save("autosave")
             const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
             const encode = this.arrayBufferToBase64(newBuffer)
-            this.gameStateManager!.gameStateChange(encode);
+            this.gameStateManager.gameStateChange(encode);
             this.emitter.emit("next-turn");
 
             this.UpdateCellText()
@@ -269,14 +255,14 @@ class PlayScene extends Phaser.Scene {
     }
 
     //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
-    doFunction(button: HTMLButtonElement, undo: boolean){
+    doFunction(button, undo){
         let state;
         let emitTxt;
         if(undo){
-            state = this.gameStateManager!.undo();
+            state = this.gameStateManager.undo();
             emitTxt = "undo";
         }else{
-            state = this.gameStateManager!.redo();
+            state = this.gameStateManager.redo();
             emitTxt = "redo";
         }
         if(state){
@@ -303,8 +289,8 @@ class PlayScene extends Phaser.Scene {
 
     setInfoFromData(){
         const data = this.cache.json.get('json')
-        this.player!.x = data.playerX;
-        this.player!.y = data.playerY;
+        this.player.x = data.playerX;
+        this.player.y = data.playerY;
         maxSeeds = data.maxSeeds;
         seeds = data.numSeeds;
         this.winCondition = data.winCondition;

@@ -149,7 +149,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         seeds = data.seeds;
     }
     undoRedo(){
-        const playScene = this.scene.scene.get("playScene") as PlayScene; 
+        const playScene = this.scene.scene.get("playScene"); 
         const newBuffer = playScene.appendBuffer(playScene.GetArrayBufferFromGrid(), playScene.GetArrayBufferFromPlayer())
         const encode = playScene.arrayBufferToBase64(newBuffer)
         playScene.gameStateManager.gameStateChange(encode);

@@ -5,12 +5,12 @@ class SaveManager {
 
   constructor() {
 
-    SaveManager.initializeSlots();
+    this.initializeSlots();
 
     // Set up listeners
-    SaveManager.emitter.on("save-game", SaveManager.saveGame.bind(this));
-    SaveManager.emitter.on("load-game", SaveManager.loadGame.bind(this));
-    SaveManager.emitter.on("delete-save", SaveManager.deleteSave.bind(this));
+    this.emitter.on("save-game", this.saveGame.bind(this));
+    this.emitter.on("load-game", this.loadGame.bind(this));
+    this.emitter.on("delete-save", this.deleteSave.bind(this));
   }
 
   static initializeSlots() {
@@ -41,7 +41,7 @@ class SaveManager {
     SaveManager.initialized = true;
   }
 
-  static saveGame(slotName: string, gameState) {
+  static saveGame(slotName, gameState) {
     const saves = SaveManager.getallSaves();
     const fullyGrownCount = gameState.grid.flat().filter((cell) => {
       return cell.plant && cell.plant.growth >= 3;
@@ -65,8 +65,8 @@ class SaveManager {
       SaveManager.emitter.emit("switch-state", gameState);
       console.log(`Game loaded from ${slotName}`);
       console.log("GameState after loading:", gameState);
-      gameState.grid.forEach((row: Cell[], i:number) => {
-        row.forEach((cell:Cell, j:number) => {
+      gameState.grid.forEach((row, i) => {
+        row.forEach((cell, j) => {
           if (cell.plant) {
             console.log(
               `Plant at ${i}, ${j}: Type=${cell.plant.type}, Growth=${cell.plant.growth}`
@@ -89,7 +89,7 @@ class SaveManager {
     return saves ? JSON.parse(saves) : {};
   }
 
-  static deleteSave(slotName: string) {
+  static deleteSave(slotName) {
     const saves = SaveManager.getallSaves();
     if (saves[slotName] && saves[slotName] !== "Empty Slot") {
       saves[slotName] = "Empty Slot"; // Reset slot to empty
