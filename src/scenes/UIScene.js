@@ -268,6 +268,7 @@ class UIScene extends Phaser.Scene {
 
     handleSlotAction(action, slot, slotButton) {
         const playScene = this.scene.get("playScene"); // Get Play.js methods
+        const txt = this.cache.json.get('language')
         switch (action) {
             case "save":
                 console.log(`Saving to slot: ${slot}`);
