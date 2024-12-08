@@ -12,7 +12,7 @@ class UIScene extends Phaser.Scene {
         this.load.json('language', 'src/Utils/language.json')
     }
 
-    create (){
+    create(){
         const txt = this.cache.json.get('language');
         // use seeds not this.seeds
         this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `${txt.Seeds[txt.lang]}: ${seeds}`, { fontSize: '20px' })
@@ -40,7 +40,18 @@ class UIScene extends Phaser.Scene {
 
         // Create the dropdown menu
         this.createDropdownMenu();
+    }
 
+    resetAllTxt(){
+        const txt = this.cache.json.get('language');
+        // use seeds not this.seeds
+        this.seedText.text = (gameWidth / 13, gameHeight / 12, `${txt.Seeds[txt.lang]}: ${seeds}`, { fontSize: '20px' })
+        this.weatherText.text = (gameWidth / 13, gameHeight / 9, `${txt.Weather[txt.lang]}: ${weather}`, { fontSize: '20px' })
+
+        this.endText.text = (gameWidth / 2, gameHeight / 2, `${txt.GAMEFINISHED[txt.lang]}`, { fontSize: '60px' })
+        this.endText.visible = false
+
+        this.dropdownToggle.text = (800, 10, txt.Menu[txt.lang], { fontSize: '16px', color: '#123456' });
     }
     
     setListeners() {
@@ -147,10 +158,11 @@ class UIScene extends Phaser.Scene {
 
     changeLanguage(){
         const txt = this.cache.json.get('language');
-        const langChoices = ["English " + "Chinese " + "Japanese " + "French " + "Spanish "];
-        let yPos = -30; // Position for the first button
+        const langChoices = ["English ", "中文 ", "日本語 ", "Français ", "Espagnole "];
+        let yPos = -45; // Position for the first button
         langChoices.forEach((lang, i) => {
             // Create language button
+            
             const langButton = this.add.text(0, yPos, lang, {
                 fontSize: "18px",
                 color: "#fff",
@@ -159,11 +171,12 @@ class UIScene extends Phaser.Scene {
             }).setOrigin(0.5).setInteractive();
             langButton.on("pointerdown", () => {
                 txt.lang = i;
+                this.resetAllTxt();
+                this.slotWindow.removeAll(true)
             });
             this.slotWindow.add(langButton);
-            yPos += 40; // Move the next button down
+            yPos += 25; // Move the next button down
         })
-        
     }
 
     showSlotWindow(action) {
