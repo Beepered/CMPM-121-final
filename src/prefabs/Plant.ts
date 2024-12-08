@@ -1,12 +1,7 @@
 class Plant extends Phaser.GameObjects.Sprite{
-    emitter: any;
-    breed: number;
-    growth: number;
-    maxGrowth: number;
-
-    constructor(scene: Phaser.Scene, x: number, y: number, breed = 0){
+    constructor(scene, x, y, type = 0){
         let texture;
-        switch(breed){
+        switch(type){
             case(1):
                 texture = "pink"
                 break;
@@ -24,7 +19,7 @@ class Plant extends Phaser.GameObjects.Sprite{
 
         this.emitter = EventDispatcher.getInstance();
 
-        this.breed = breed;
+        this.type = type
 
         this.growth = 0;
         this.maxGrowth = 3;
@@ -47,9 +42,9 @@ class Plant extends Phaser.GameObjects.Sprite{
         }
     }
 
-    GiveNutrients(cell: Cell, sun: number, water: number){
+    GiveNutrients(cell, sun, water){
         if(this.growth < this.maxGrowth){
-            switch(this.breed){
+            switch(this.type){
                 case(0):
                     if(sun >= 2 && water >= 2){
                         this.growth += 1;

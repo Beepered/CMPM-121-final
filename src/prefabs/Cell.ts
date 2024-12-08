@@ -1,12 +1,5 @@
 class Cell extends Phaser.GameObjects.Sprite {
-    emitter: any;
-    plant: Plant | null;
-    sun: number;
-    water: number;
-    sunText: Phaser.GameObjects.Text;
-    waterText: Phaser.GameObjects.Text;
-
-    constructor(scene: Phaser.Scene, x: number, y: number, texture: string | Phaser.Textures.Texture) {
+    constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
         scene.add.rectangle(x, y, this.displayWidth + 5, this.displayHeight + 5, 0x000000); // border
 
@@ -78,7 +71,7 @@ class Cell extends Phaser.GameObjects.Sprite {
         }
     }
 
-    Plant(seed: number) {
+    Plant(seed) {
         this.plant = new Plant(this.scene, this.x, this.y, seed);
     }
 

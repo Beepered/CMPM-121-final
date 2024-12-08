@@ -104,7 +104,7 @@ class Play extends Phaser.Scene {
             view.setInt16(byteCount, cell.sun);
             view.setInt16(byteCount + 2, cell.water);
             if(cell.plant != null){
-                view.setInt16(byteCount + 4, cell.plant.breed);
+                view.setInt16(byteCount + 4, cell.plant.type);
                 view.setInt16(byteCount + 6, cell.plant.growth);
             }
             byteCount += 8
