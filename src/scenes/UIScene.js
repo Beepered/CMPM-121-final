@@ -130,7 +130,7 @@ class UIScene extends Phaser.Scene {
         const dropdownBg = this.add.rectangle(0, 0, 150, 100, 0x333333).setOrigin(0);
         dropdownBg.setDepth(2);
     
-        const saveButton = this.add.text(55, 10, txt.Save[txt.selected]).setInteractive();
+        const saveButton = this.add.text(55, 10, txt.Save[txt.selected][0]).setInteractive();
         const loadButton = this.add.text(55, 40, txt.Load[txt.selected]).setInteractive();
         const deleteButton = this.add.text(47, 70, txt.Delete[txt.selected]).setInteractive();
     
