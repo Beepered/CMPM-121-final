@@ -23,8 +23,9 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.ChangeSun();
         this.ChangeWater();
         this.updateText();
+        const neighbors = this.getNeighbors()
         if(this.plant)
-            this.plant.GiveNutrients(this, this.sun, this.water);
+            this.plant.GiveNutrients(this, this.sun, this.water, neighbors);
     }
 
     ChangeSun() {
@@ -71,8 +72,43 @@ class Cell extends Phaser.GameObjects.Sprite {
         }
     }
 
+    getNeighbors() {
+        const neighbors = []
+        const grid = this.scene.grid // Ensure the grid is correctly referenced
+
+        if (!grid || this.xIndex == null || this.yIndex == null) {
+            console.error("Grid or indices not found for cell:", this)
+            return neighbors
+        }
+
+        const directions = [
+            { x: -1, y: 0 }, // Left
+            { x: 1, y: 0 },  // Right
+            { x: 0, y: -1 }, // Up
+            { x: 0, y: 1 }   // Down
+        ]
+
+        directions.forEach(dir => {
+            const nx = this.xIndex + dir.x
+            const ny = this.yIndex + dir.y
+
+            // Ensure neighbor is within grid boundaries
+            if (nx >= 0 && nx < grid.length && ny >= 0 && ny < grid[0].length) {
+            const neighbor = grid[nx][ny]
+            if (neighbor.plant) {
+                neighbors.push(neighbor)
+            }
+            }
+        })
+
+        console.log("Flower neighbors for cell:", this, neighbors)
+        return neighbors
+        }
+
     Plant(seed) {
         this.plant = new Plant(this.scene, this.x, this.y, seed);
+        console.log("Plant added to cell:", this, this.plant)
+
     }
 
     updateText() {

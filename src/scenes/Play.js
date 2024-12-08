@@ -69,16 +69,26 @@ class Play extends Phaser.Scene {
     }
 
     MakeCellGrid(x, y){
-        const minXPos = 100;
-        const minYPos = 70;
-        var cellGrid = this.Make2DArray(x, y);
-        for(let i = 0; i < x ; i++){
-            for(let j = 0; j < y; j++){
-                cellGrid[i][j] = this.createCell(minXPos + gameWidth / this.XTiles * i, minYPos + gameHeight / this.YTiles * j);
+        const minXPos = 100
+        const minYPos = 70
+        const cellGrid = this.Make2DArray(x, y)
+
+        for (let i = 0; i < x; i++) {
+            for (let j = 0; j < y; j++) {
+            const cell = this.createCell(
+                minXPos + gameWidth / this.XTiles * i,
+                minYPos + gameHeight / this.YTiles * j
+            )
+            cell.xIndex = i
+            cell.yIndex = j // Set indices for each cell
+            cellGrid[i][j] = cell
+            console.log(`Cell created at grid [${i}, ${j}]:`, cell)
             }
         }
-        return cellGrid;
-    }
+
+    return cellGrid
+}
+
 
     UpdateCellText() {
         for(let i = 0; i < this.grid.length ; i++){
