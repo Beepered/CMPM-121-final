@@ -18,7 +18,6 @@ class Play extends Phaser.Scene {
         this.load.image("grass", "assets/GrassV1.png")
 
         // flowers
-        this.load.image("testplant", "assets/testplant.png")
         this.load.image("pink", "assets/Pink_Flower.png")
         this.load.image("purple", "assets/Purple_Flower.png")
         this.load.image("red", "assets/Red_Flower.png")
@@ -57,8 +56,10 @@ class Play extends Phaser.Scene {
         this.UpdateCellText();
     }
     
-    createCell(x, y){
+    createCell(x, y, gridX, gridY) {
         const cell = new Cell(this, x, y, "grass");
+        cell.gridX = gridX;
+        cell.gridY = gridY;
         this.cellGroup.add(cell);
         return cell;
     }
@@ -77,7 +78,13 @@ class Play extends Phaser.Scene {
         var cellGrid = this.Make2DArray(x, y);
         for(let i = 0; i < x ; i++){
             for(let j = 0; j < y; j++){
-                cellGrid[i][j] = this.createCell(minXPos + gameWidth / this.XTiles * i, minYPos + gameHeight / this.YTiles * j);
+                const cell = this.createCell(
+                    minXPos + gameWidth / this.XTiles * i,
+                    minYPos + gameHeight / this.YTiles * j
+                )
+                cell.xIndex = i
+                cell.yIndex = j // Set indices for each cell
+                cellGrid[i][j] = cell
             }
         }
         return cellGrid;
@@ -103,12 +110,24 @@ class Play extends Phaser.Scene {
         const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save (sun,water,type,growth), 2 = bytes)
         const view = new DataView(buffer);
         let byteCount = 0
+        const plantTypeMap = {
+            'sunflower': 1,
+            'lavender': 2,
+            'rose': 3
+            // More can go here
+        }
         for(const cell of this.gridCells()) {
             view.setInt16(byteCount, cell.sun);
             view.setInt16(byteCount + 2, cell.water);
             if(cell.plant != null){
-                view.setInt16(byteCount + 4, cell.plant.type);
+                const plantType = plantTypeMap[cell.plant.typeName] || 0;
+                view.setInt16(byteCount + 4, plantType);
                 view.setInt16(byteCount + 6, cell.plant.growth);
+
+                // Debugger code
+                //console.log(`Saving Plant: Type=${cell.plant.typeName}, Growth=${cell.plant.growth} at Cell [${cell.xIndex}, ${cell.yIndex}]`)
+                //console.log(`Saving Plant Type=${plantType} (${cell.plant.typeName}) at Cell [${cell.xIndex}, ${cell.yIndex}]`)
+                console.log(`Saving Plant: TypeName=${cell.plant.typeName}, PlantType=${plantType}, Growth=${cell.plant.growth} at Cell [${cell.xIndex}, ${cell.yIndex}]`)
             }
             byteCount += 8
         }
@@ -126,23 +145,45 @@ class Play extends Phaser.Scene {
         const view = new DataView(buffer);
         let byteCount = 0
         this.flowersGrown = 0;
+
+        const plantTypeMap = {
+            1: 'sunflower',
+            2: 'lavender',
+            3: 'rose'
+            // Add more mappings if needed
+          }
+
         for(const cell of this.gridCells()) {
             cell.sun = view.getInt16(byteCount);
             cell.water = view.getInt16(byteCount + 2);
             const plantType = view.getInt16(byteCount + 4);
+            const plantName = plantTypeMap[plantType] // Reverse mapping
+            console.log(`Decoded PlantType=${plantType} -> PlantName=${plantName}`)
+            console.log(`Decoded Plant Type=${plantType} at Cell [${cell.xIndex}, ${cell.yIndex}]`)
             if (plantType !== 0) {
                 // Ensure plant is re-initialized
                 const plantGrowth = view.getInt16(byteCount + 6);
                 cell.removePlant(); 
-                cell.Plant(plantType);
-                cell.plant.growth = plantGrowth;
+            
+                const plantName = plantTypeMap[plantType]
+                if (!plantName) {
+                    console.error(`Unknown plant type ${plantType} at [${cell.xIndex}, ${cell.yIndex}]`)
+                    continue
+                  }
+
+                cell.Plant(plantName)
+                cell.plant.growth = plantGrowth
+
                 if(cell.plant.growth == 3){ //Could change to be dynamic
                     this.FlowerGrown();
                 }
                 cell.plant.updatePlant();
+                // Debugger code
+                console.log(`Loaded Plant: Type=${plantTypeMap[plantType] || 'unknown'}, Growth=${plantGrowth} into Cell [${cell.xIndex}, ${cell.yIndex}]`)
             } else {
-                // Clear plant if no type
-                cell.removePlant();
+            // Debugging logs for empty cell
+            console.log(`Loaded Empty Cell at [${cell.xIndex}, ${cell.yIndex}]`)
+            cell.removePlant()
             }
             byteCount += 8; // Advance the data index
         }
@@ -153,7 +194,7 @@ class Play extends Phaser.Scene {
         const view = new DataView(buffer);
         view.setInt16(0, this.player.x);
         view.setInt16(2, this.player.y);
-        view.setInt16(4, this.player.seeds);
+        view.setInt16(4, seeds);
         return buffer
     }
 
@@ -161,7 +202,7 @@ class Play extends Phaser.Scene {
         const view = new DataView(buffer);
         this.player.x = view.getInt16(0);
         this.player.y = view.getInt16(2);
-        this.player.seeds = view.getInt16(4);
+        seeds = view.getInt16(4);
     }
 
     appendBuffer = function(buffer1, buffer2) {
@@ -215,6 +256,9 @@ class Play extends Phaser.Scene {
             this.SetGridFromArrayBuffer(gridBuffer)
             const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
             this.SetPlayerFromArrayBuffer(playerBuffer)
+
+            console.log('Grid Buffer:', gridBuffer)
+            console.log('Player Buffer:', playerBuffer)
         }
         else{
             const txt = this.cache.json.get('language');
@@ -235,7 +279,7 @@ class Play extends Phaser.Scene {
             const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
             const encode = this.arrayBufferToBase64(newBuffer)
             this.gameStateManager.gameStateChange(encode);
-            this.emitter.emit("next-turn");
+            this.emitter.emit("next-turn", this.grid)
 
             this.UpdateCellText()
         })
@@ -251,7 +295,7 @@ class Play extends Phaser.Scene {
         doButtons.forEach((button, i) => {
             button.innerHTML = `${buttonTxt[i]}`;
             button.addEventListener("click", () => {
-                this.doFunction(buttonTxt, i == 0); //function needs to be filled
+                this.doFunction(buttonTxt[i], i == 0); //function needs to be filled
             })
             document.body.append(button);
         })
@@ -276,7 +320,7 @@ class Play extends Phaser.Scene {
             this.SetGridFromArrayBuffer(gridBuffer)
             const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
             this.SetPlayerFromArrayBuffer(playerBuffer)
-            console.log(buttonTxt);
+            console.log("Button: " + buttonTxt);
             this.emitter.emit(buttonTxt)
         }
         this.UpdateCellText();
@@ -284,12 +328,11 @@ class Play extends Phaser.Scene {
 
     NextTurn(){
         seeds = maxSeeds;
-
         //random weather value
         const values = Object.keys(WEATHER);
         const enumKey = values[Math.floor(Math.random() * values.length)];
         weather = WEATHER[enumKey];
-    }
+}
 
     setInfoFromData(){
         const data = this.cache.json.get('json')
@@ -304,6 +347,8 @@ class Play extends Phaser.Scene {
 
     setListeners(){
         this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
-        this.emitter.on("next-turn", this.NextTurn.bind(this));
-    }
+        this.emitter.on("next-turn", (grid) => {
+            this.NextTurn(grid)
+          })
+        }
 }

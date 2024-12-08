@@ -91,8 +91,15 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Plant() {
-        const randSeed = Math.floor(Math.random() * 3) + 1;
-        this.cell.Plant(randSeed)
+        const typeMapping = {
+            1: "sunflower",
+            2: "rose",
+            3: "lavender"
+          };
+        
+          const randSeed = Math.floor(Math.random() * 3) + 1;
+          const typeName = typeMapping[randSeed];
+          this.cell.Plant(typeName);
     }
 
     Reap(){
@@ -120,19 +127,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.emitter.on("end-game", ()=>{ this.playersTurn = false });
     }
 
-    serialize() {
-        return {
-            x: this.x,
-            y: this.y,
-            seeds: seeds,
-        };
-    }
-
-    deserialize(data) {
-        this.x = data.x;
-        this.y = data.y;
-        seeds = data.seeds;
-    }
+    
     undoRedo(){
         const playScene = this.scene.scene.get("playScene"); 
         const newBuffer = playScene.appendBuffer(playScene.GetArrayBufferFromGrid(), playScene.GetArrayBufferFromPlayer())
