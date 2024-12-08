@@ -1,5 +1,5 @@
 {
-    "selected": 0,
+    "lang": 0,
     "format": ["English", "Chinese", "Japanese", "French", "Spanish", "Latin"],
     "autoConfirmtxt": ["Attempt to load Autosave?", 
         "尝试加载自动保存吗？", 

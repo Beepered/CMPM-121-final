@@ -47,7 +47,7 @@ class Play extends Phaser.Scene {
             this.player.checkCellList.push(cell)
         })
         const txt = this.cache.json.get('language');
-        let autoConfirm = confirm(txt.autoConfirmtxt[txt.selected]);
+        let autoConfirm = confirm(txt.autoConfirmtxt[txt.lang]);
         if(autoConfirm){
             this.Load("autosave");
         }
@@ -188,14 +188,14 @@ class Play extends Phaser.Scene {
         const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
         const encode = this.arrayBufferToBase64(newBuffer)
         const txt = this.cache.json.get('language');
-        console.log(txt.savingtxt[txt.selected] + fileName);
-        console.log(txt.encodedtxt[txt.selected] + encode);
+        console.log(txt.savingtxt[txt.lang] + fileName);
+        console.log(txt.encodedtxt[txt.lang] + encode);
 
         try {
             localStorage.setItem(fileName, encode);
-            console.log(txt.saveSuccess[txt.selected]);
+            console.log(txt.saveSuccess[txt.lang]);
         } catch (error) {
-            console.error(txt.saveFailed[txt.selected], error);
+            console.error(txt.saveFailed[txt.lang], error);
         }
     }
 
@@ -210,7 +210,7 @@ class Play extends Phaser.Scene {
         }
         else{
             const txt = this.cache.json.get('language');
-            alert(txt.nullSavetxt[txt.selected]);
+            alert(txt.nullSavetxt[txt.lang]);
         }
     }
 
@@ -221,7 +221,7 @@ class Play extends Phaser.Scene {
     addTurnButton(){
         const txt = this.cache.json.get('language');
         const turnButton = document.createElement("button");
-        turnButton.textContent = txt.nextTurn[txt.selected];
+        turnButton.textContent = txt.nextTurn[txt.lang];
         turnButton.addEventListener("click", () => {
             this.Save("autosave")
             const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
@@ -239,7 +239,7 @@ class Play extends Phaser.Scene {
             () => document.createElement("button"),
         );
         const txt = this.cache.json.get('language');
-        const buttonTxt = [txt.undoTxt[txt.selected], txt.redoTxt[txt.selected]];
+        const buttonTxt = [txt.undoTxt[txt.lang], txt.redoTxt[txt.lang]];
         doButtons.forEach((button, i) => {
             button.innerHTML = `${buttonTxt[i]}`;
             button.addEventListener("click", () => {

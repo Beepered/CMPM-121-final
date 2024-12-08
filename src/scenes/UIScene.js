@@ -15,16 +15,16 @@ class UIScene extends Phaser.Scene {
     create (){
         const txt = this.cache.json.get('language');
         // use seeds not this.seeds
-        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `${txt.Seeds[txt.selected]}: ${seeds}`, { fontSize: '20px' })
-        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `${txt.Weather[txt.selected]}: ${weather}`, { fontSize: '20px' })
+        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `${txt.Seeds[txt.lang]}: ${seeds}`, { fontSize: '20px' })
+        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `${txt.Weather[txt.lang]}: ${weather}`, { fontSize: '20px' })
 
-        this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `${txt.GAMEFINISHED[txt.selected]}`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
+        this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `${txt.GAMEFINISHED[txt.lang]}`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
 
         this.createDropdownMenu();
         this.slotWindow = this.add.container(0, 0);
 
-        this.dropdownToggle = this.add.text(800, 10, txt.Menu[txt.selected], { fontSize: '16px', color: '#123456' }).setInteractive();
+        this.dropdownToggle = this.add.text(800, 10, txt.Menu[txt.lang], { fontSize: '16px', color: '#123456' }).setInteractive();
         this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
 
         // Position the button dynamically
@@ -105,8 +105,8 @@ class UIScene extends Phaser.Scene {
     updateUI(){
         const txt = this.cache.json.get('language');
         // change to seeds
-        this.seedText.text = `${txt.Seeds[txt.selected]}: ${seeds}`
-        this.weatherText.text = `${txt.Weather[txt.selected]}: ${weather}`
+        this.seedText.text = `${txt.Seeds[txt.lang]}: ${seeds}`
+        this.weatherText.text = `${txt.Weather[txt.lang]}: ${weather}`
     }
 
     toggleDropdownMenu() {
@@ -130,9 +130,9 @@ class UIScene extends Phaser.Scene {
         const dropdownBg = this.add.rectangle(0, 0, 150, 100, 0x333333).setOrigin(0);
         dropdownBg.setDepth(2);
     
-        const saveButton = this.add.text(55, 10, txt.Save[txt.selected][0]).setInteractive();
-        const loadButton = this.add.text(55, 40, txt.Load[txt.selected]).setInteractive();
-        const deleteButton = this.add.text(47, 70, txt.Delete[txt.selected]).setInteractive();
+        const saveButton = this.add.text(55, 10, txt.Save[txt.lang][0]).setInteractive();
+        const loadButton = this.add.text(55, 40, txt.Load[txt.lang]).setInteractive();
+        const deleteButton = this.add.text(47, 70, txt.Delete[txt.lang]).setInteractive();
     
         // Event handlers for each button
         saveButton.on("pointerdown", () => this.showSlotWindow("save"));
@@ -160,22 +160,22 @@ class UIScene extends Phaser.Scene {
         this.slotWindow.add(bg);
         let actiontxt;
         if(action == "save"){
-            actiontxt = txt.Save[txt.selected][0]
+            actiontxt = txt.Save[txt.lang][0]
         }else if(action == "load"){
-            actiontxt = txt.Load[txt.selected]
+            actiontxt = txt.Load[txt.lang]
         }else if(action == "delete"){
-            actiontxt = txt.Delete[txt.selected]
+            actiontxt = txt.Delete[txt.lang]
         }
     
         // Add title text
-        const titleText = this.add.text(0, -80, `${actiontxt} ${txt.Slot[txt.selected][1]}`, {
+        const titleText = this.add.text(0, -80, `${actiontxt} ${txt.Slot[txt.lang][1]}`, {
             fontSize: "20px",
             color: "#fff",
         }).setOrigin(0.5);
         this.slotWindow.add(titleText);
     
         // Define slots
-        const slots = [txt.Slot[txt.selected][0] + "1", txt.Slot[txt.selected][0] + "2", txt.Slot[txt.selected][0] + "3"];
+        const slots = [txt.Slot[txt.lang][0] + "1", txt.Slot[txt.lang][0] + "2", txt.Slot[txt.lang][0] + "3"];
         let yPos = -30; // Position for the first button
     
         slots.forEach((slot) => {
@@ -183,8 +183,8 @@ class UIScene extends Phaser.Scene {
             const slotData = localStorage.getItem(slot);
     
             // Determine button text and color
-            const isEmpty = !slotData || slotData === `${txt.Empty[txt.selected]} ${txt.Slot[txt.selected][0]}`;
-            const slotText = isEmpty ? `${txt.Empty[txt.selected]} ${txt.Slot[txt.selected][0]}` : `${slot} - ${txt.Save[txt.selected][1]}`;
+            const isEmpty = !slotData || slotData === `${txt.Empty[txt.lang]} ${txt.Slot[txt.lang][0]}`;
+            const slotText = isEmpty ? `${txt.Empty[txt.lang]} ${txt.Slot[txt.lang][0]}` : `${slot} - ${txt.Save[txt.lang][1]}`;
             const slotColor = isEmpty ? "#333" : "#228B22";
     
             // Create slot button
@@ -203,7 +203,7 @@ class UIScene extends Phaser.Scene {
         });
     
         // Add Close Button
-        const closeButton = this.add.text(0, 80, txt.Close[txt.selected], {
+        const closeButton = this.add.text(0, 80, txt.Close[txt.lang], {
             fontSize: "18px",
             backgroundColor: "#cc0000",
             color: "#fff",
@@ -225,7 +225,7 @@ class UIScene extends Phaser.Scene {
                 console.log(`Saving to slot: ${slot}`);
                 playScene.Save(slot); // Perform the save
                 // Dynamically update button text and color
-                slotButton.setText(`${slot} - ${txt.Save[txt.selected][1]}`);
+                slotButton.setText(`${slot} - ${txt.Save[txt.lang][1]}`);
                 slotButton.setStyle({ backgroundColor: "#228B22" });
                 break;
     
@@ -239,7 +239,7 @@ class UIScene extends Phaser.Scene {
                 console.log(`Deleting slot: ${slot}`);
                 localStorage.removeItem(slot); // Delete the slot
                 // Reset button text and color
-                slotButton.setText(`${txt.Empty[txt.selected]} ${txt.Slot[txt.selected][0]}`);
+                slotButton.setText(`${txt.Empty[txt.lang]} ${txt.Slot[txt.lang][0]}`);
                 slotButton.setStyle({ backgroundColor: "#333" });
                 break;
         }
