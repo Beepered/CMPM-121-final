@@ -21,7 +21,7 @@ class UIScene extends Phaser.Scene {
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `${txt.GAMEFINISHED[txt.lang]}`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
 
-        this.createDropdownMenu();
+        //this.createDropdownMenu(); //<--I think this is obselete
         this.slotWindow = this.add.container(0, 0);
 
         this.dropdownToggle = this.add.text(800, 10, txt.Menu[txt.lang], { fontSize: '16px', color: '#123456' }).setInteractive();
@@ -127,20 +127,43 @@ class UIScene extends Phaser.Scene {
         const txt = this.cache.json.get('language');
         this.dropdownMenu = this.add.container(0, 0);
         this.dropdownMenu.setDepth(10);
-        const dropdownBg = this.add.rectangle(0, 0, 150, 100, 0x333333).setOrigin(0);
-        dropdownBg.setDepth(2);
+        const dropdownBg = this.add.rectangle(0, 0, 150, 130, 0x333333).setOrigin(0);
+        dropdownBg.setDepth(3);
     
         const saveButton = this.add.text(55, 10, txt.Save[txt.lang][0]).setInteractive();
         const loadButton = this.add.text(55, 40, txt.Load[txt.lang]).setInteractive();
         const deleteButton = this.add.text(47, 70, txt.Delete[txt.lang]).setInteractive();
+        const languageButton = this.add.text(39, 100, "language").setInteractive();
     
         // Event handlers for each button
         saveButton.on("pointerdown", () => this.showSlotWindow("save"));
         loadButton.on("pointerdown", () => this.showSlotWindow("load"));
         deleteButton.on("pointerdown", () => this.showSlotWindow("delete"));
+        languageButton.on("pointerdown", () => this.showSlotWindow("language"))
     
-        this.dropdownMenu.add([dropdownBg, saveButton, loadButton, deleteButton]);
+        this.dropdownMenu.add([dropdownBg, saveButton, loadButton, deleteButton, languageButton]);
         this.dropdownMenu.visible = false;
+    }
+
+    changeLanguage(){
+        const txt = this.cache.json.get('language');
+        const langChoices = ["English " + "Chinese " + "Japanese " + "French " + "Spanish "];
+        let yPos = -30; // Position for the first button
+        langChoices.forEach((lang, i) => {
+            // Create language button
+            const langButton = this.add.text(0, yPos, lang, {
+                fontSize: "18px",
+                color: "#fff",
+                backgroundColor: "black",
+                padding: { x: 10, y: 5 },
+            }).setOrigin(0.5).setInteractive();
+            langButton.on("pointerdown", () => {
+                txt.lang = i;
+            });
+            this.slotWindow.add(langButton);
+            yPos += 40; // Move the next button down
+        })
+        
     }
 
     showSlotWindow(action) {
@@ -154,25 +177,50 @@ class UIScene extends Phaser.Scene {
         // Centralize the slot window
         const x = this.cameras.main.width / 2;
         const y = this.cameras.main.height / 2;
-    
-        // Add background
-        const bg = this.add.rectangle(0, 0, 300, 200, 0x222222).setOrigin(0.5);
-        this.slotWindow.add(bg);
-        let actiontxt;
+
+        let windowHeight = 200;
+
+        let actiontxt = "language"; //set to language because thre is no if statement for language until after it's used
         if(action == "save"){
             actiontxt = txt.Save[txt.lang][0]
         }else if(action == "load"){
             actiontxt = txt.Load[txt.lang]
         }else if(action == "delete"){
             actiontxt = txt.Delete[txt.lang]
+            windowHeight += 40
         }
     
+        // Add background
+        const bg = this.add.rectangle(0, 0, 300, windowHeight, 0x222222).setOrigin(0.5);
+        this.slotWindow.add(bg);
+        
         // Add title text
         const titleText = this.add.text(0, -80, `${actiontxt} ${txt.Slot[txt.lang][1]}`, {
             fontSize: "20px",
             color: "#fff",
         }).setOrigin(0.5);
         this.slotWindow.add(titleText);
+
+        // Position and display the slot window
+        this.slotWindow.setPosition(x, y);
+        this.slotWindow.setVisible(true);
+
+        // Add Close Button
+        const closeButton = this.add.text(0, 80, txt.Close[txt.lang], {
+            fontSize: "18px",
+            backgroundColor: "#cc0000",
+            color: "#fff",
+            padding: { x: 10, y: 5 },
+        }).setOrigin(0.5).setInteractive();
+    
+        closeButton.on("pointerdown", () => this.slotWindow.removeAll(true));
+        this.slotWindow.add(closeButton);
+
+        //for the language option only
+        if(action == "language"){
+            this.changeLanguage();
+            return;
+        }
     
         // Define slots
         const slots = [txt.Slot[txt.lang][0] + "1", txt.Slot[txt.lang][0] + "2", txt.Slot[txt.lang][0] + "3"];
@@ -202,20 +250,7 @@ class UIScene extends Phaser.Scene {
             yPos += 40; // Move the next button down
         });
     
-        // Add Close Button
-        const closeButton = this.add.text(0, 80, txt.Close[txt.lang], {
-            fontSize: "18px",
-            backgroundColor: "#cc0000",
-            color: "#fff",
-            padding: { x: 10, y: 5 },
-        }).setOrigin(0.5).setInteractive();
-    
-        closeButton.on("pointerdown", () => this.slotWindow.removeAll(true));
-        this.slotWindow.add(closeButton);
-    
-        // Position and display the slot window
-        this.slotWindow.setPosition(x, y);
-        this.slotWindow.setVisible(true);
+        
     }
 
     handleSlotAction(action, slot, slotButton) {
