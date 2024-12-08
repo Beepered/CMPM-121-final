@@ -130,28 +130,35 @@ class Play extends Phaser.Scene {
     }
 
     SetGridFromArrayBuffer(buffer) {
-        const view = new DataView(buffer);
+        const view = new DataView(buffer)
         let byteCount = 0
-        this.flowersGrown = 0;
-        for(const cell of this.gridCells()) {
-            cell.sun = view.getInt16(byteCount);
-            cell.water = view.getInt16(byteCount + 2);
-            const plantType = view.getInt16(byteCount + 4);
+        this.flowersGrown = 0
+
+        for (const cell of this.gridCells()) {
+            cell.sun = view.getInt16(byteCount)
+            cell.water = view.getInt16(byteCount + 2)
+            const plantType = view.getInt16(byteCount + 4)
+
             if (plantType !== 0) {
-                // Ensure plant is re-initialized
-                const plantGrowth = view.getInt16(byteCount + 6);
-                cell.removePlant(); 
-                cell.Plant(plantType);
-                cell.plant.growth = plantGrowth;
-                if(cell.plant.growth == 3){ //Could change to be dynamic
-                    this.FlowerGrown();
-                }
-                cell.plant.updatePlant();
-            } else {
-                // Clear plant if no type
-                cell.removePlant();
+            // Ensure plant is re-initialized
+            const plantGrowth = view.getInt16(byteCount + 6)
+            cell.removePlant() // Remove any existing plant
+            cell.Plant(plantType) // Recreate the plant
+
+            // Set growth state and update visuals
+            cell.plant.growth = plantGrowth
+            cell.plant.updatePlant()
+
+            // Count fully grown flowers
+            if (cell.plant.growth === 3) {
+                this.FlowerGrown()
             }
-            byteCount += 8; // Advance the data index
+            } else {
+            // Clear plant if no type
+            cell.removePlant()
+            }
+
+            byteCount += 8 // Advance the data index
         }
     }
 
@@ -202,14 +209,13 @@ class Play extends Phaser.Scene {
     Save(fileName) {
         const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
         const encode = this.arrayBufferToBase64(newBuffer)
-        console.log(`Saving data to slot: ${fileName}`);
-        console.log(`Encoded data: ${encode}`);
+        console.log(`Saving data to slot: ${fileName}, Encoded data:`, encode)
 
         try {
-            localStorage.setItem(fileName, encode);
-            console.log("Save successful.");
+            localStorage.setItem(fileName, encode)
+            console.log("Save successful.")
         } catch (error) {
-            console.error("Save failed:", error);
+            console.error("Save failed:", error)
         }
     }
 
