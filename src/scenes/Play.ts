@@ -68,7 +68,7 @@ class Play extends Phaser.Scene {
         this.UpdateCellText();
     }
     
-    createCell(x: number, y: number, gridX , gridY) {
+    createCell(x: number, y: number, gridX: number , gridY: number) {
         const cell = new Cell(this, x, y, "grass");
         cell.gridX = gridX;
         cell.gridY = gridY;

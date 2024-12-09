@@ -5,6 +5,8 @@ class Cell extends Phaser.GameObjects.Sprite {
     water: number;
     sunText: Phaser.GameObjects.Text;
     waterText: Phaser.GameObjects.Text;
+    xIndex: number | null | undefined;
+    yIndex: number | null | undefined;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture:string) {
         super(scene, x, y, texture);
@@ -101,8 +103,8 @@ class Cell extends Phaser.GameObjects.Sprite {
         ]
 
         directions.forEach(dir => {
-            const nx = this.xIndex + dir.x
-            const ny = this.yIndex + dir.y
+            const nx = this.xIndex! + dir.x
+            const ny = this.yIndex! + dir.y
 
             // Ensure neighbor is within grid boundaries
             if (nx >= 0 && nx < grid.length && ny >= 0 && ny < grid[0].length) {
