@@ -76,7 +76,7 @@ class Play extends Phaser.Scene {
         return cell;
     }
 
-    Make2DArray(x, y){
+    Make2DArray(x: number, y: number){
         var arr = []; // make 2d array
         for(let i = 0; i < y; i++) {
             arr.push(new Array(x));
@@ -84,7 +84,7 @@ class Play extends Phaser.Scene {
         return arr
     }
 
-    MakeCellGrid(x, y){
+    MakeCellGrid(x: number, y: number){
         const minXPos = 100;
         const minYPos = 70;
         var cellGrid = this.Make2DArray(x, y);
@@ -122,17 +122,12 @@ class Play extends Phaser.Scene {
         const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save (sun,water,type,growth), 2 = bytes)
         const view = new DataView(buffer);
         let byteCount = 0
-        const plantTypeMap = {
-            'sunflower': 1,
-            'lavender': 2,
-            'rose': 3
-            // More can go here
-        }
+        const plantTypeArray: string[] = ['sunflower', 'lavendar', 'rose'];
         for(const cell of this.gridCells()) {
             view.setInt16(byteCount, cell.sun);
             view.setInt16(byteCount + 2, cell.water);
             if(cell.plant != null){
-                const plantType = plantTypeMap[cell.plant.typeName] || 0;
+                const plantType = plantTypeArray.indexOf(cell.plant.typeName) +1 || 0;
                 view.setInt16(byteCount + 4, plantType);
                 view.setInt16(byteCount + 6, cell.plant.growth);
 
@@ -153,7 +148,7 @@ class Play extends Phaser.Scene {
         }
     }
 
-    SetGridFromArrayBuffer(buffer) {
+    SetGridFromArrayBuffer(buffer:any) {
         const view = new DataView(buffer);
         let byteCount = 0
         this.flowersGrown = 0;
@@ -210,14 +205,14 @@ class Play extends Phaser.Scene {
         return buffer
     }
 
-    SetPlayerFromArrayBuffer(buffer){
+    SetPlayerFromArrayBuffer(buffer:any){
         const view = new DataView(buffer);
         this.player.x = view.getInt16(0);
         this.player.y = view.getInt16(2);
         seeds = view.getInt16(4);
     }
 
-    appendBuffer = function(buffer1, buffer2) {
+    appendBuffer = function(buffer1:any, buffer2:any) {
         //https://gist.github.com/72lions/4528834
         var tmp = new Uint8Array(buffer1.byteLength + buffer2.byteLength);
         tmp.set(new Uint8Array(buffer1), 0);
@@ -225,7 +220,7 @@ class Play extends Phaser.Scene {
         return tmp.buffer;
     };
 
-    arrayBufferToBase64(buffer){
+    arrayBufferToBase64(buffer: any){
         //https://stackoverflow.com/questions/75577296/which-is-the-fastest-method-to-convert-array-buffer-to-base64
         let binary = '';
         const bytes = new Uint8Array(buffer);
@@ -235,7 +230,7 @@ class Play extends Phaser.Scene {
         }
         return window.btoa(binary);
     }
-    base64ToArrayBuffer(base64) {
+    base64ToArrayBuffer(base64: any) {
         //https://stackoverflow.com/questions/21797299/how-can-i-convert-a-base64-string-to-arraybuffer
         var binaryString = atob(base64);
         var bytes = new Uint8Array(binaryString.length);
@@ -245,7 +240,7 @@ class Play extends Phaser.Scene {
         return bytes.buffer;
     }
 
-    Save(fileName) {
+    Save(fileName: string) {
         const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
         const encode = this.arrayBufferToBase64(newBuffer)
         const txt = this.cache.json.get('language');
@@ -260,7 +255,7 @@ class Play extends Phaser.Scene {
         }
     }
 
-    Load(fileName) {
+    Load(fileName: string) {
         const save = localStorage.getItem(fileName)
         if(save){
             const buffer = this.base64ToArrayBuffer(save)
@@ -276,10 +271,6 @@ class Play extends Phaser.Scene {
             const txt = this.cache.json.get('language');
             alert(txt.nullSavetxt[txt.lang]);
         }
-    }
-
-    ParseData(){
-        FetchData()
     }
 
     addTurnButton(){
@@ -318,7 +309,7 @@ class Play extends Phaser.Scene {
     }
 
     //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
-    doFunction(buttonTxt, undo){
+    doFunction(buttonTxt: string, undo: boolean){
         let state;
         if(undo){
             state = this.gameStateManager.undo();
