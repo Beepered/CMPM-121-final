@@ -1,0 +1,18 @@
+{
+    "name": "We Plantin'",
+    "short_name": "WePlant",
+    "description": "Final Team 47's game",
+    "start_url": "/index.html",
+    "display": "fullscreen",
+    "icons": [
+        {
+            "sizes": "180x180",
+            "src": "https://cdn.glitch.global/4fc6eda5-1313-4a1e-8b76-b859653416cd/brace-logo-symbol.png?v=1733533998031"
+        },
+        {
+            "sizes": "192x192",
+            "src": "/assets/icons/image.png",
+            "type": "image/png"
+        }
+    ]
+  }

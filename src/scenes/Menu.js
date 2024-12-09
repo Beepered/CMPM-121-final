@@ -4,6 +4,8 @@ class Menu extends Phaser.Scene {
     }
 
     create(){
+        //this.scene.switch("test")
+
         let titleConfig = {
             fontFamily: "Montserrat",
             fontSize: "80px",

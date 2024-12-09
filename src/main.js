@@ -9,7 +9,7 @@ let config = {
     width: 800,
     height: 500,
     backgroundColor: '#3f9b0b',
-    scene: [Test, Menu, Credits, Play, UIScene]
+    scene: [Menu, Credits, Play, UIScene, Test]
 }
 
 let game = new Phaser.Game(config);
