@@ -91,9 +91,10 @@ This section should outline which code or data files need to get changed when ad
 
 ### Localization
 
-Tell us about which three languages your game supports. For each language, tell us about how you accomplished that localization. Did a team member use their own knowledge of the language? Did you have a friend, volunteer classmate, or paid expert help? Did you make use of a tool like ChatGPT to help? (If so, describe your prompts so that we can see how you gave the system extra context for your project.)
+For localization, we put 5 languages, English, Chinese, Japanese, French and Spanish. We chose these languages due to their widespread popularity. For the localization to work, we had a JSON file which is accessed by all scene files and stores all the language options. At the very beginning of the JSON, there is a number variable which chooses the language. 1 is for English, 2 Chinese, 3 Japanese, 4 French, 5 Spanish. Every text displayed on screen has it’s own array of strings where each index of the array is the different languages for that text. Due to different languages having varying subject and verb alignment for their grammar we stored whole sentences. 
+For the translations, we used Google Translate. Some phrases with less words could be easily taken out of context by the translator so we would surround the words with other words to put it into context. For example “save” can be interpreted as saving a life instead of saving a game state for storage. So in google translate we would put “save file” and used the word in that context. 
+The language can be selected in the drop down menu by clicking on menu -> 🌐 inside the game. The player does not have to do a special option launch to choose the language. 
 
-How should the user select which language will be used? Do they change the language setting from inside the game? Did you release three different versions of the game with a different language hard-coded into each? Does the player launch the game with special options (e.g. command line arguments or URL parameters) that encode the choice of language?
 
 ### Mobile Installation
 The game is able to be downloaded on the live server. We couldn't figure out how to get it "properly" downloaded in github pages, because on mobile the game claims that the github site does not exist.
