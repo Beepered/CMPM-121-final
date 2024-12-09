@@ -149,7 +149,7 @@ class UIScene extends Phaser.Scene {
         this.saveButton = this.add.text(55, 10, txt.Save[txt.lang][0]).setInteractive();
         this.loadButton = this.add.text(55, 40, txt.Load[txt.lang]).setInteractive();
         this.deleteButton = this.add.text(47, 70, txt.Delete[txt.lang]).setInteractive();
-        this.languageButton = this.add.text(39, 100, "language").setInteractive();
+        this.languageButton = this.add.text(39, 100, "🌐✍️").setInteractive();
     
         // Event handlers for each button
         this.saveButton.on("pointerdown", () => this.showSlotWindow("save"));

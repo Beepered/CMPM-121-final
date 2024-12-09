@@ -31,5 +31,7 @@
     "Slot": [["Slot ", "SLOTS"], ["槽", "插槽"], ["スロット", "スロット"], ["Emplacement", "emplacements"], ["archivo", "archivo"], ["", ""]],
     "Empty": ["Empty ", "空", "空の", "Vide", "Vacío", ""],
     "Close": ["Close", "关闭", "近い", "Fermer", "Cerca", ""],
-    "gameSavedIn": ["Game saved in", "保存于", "ゲームは保存されました", "Jeu sauvegardé dans", "Juego guardado en", ""]
+    "gameSavedIn": ["Game saved in", "保存于", "ゲームは保存されました", "Jeu sauvegardé dans", "Juego guardado en", ""],
+    "credits": ["CREDITS"],
+    "LeaveCreditTxt": ["Press SPACEBAR for MENU"]
 }
