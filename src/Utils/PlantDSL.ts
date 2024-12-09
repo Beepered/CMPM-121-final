@@ -8,7 +8,7 @@ interface PlantType {
 interface Cell {
   x: number
   y: number
-  plant?: PlantInstance
+  plant: Plant | null
 }
 
 interface PlantInstance {
@@ -43,16 +43,6 @@ const PlantDSL = {
   },
 }
 
-// Extend the global window object to include PlantDSL
-declare global {
-  interface Window {
-    PlantDSL: typeof PlantDSL
-  }
-}
-
-// Attach PlantDSL to the window object
-window.PlantDSL = PlantDSL
-
 // Define Plant Types
 PlantDSL.addPlantType(
   "sunflower",
@@ -84,4 +74,3 @@ PlantDSL.addPlantType(
   }
 )
 
-export default PlantDSL

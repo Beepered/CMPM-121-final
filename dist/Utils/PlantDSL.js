@@ -1,3 +1,4 @@
+"use strict";
 // Global PlantDSL Namespace
 const PlantDSL = {
     registry: new Map(),
@@ -13,8 +14,6 @@ const PlantDSL = {
         return this.registry.get(name);
     },
 };
-// Attach PlantDSL to the window object
-window.PlantDSL = PlantDSL;
 // Define Plant Types
 PlantDSL.addPlantType("sunflower", "pink", (cell, { sun, water, neighbors }) => {
     // Requires at least 3 sunlight and 2 water, plus no neighbors
@@ -29,4 +28,3 @@ PlantDSL.addPlantType("lavender", "purple", (cell, { sun, water }) => {
     // Requires high sunlight and low water
     return sun >= 5 && water >= 7;
 });
-export default PlantDSL;

@@ -1,4 +1,4 @@
-import PlantDSL from "../Utils/PlantDSL";
+"use strict";
 class Plant extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, typeName) {
         const plantType = PlantDSL.getPlantType(typeName);

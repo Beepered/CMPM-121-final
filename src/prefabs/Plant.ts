@@ -1,4 +1,3 @@
-import PlantDSL from "../Utils/PlantDSL";
 class Plant extends Phaser.GameObjects.Sprite{
     typeName: string;
     emitter: EventDispatcher;
