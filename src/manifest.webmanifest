@@ -6,13 +6,20 @@
     "display": "fullscreen",
     "icons": [
         {
-            "sizes": "180x180",
-            "src": "https://cdn.glitch.global/4fc6eda5-1313-4a1e-8b76-b859653416cd/brace-logo-symbol.png?v=1733533998031"
+            "src": "/assets/icons/icon-72.png",
+            "sizes": "72x72",
+            "type": "image/png"
         },
         {
-            "sizes": "192x192",
-            "src": "/assets/icons/image.png",
+            "src": "/assets/icons/icon-128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icons/icon-144.png",
+            "sizes": "144x144",
             "type": "image/png"
         }
+        
     ]
   }

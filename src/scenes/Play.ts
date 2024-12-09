@@ -343,6 +343,6 @@ class Play extends Phaser.Scene {
         this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
         this.emitter.on("next-turn", (grid: any) => {
             this.NextTurn()
-          })
-        }
+        })
+    }
 }
