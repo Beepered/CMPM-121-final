@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Global Plant DSL Namespace
 window.PlantDSL = {
   registry: new Map(),
