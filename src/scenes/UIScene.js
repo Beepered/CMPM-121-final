@@ -35,7 +35,7 @@ class UIScene extends Phaser.Scene {
         this.scale.on('resize', (gameSize) => {
             const { width, height } = gameSize;
             this.cameras.main.setSize(width, height); // Resize the camera
-            this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 10, 10);
+            this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 40, 10);
         });
 
         // Create the dropdown menu
@@ -52,6 +52,10 @@ class UIScene extends Phaser.Scene {
         this.endText.visible = false
 
         this.dropdownToggle.text = JSON.stringify(txt.Menu[txt.lang]);
+
+        this.saveButton.text = txt.Save[txt.lang][0];
+        this.loadButton.text = txt.Load[txt.lang];
+        this.deleteButton.text = txt.Delete[txt.lang]
     }
     
     setListeners() {
@@ -141,19 +145,19 @@ class UIScene extends Phaser.Scene {
         this.dropdownMenu.setDepth(10);
         const dropdownBg = this.add.rectangle(0, 0, 150, 130, 0x333333).setOrigin(0);
         dropdownBg.setDepth(3);
-    
-        const saveButton = this.add.text(55, 10, txt.Save[txt.lang][0]).setInteractive();
-        const loadButton = this.add.text(55, 40, txt.Load[txt.lang]).setInteractive();
-        const deleteButton = this.add.text(47, 70, txt.Delete[txt.lang]).setInteractive();
-        const languageButton = this.add.text(39, 100, "language").setInteractive();
+
+        this.saveButton = this.add.text(55, 10, txt.Save[txt.lang][0]).setInteractive();
+        this.loadButton = this.add.text(55, 40, txt.Load[txt.lang]).setInteractive();
+        this.deleteButton = this.add.text(47, 70, txt.Delete[txt.lang]).setInteractive();
+        this.languageButton = this.add.text(39, 100, "language").setInteractive();
     
         // Event handlers for each button
-        saveButton.on("pointerdown", () => this.showSlotWindow("save"));
-        loadButton.on("pointerdown", () => this.showSlotWindow("load"));
-        deleteButton.on("pointerdown", () => this.showSlotWindow("delete"));
-        languageButton.on("pointerdown", () => this.showSlotWindow("language"))
+        this.saveButton.on("pointerdown", () => this.showSlotWindow("save"));
+        this.loadButton.on("pointerdown", () => this.showSlotWindow("load"));
+        this.deleteButton.on("pointerdown", () => this.showSlotWindow("delete"));
+        this.languageButton.on("pointerdown", () => this.showSlotWindow("language"))
     
-        this.dropdownMenu.add([dropdownBg, saveButton, loadButton, deleteButton, languageButton]);
+        this.dropdownMenu.add([dropdownBg, this.saveButton, this.loadButton, this.deleteButton, this.languageButton]);
         this.dropdownMenu.visible = false;
     }
 
