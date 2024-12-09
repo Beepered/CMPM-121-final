@@ -2,26 +2,26 @@
     "name": "We Plantin'",
     "short_name": "WePlant",
     "description": "Final Team 47's game",
-    "start_url": "/index.html",
+    "start_url": "./index.html",
     "display": "fullscreen",
     "icons": [
         {
-            "src": "/assets/icons/icon-72.png",
+            "src": "./assets/icons/icon-72.png",
             "sizes": "72x72",
             "type": "image/png"
         },
         {
-            "src": "/assets/icons/icon-128.png",
+            "src": "./assets/icons/icon-128.png",
             "sizes": "128x128",
             "type": "image/png"
         },
         {
-            "src": "/assets/icons/icon-144.png",
+            "src": "./assets/icons/icon-144.png",
             "sizes": "144x144",
             "type": "image/png"
         },
         {
-            "src": "/assets/icons/icon-192.png",
+            "src": "./assets/icons/icon-192.png",
             "sizes": "192x192",
             "type": "image/png"
         }
