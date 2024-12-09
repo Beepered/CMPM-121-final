@@ -9,7 +9,7 @@ class Play extends Phaser.Scene {
         this.winCondition = 3;
         this.flowersGrown = 0;
 
-        this.addAllButtons();
+        
         this.setListeners();
     }
 
@@ -22,15 +22,17 @@ class Play extends Phaser.Scene {
         this.load.image("grass5", "assets/GrassV5.png")
 
         // flowers
-        this.load.image("testplant", "assets/testplant.png")
         this.load.image("pink", "assets/Pink_Flower.png")
         this.load.image("purple", "assets/Purple_Flower.png")
         this.load.image("red", "assets/Red_Flower.png")
 
         this.load.json('json', 'src/Utils/scenario.json')
+        this.load.json('language', 'src/Utils/language.json')
     }
 
     create(){
+
+        this.addAllButtons();
         this.scene.launch("uiScene")
         
         this.gameObjects = this.add.group({
@@ -47,23 +49,19 @@ class Play extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.cellGroup, (player, cell) => {
             this.player.checkCellList.push(cell)
         })
-        
-        let autoConfirm = confirm("Attempt to load Autosave?");
+        const txt = this.cache.json.get('language');
+        let autoConfirm = confirm(txt.autoConfirmtxt[txt.lang]);
         if(autoConfirm){
             this.Load("autosave");
         }
-
+        
         this.setInfoFromData();
 
         this.UpdateCellText();
     }
     
-    createCell(x, y){
-        // random grass image
-        const randNum = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
-        const textureText = "grass" + randNum.toString()
-
-        const cell = new Cell(this, x, y, textureText);
+    createCell(x, y) {
+        const cell = new Cell(this, x, y, "grass");
         this.cellGroup.add(cell);
         return cell;
     }
@@ -76,15 +74,19 @@ class Play extends Phaser.Scene {
         return arr
     }
 
-    MakeCellGrid(xPos, yPos, xAmt, yAmt){
-        var cellGrid = this.Make2DArray(xAmt, yAmt);
-
-        const cellWidth = 128, cellHeight = 128; // space cells by cellWidth and cellHeight
-        const xSpacing = 10, ySpacing = 10;
-
-        for(let i = 0; i < xAmt ; i++){
-            for(let j = 0; j < yAmt; j++){
-                cellGrid[i][j] = this.createCell(xPos + ((cellWidth + xSpacing) * i), yPos + ((cellHeight + ySpacing) * j));
+    MakeCellGrid(x, y){
+        const minXPos = 100;
+        const minYPos = 70;
+        var cellGrid = this.Make2DArray(x, y);
+        for(let i = 0; i < x ; i++){
+            for(let j = 0; j < y; j++){
+                const cell = this.createCell(
+                    minXPos + gameWidth / this.XTiles * i,
+                    minYPos + gameHeight / this.YTiles * j
+                )
+                cell.xIndex = i
+                cell.yIndex = j // Set indices for each cell
+                cellGrid[i][j] = cell
             }
         }
         return cellGrid;
@@ -146,38 +148,80 @@ class Play extends Phaser.Scene {
         const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save (sun,water,type,growth), 2 = bytes)
         const view = new DataView(buffer);
         let byteCount = 0
+        const plantTypeMap = {
+            'sunflower': 1,
+            'lavender': 2,
+            'rose': 3
+            // More can go here
+        }
         for(const cell of this.gridCells()) {
             view.setInt16(byteCount, cell.sun);
             view.setInt16(byteCount + 2, cell.water);
             if(cell.plant != null){
-                view.setInt16(byteCount + 4, cell.plant.type);
+                const plantType = plantTypeMap[cell.plant.typeName] || 0;
+                view.setInt16(byteCount + 4, plantType);
                 view.setInt16(byteCount + 6, cell.plant.growth);
+
+                // Debugger code
+                //console.log(`Saving Plant: Type=${cell.plant.typeName}, Growth=${cell.plant.growth} at Cell [${cell.xIndex}, ${cell.yIndex}]`)
+                //console.log(`Saving Plant Type=${plantType} (${cell.plant.typeName}) at Cell [${cell.xIndex}, ${cell.yIndex}]`)
+                console.log(`Saving Plant: TypeName=${cell.plant.typeName}, PlantType=${plantType}, Growth=${cell.plant.growth} at Cell [${cell.xIndex}, ${cell.yIndex}]`)
             }
             byteCount += 8
         }
         return buffer
     } 
 
+    FlowerGrown() {
+        this.flowersGrown++;
+        if(this.flowersGrown >= this.winCondition){
+            this.emitter.emit("end-game");
+        }
+    }
+
     SetGridFromArrayBuffer(buffer) {
         const view = new DataView(buffer);
         let byteCount = 0
+        this.flowersGrown = 0;
+
+        const plantTypeMap = {
+            1: 'sunflower',
+            2: 'lavender',
+            3: 'rose'
+            // Add more mappings if needed
+          }
+
         for(const cell of this.gridCells()) {
             cell.sun = view.getInt16(byteCount);
             cell.water = view.getInt16(byteCount + 2);
             const plantType = view.getInt16(byteCount + 4);
+            const plantName = plantTypeMap[plantType] // Reverse mapping
+            console.log(`Decoded PlantType=${plantType} -> PlantName=${plantName}`)
+            console.log(`Decoded Plant Type=${plantType} at Cell [${cell.xIndex}, ${cell.yIndex}]`)
             if (plantType !== 0) {
                 // Ensure plant is re-initialized
                 const plantGrowth = view.getInt16(byteCount + 6);
-                if (!cell.plant || cell.plant.type !== plantType) {
-                    cell.Plant(plantType); // Re-plant
+                cell.removePlant(); 
+            
+                const plantName = plantTypeMap[plantType]
+                if (!plantName) {
+                    console.error(`Unknown plant type ${plantType} at [${cell.xIndex}, ${cell.yIndex}]`)
+                    continue
+                  }
+
+                cell.Plant(plantName)
+                cell.plant.growth = plantGrowth
+
+                if(cell.plant.growth == 3){ //Could change to be dynamic
+                    this.FlowerGrown();
                 }
-                else{
-                    cell.plant.growth = plantGrowth;
-                    cell.plant.updatePlant();
-                }
+                cell.plant.updatePlant();
+                // Debugger code
+                console.log(`Loaded Plant: Type=${plantTypeMap[plantType] || 'unknown'}, Growth=${plantGrowth} into Cell [${cell.xIndex}, ${cell.yIndex}]`)
             } else {
-                // Clear plant if no type
-                cell.removePlant();
+            // Debugging logs for empty cell
+            console.log(`Loaded Empty Cell at [${cell.xIndex}, ${cell.yIndex}]`)
+            cell.removePlant()
             }
             byteCount += 8; // Advance the data index
         }
@@ -188,7 +232,7 @@ class Play extends Phaser.Scene {
         const view = new DataView(buffer);
         view.setInt16(0, this.player.x);
         view.setInt16(2, this.player.y);
-        view.setInt16(4, this.player.seeds);
+        view.setInt16(4, seeds);
         return buffer
     }
 
@@ -196,7 +240,7 @@ class Play extends Phaser.Scene {
         const view = new DataView(buffer);
         this.player.x = view.getInt16(0);
         this.player.y = view.getInt16(2);
-        this.player.seeds = view.getInt16(4);
+        seeds = view.getInt16(4);
     }
 
     appendBuffer = function(buffer1, buffer2) {
@@ -230,14 +274,15 @@ class Play extends Phaser.Scene {
     Save(fileName) {
         const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
         const encode = this.arrayBufferToBase64(newBuffer)
-        console.log(`Saving data to slot: ${fileName}`);
-        console.log(`Encoded data: ${encode}`);
+        const txt = this.cache.json.get('language');
+        console.log(txt.savingtxt[txt.lang] + fileName);
+        console.log(txt.encodedtxt[txt.lang] + encode);
 
         try {
             localStorage.setItem(fileName, encode);
-            console.log("Save successful.");
+            console.log(txt.saveSuccess[txt.lang]);
         } catch (error) {
-            console.error("Save failed:", error);
+            console.error(txt.saveFailed[txt.lang], error);
         }
     }
 
@@ -249,9 +294,13 @@ class Play extends Phaser.Scene {
             this.SetGridFromArrayBuffer(gridBuffer)
             const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
             this.SetPlayerFromArrayBuffer(playerBuffer)
+
+            console.log('Grid Buffer:', gridBuffer)
+            console.log('Player Buffer:', playerBuffer)
         }
         else{
-            alert("null save")
+            const txt = this.cache.json.get('language');
+            alert(txt.nullSavetxt[txt.lang]);
         }
     }
 
@@ -260,14 +309,15 @@ class Play extends Phaser.Scene {
     }
 
     addTurnButton(){
+        const txt = this.cache.json.get('language');
         const turnButton = document.createElement("button");
-        turnButton.textContent = "Next Turn";
+        turnButton.textContent = txt.nextTurn[txt.lang];
         turnButton.addEventListener("click", () => {
             this.Save("autosave")
             const newBuffer = this.appendBuffer(this.GetArrayBufferFromGrid(), this.GetArrayBufferFromPlayer())
             const encode = this.arrayBufferToBase64(newBuffer)
             this.gameStateManager.gameStateChange(encode);
-            this.emitter.emit("next-turn");
+            this.emitter.emit("next-turn", this.grid)
 
             this.UpdateCellText()
         })
@@ -278,11 +328,12 @@ class Play extends Phaser.Scene {
             { length: 2 },
             () => document.createElement("button"),
         );
-        const buttonTxt = ["undo", "redo"];
+        const txt = this.cache.json.get('language');
+        const buttonTxt = [txt.undoTxt[txt.lang], txt.redoTxt[txt.lang]];
         doButtons.forEach((button, i) => {
             button.innerHTML = `${buttonTxt[i]}`;
             button.addEventListener("click", () => {
-                this.doFunction(button, i == 0); //function needs to be filled
+                this.doFunction(buttonTxt[i], i == 0); //function needs to be filled
             })
             document.body.append(button);
         })
@@ -293,15 +344,12 @@ class Play extends Phaser.Scene {
     }
 
     //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
-    doFunction(button, undo){
+    doFunction(buttonTxt, undo){
         let state;
-        let emitTxt;
         if(undo){
             state = this.gameStateManager.undo();
-            emitTxt = "undo";
         }else{
             state = this.gameStateManager.redo();
-            emitTxt = "redo";
         }
         if(state){
             this.Save("autosave")
@@ -310,31 +358,22 @@ class Play extends Phaser.Scene {
             this.SetGridFromArrayBuffer(gridBuffer)
             const playerBuffer = new Uint8Array(buffer.slice((this.XTiles * this.YTiles) * 8)).buffer;
             this.SetPlayerFromArrayBuffer(playerBuffer)
-            console.log(emitTxt);
-            this.emitter.emit(emitTxt)
+            console.log("Button: " + buttonTxt);
+            this.emitter.emit(buttonTxt)
         }
         this.UpdateCellText();
-    }
-
-    FlowerGrown() {
-        this.flowersGrown++;
-        if(this.flowersGrown >= this.winCondition){
-            this.emitter.emit("end-game");
-        }
     }
 
     NextTurn(){
         seeds = maxSeeds;
 
         currentWeather = weatherList.shift()
-
-        // random weather value
-        // setting the next weather
+        
+        //random weather value
         const values = Object.keys(WEATHER);
         const enumKey = values[Math.floor(Math.random() * values.length)];
         weatherList.push(WEATHER[enumKey]);
-
-    }
+}
 
     setInfoFromData(){
         const data = this.cache.json.get('json')
@@ -349,6 +388,8 @@ class Play extends Phaser.Scene {
 
     setListeners(){
         this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
-        this.emitter.on("next-turn", this.NextTurn.bind(this));
-    }
+        this.emitter.on("next-turn", (grid) => {
+            this.NextTurn(grid)
+          })
+        }
 }

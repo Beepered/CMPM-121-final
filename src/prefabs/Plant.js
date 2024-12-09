@@ -1,25 +1,15 @@
 class Plant extends Phaser.GameObjects.Sprite{
-    constructor(scene, x, y, type = 0){
-        let texture;
-        switch(type){
-            case(1):
-                texture = "pink"
-                break;
-            case(2):
-                texture = "purple"
-                break;
-            case(3):
-                texture = "red"
-                break;
-            default:
-                texture = "testplant"
-        }
-        super(scene, x, y, texture);
-        scene.add.existing(this);
+    constructor(scene, x, y, typeName) {
+        const plantType = PlantDSL.getPlantType(typeName)
+        super(scene, x, y, plantType.texture)
+        this.scene = scene
+        this.typeName = typeName
+        this.setScale(0.5)
+        this.scene.add.existing(this)
+        //super(scene, x, y, texture);
+        //scene.add.existing(this);
 
         this.emitter = EventDispatcher.getInstance();
-
-        this.type = type
 
         this.growth = 0;
         this.maxGrowth = 3;
@@ -42,31 +32,15 @@ class Plant extends Phaser.GameObjects.Sprite{
         }
     }
 
-    GiveNutrients(cell, sun, water){
-        if(this.growth < this.maxGrowth){
-            switch(this.type){
-                case(0):
-                    if(sun >= 2 && water >= 2){
-                        this.growth += 1;
-                        cell.water -= 2;
-                    }
-                    break;
-                case(1):
-                    if(sun >= 1 && water >= 5){
-                        this.growth += 1;
-                        cell.water -= 5;
-                    }
-                    break;
-                case(2):
-                    if(sun >= 4 && water >= 4){
-                        this.growth += 1;
-                        cell.water -= 4;
-                    }
-                    break;
-                default:
-                    this.growth += 1;
+    GiveNutrients(cell, sun, water, neighbors){
+        if (this.growth < this.maxGrowth) {
+            const plantType = PlantDSL.getPlantType(this.typeName)
+            const canGrow = plantType.growthRule(cell, { sun, water, neighbors })
+            if (canGrow) {
+              this.growth += 1
+              cell.water -= Math.min(2, cell.water) // Adjust depletion rules
+              this.updatePlant()
             }
-            this.updatePlant()
         }
     }
 }
