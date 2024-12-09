@@ -1,19 +1,24 @@
 class gameStateManager {
-    constructor(playScene) {
+    undoStack: string[];
+    redoStack: string[];
+    scene: Phaser.Scene;
+
+    constructor(scene: Phaser.Scene) {
         this.undoStack = [];
         this.redoStack = [];
-        this.playScene = playScene;
+        this.scene = scene;
     }
 
-    gameStateChange(state) {
+    gameStateChange(state: string) {
         this.undoStack.push(state);
         this.redoStack = []; 
     }
 
     undo() {
         if (this.undoStack.length > 0) {
-            const newBuffer = this.playScene.appendBuffer(this.playScene.GetArrayBufferFromGrid(), this.playScene.GetArrayBufferFromPlayer())
-            const currentState = this.playScene.arrayBufferToBase64(newBuffer)
+            const playScene = this.scene.scene.get("playScene") as Play; 
+            const newBuffer = playScene.appendBuffer(playScene.GetArrayBufferFromGrid(), playScene.GetArrayBufferFromPlayer())
+            const currentState = playScene.arrayBufferToBase64(newBuffer)
             this.redoStack.push(currentState);
             const prevState = this.undoStack.pop();
             return prevState;
@@ -23,8 +28,9 @@ class gameStateManager {
 
     redo() {
         if (this.redoStack.length > 0) {
-            const newBuffer = this.playScene.appendBuffer(this.playScene.GetArrayBufferFromGrid(), this.playScene.GetArrayBufferFromPlayer())
-            const currentState = this.playScene.arrayBufferToBase64(newBuffer)
+            const playScene = this.scene.scene.get("playScene") as Play; 
+            const newBuffer = playScene.appendBuffer(playScene.GetArrayBufferFromGrid(), playScene.GetArrayBufferFromPlayer())
+            const currentState = playScene.arrayBufferToBase64(newBuffer)
             this.undoStack.push(currentState);
             const nextState = this.redoStack.pop();
             return nextState;
