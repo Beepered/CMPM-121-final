@@ -77,3 +77,31 @@ Our port from JavaScript to TypeScript started by installing node into our exist
 
 ## Reflection
 We knew we couldn't finish the project because the save and load from F1 was constantly breaking and managing other projects. Eventually the roles didn't matter too much as everyone was just trying to do as much as they can. Brendan started focusing on making small user experience changes and implementing new ideas (player movement and cell checking, weather, JSON). Ian focused on fixing the save/load, undo/redo, and transitioning to TypeScript. Izaiah switched focus from reworking our code to being compatible with each others logic, as well as the UI he designed, to working on the internal DSL logic and ensuring it was implemented accordingly to all the previous logic done before. 
+
+## Log 5 - Dec 8 2024
+## How we satisfied the software requirements
+### F0+F1+F2
+No Major Changes to F0,F1, and F2 were made while implementing F3. This is in part because we worked on F3 at the same time as F2 so most changes are documented in the previous devlog. 
+
+### Internationalization
+
+The devlog should explain how your code has changed to distinguish between strings internal to the program and strings that will be shown to the player (needing localization). If you did something clever with your language's type system so that the compiler helps you catch incomplete translations or other missing messages, brag about that in this section.
+
+This section should outline which code or data files need to get changed when adding support for a new language or adding a new translatable message to the game.
+
+### Localization
+
+Tell us about which three languages your game supports. For each language, tell us about how you accomplished that localization. Did a team member use their own knowledge of the language? Did you have a friend, volunteer classmate, or paid expert help? Did you make use of a tool like ChatGPT to help? (If so, describe your prompts so that we can see how you gave the system extra context for your project.)
+
+How should the user select which language will be used? Do they change the language setting from inside the game? Did you release three different versions of the game with a different language hard-coded into each? Does the player launch the game with special options (e.g. command line arguments or URL parameters) that encode the choice of language?
+
+### Mobile Installation
+
+How did you get your game to be installable on a smartphone-class mobile device? If you followed a tutorial, guide, video, or blogpost, directly link to those resources that helped you learn. What changes were needed to make the game installable?
+
+### Mobile Play (Offline)
+
+What changes to your design were needed to make it play well on a mobile device? Were there any changes needed to make sure it worked in the offline case?
+
+## Reflection
+Looking back on how you achieved the new F3 requirements, how has your team’s plan changed? Did you reconsider any of the choices you previously described for Tools and Materials or your Roles? Has your game design evolved now that you've started to think about giving the player more feedback? It would be very suspicious if you didn’t need to change anything. There’s learning value in you documenting how your team’s thinking has changed over time.
