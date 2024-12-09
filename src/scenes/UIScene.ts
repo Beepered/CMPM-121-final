@@ -24,22 +24,22 @@ class UIScene extends Phaser.Scene {
 
     create(){
         const txt = this.cache.json.get('language');
-        // use seeds not this.seeds
-        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `${txt.Seeds[txt.lang]}: ${seeds}`, { fontSize: '20px' })
-        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `${txt.Weather[txt.lang]}: ${weather}`, { fontSize: '20px' })
+
+        this.seedText = this.add.text(20, 20, `${txt.Seeds[txt.lang]}: ${seeds}`, { fontSize: '20px' })
+        this.weatherText = this.add.text(20, 35, `${txt.Weather[txt.lang]}: ${currentWeather}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `${txt.GAMEFINISHED[txt.lang]}`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
 
-        //this.createDropdownMenu(); //<--I think this is obselete
         this.slotWindow = this.add.container(0, 0);
 
-        this.dropdownToggle = this.add.text(800, 10, txt.Menu[txt.lang], { fontSize: '16px', color: '#123456' }).setInteractive();
-        this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
+        const menuButton = this.add.rectangle(this.cameras.main.width - 90, 0, 90, 30, 0x404040).setOrigin(0).setInteractive()
+        menuButton.on("pointerdown", () => this.toggleDropdownMenu());
+        this.dropdownToggle = this.add.text(800, 10, txt.Menu[txt.lang], { fontSize: '16px', color: '#ffffff' })
 
         // Position the button dynamically
         this.dropdownToggle.setScrollFactor(0);
-        this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
+        this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 25, 8);
 
         // Handle resizing
         this.scale.on('resize', (gameSize: { width: any; height: any; }) => {
@@ -54,9 +54,9 @@ class UIScene extends Phaser.Scene {
 
     resetAllTxt(){
         const txt = this.cache.json.get('language');
-        // use seeds not this.seeds
+        
         this.seedText.text = JSON.stringify(`${txt.Seeds[txt.lang]}: ${seeds}`);
-        this.weatherText.text = JSON.stringify( `${txt.Weather[txt.lang]}: ${weather}`);
+        this.weatherText.text = JSON.stringify( `${txt.Weather[txt.lang]}: ${currentWeather}`);
 
         this.endText.text = JSON.stringify(`${txt.GAMEFINISHED[txt.lang]}`)
         this.endText.visible = false
@@ -69,12 +69,11 @@ class UIScene extends Phaser.Scene {
         this.emitter.on("plant", this.Plant.bind(this));
         // this.emitter.on("reap", this.Reap.bind(this));
         this.emitter.on("end-game", this.endGame.bind(this));
-        this.emitter.on("undo", this.undo.bind(this)); // why is this commented?
+        this.emitter.on("undo", this.undo.bind(this));
         this.emitter.on("redo", this.redo.bind(this));
     }
 
     NextTurn(){
-        // change to seeds
         const tmp = seeds;
         this.historyStack.push(tmp);
         seeds = 3;
@@ -128,7 +127,7 @@ class UIScene extends Phaser.Scene {
         const txt = this.cache.json.get('language');
         // change to seeds
         this.seedText.text = `${txt.Seeds[txt.lang]}: ${seeds}`
-        this.weatherText.text = `${txt.Weather[txt.lang]}: ${weather}`
+        this.weatherText.text = `${txt.Weather[txt.lang]}: ${currentWeather}`
     }
 
     toggleDropdownMenu() {

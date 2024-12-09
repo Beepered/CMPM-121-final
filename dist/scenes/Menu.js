@@ -7,25 +7,15 @@ class Menu extends Phaser.Scene {
         this.load.json('language', 'src/Utils/language.json');
     }
     create() {
+        //this.scene.switch("test")
         let titleConfig = {
             fontFamily: "Montserrat",
-            fontSize: "60px",
+            fontSize: "80px",
             color: "#FF0000",
-            align: "center",
-            padding: {
-                top: 5,
-                bottom: 5
-            },
         };
         let textConfig = {
             fontFamily: "Montserrat",
             fontSize: "22px",
-            color: "#FFFFFF",
-            align: "center",
-            padding: {
-                top: 5,
-                bottom: 5
-            },
         };
         const txt = this.cache.json.get('language');
         this.add.text(gameWidth / 2, gameHeight / 2.5, txt.Title[txt.lang], titleConfig).setOrigin(0.5);

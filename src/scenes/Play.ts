@@ -39,7 +39,6 @@ class Play extends Phaser.Scene {
     }
 
     create(){
-
         this.addAllButtons();
         this.scene.launch("uiScene")
         
@@ -50,7 +49,7 @@ class Play extends Phaser.Scene {
         this.gameObjects.add(this.player);
 
         this.cellGroup = this.add.group()
-        this.grid = this.MakeCellGrid(this.XTiles, this.YTiles);
+        this.grid = this.MakeCellGrid(250, 110, this.XTiles, this.YTiles);
 
         this.gameStateManager = new gameStateManager(this);
         
@@ -82,19 +81,15 @@ class Play extends Phaser.Scene {
         return arr
     }
 
-    MakeCellGrid(x: number, y: number){
-        const minXPos = 100;
-        const minYPos = 70;
-        var cellGrid = this.Make2DArray(x, y);
-        for(let i = 0; i < x ; i++){
-            for(let j = 0; j < y; j++){
-                const cell = this.createCell(
-                    minXPos + gameWidth / this.XTiles * i,
-                    minYPos + gameHeight / this.YTiles * j
-                )
-                cell.xIndex = i
-                cell.yIndex = j // Set indices for each cell
-                cellGrid[i][j] = cell
+    MakeCellGrid(xPos:any, yPos:any, xAmt:any, yAmt:any){
+        var cellGrid = this.Make2DArray(xAmt, yAmt);
+
+        const cellWidth = 128, cellHeight = 128; // space cells by cellWidth and cellHeight
+        const xSpacing = 10, ySpacing = 10;
+
+        for(let i = 0; i < xAmt ; i++){
+            for(let j = 0; j < yAmt; j++){
+                cellGrid[i][j] = this.createCell(xPos + ((cellWidth + xSpacing) * i), yPos + ((cellHeight + ySpacing) * j));
             }
         }
         return cellGrid;
@@ -321,11 +316,13 @@ class Play extends Phaser.Scene {
 
     NextTurn(){
         seeds = maxSeeds;
+
+        currentWeather = weatherList.shift()!
+
         //random weather value
         const values = Object.keys(WEATHER);
         const enumKey = values[Math.floor(Math.random() * values.length)];
-
-        weather = WEATHER[enumKey as keyof typeof WEATHER];
+        weatherList.push(WEATHER[enumKey as keyof typeof WEATHER]);
 }
 
     setInfoFromData(){
@@ -335,7 +332,7 @@ class Play extends Phaser.Scene {
         maxSeeds = data.maxSeeds;
         seeds = data.numSeeds;
         this.winCondition = data.winCondition;
-        weather = data.weather;
+        weatherList = data.Forecast;
         this.emitter.emit("update-ui");
     }
 
@@ -343,6 +340,6 @@ class Play extends Phaser.Scene {
         this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
         this.emitter.on("next-turn", (grid: any) => {
             this.NextTurn()
-          })
-        }
+        })
+    }
 }
