@@ -32,12 +32,23 @@ class Menu extends Phaser.Scene {
         
         this.keyUP = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.keyDOWN = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-
-        this.changeLanguage();
+        //this.slotWindow = this.add.container(0, 0);
+        //this.changeLanguage();
     }
 
     changeLanguage(){
         const txt = this.cache.json.get('language');
+        const bg = this.add.rectangle(0, 0, 300, 200, 0x222222).setOrigin(0.5);
+        this.slotWindow.add(bg);
+        const closeButton = this.add.text(0, 80, txt.Close[txt.lang], {
+            fontSize: "18px",
+            backgroundColor: "#cc0000",
+            color: "#fff",
+            padding: { x: 10, y: 5 },
+        }).setOrigin(0.5).setInteractive();
+    
+        closeButton.on("pointerdown", () => this.slotWindow.removeAll(true));
+        this.slotWindow.add(closeButton);
         const langChoices = txt.format;
         let yPos = -45; // Position for the first button
         langChoices.forEach((lang:string, i:number) => {
