@@ -1,4 +1,14 @@
 class UIScene extends Phaser.Scene {
+    emitter: EventDispatcher;
+    historyStack: number[];
+    redoStack: number[];
+    seedText!: Phaser.GameObjects.Text;
+    weatherText!: Phaser.GameObjects.Text;
+    endText!: Phaser.GameObjects.Text;
+    slotWindow!: Phaser.GameObjects.Container;
+    dropdownToggle!: Phaser.GameObjects.Text;
+    dropdownMenu!: Phaser.GameObjects.Container;
+
     constructor(){
         super("uiScene")
         this.emitter = EventDispatcher.getInstance();
@@ -32,7 +42,7 @@ class UIScene extends Phaser.Scene {
         this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
 
         // Handle resizing
-        this.scale.on('resize', (gameSize) => {
+        this.scale.on('resize', (gameSize: { width: any; height: any; }) => {
             const { width, height } = gameSize;
             this.cameras.main.setSize(width, height); // Resize the camera
             this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 10, 10);
@@ -91,7 +101,7 @@ class UIScene extends Phaser.Scene {
         if(this.historyStack.length > 0){
             const tmp = seeds;
             this.redoStack.push(tmp);
-            const prevState = this.historyStack.pop();
+            const prevState:number = this.historyStack.pop()!;
             seeds = prevState;
             console.log("Seeds: " + seeds);
             this.updateUI();
@@ -101,7 +111,7 @@ class UIScene extends Phaser.Scene {
     redo(){
         if (this.redoStack.length > 0) {
             this.historyStack.push(seeds);
-            const nextState = this.redoStack.pop();
+            const nextState: number = this.redoStack.pop()!;
             console.log(nextState)
             seeds = nextState;
 
@@ -180,7 +190,7 @@ class UIScene extends Phaser.Scene {
         })
     }
 
-    showSlotWindow(action) {
+    showSlotWindow(action: string) {
         const txt = this.cache.json.get('language');
         // Close the dropdown menu
         this.dropdownMenu.visible = false;
@@ -267,8 +277,8 @@ class UIScene extends Phaser.Scene {
         
     }
 
-    handleSlotAction(action, slot, slotButton) {
-        const playScene = this.scene.get("playScene"); // Get Play.js methods
+    handleSlotAction(action: string, slot: string, slotButton: Phaser.GameObjects.Text) {
+        const playScene = this.scene.get("playScene") as Play; // Get Play.js methods
         const txt = this.cache.json.get('language')
         switch (action) {
             case "save":
