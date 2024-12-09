@@ -27,7 +27,6 @@ class Play extends Phaser.Scene {
         this.load.json('language', 'src/Utils/language.json');
     }
     create() {
-        console.log("sesese ");
         this.addAllButtons();
         this.scene.launch("uiScene");
         this.gameObjects = this.add.group({

@@ -325,7 +325,7 @@ class Play extends Phaser.Scene {
         //random weather value
         const values = Object.keys(WEATHER);
         const enumKey = values[Math.floor(Math.random() * values.length)];
-        weatherList.push(WEATHER[enumKey]);
+        weatherList.push(WEATHER[enumKey as keyof typeof WEATHER]);
 }
 
     setInfoFromData(){
