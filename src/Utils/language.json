@@ -1,12 +1,13 @@
+
 {
     "lang": 0,
-    "format": ["English", "Chinese", "Japanese", "French", "Spanish", "Latin"],
+    "format": ["English ", "中文 ", "日本語 ", "Français ", "Espagnole "],
     "autoConfirmtxt": ["Attempt to load Autosave?", 
         "尝试加载自动保存吗？", 
         "自動保存をロードしますか?",
         "Tenter de charger la sauvegarde automatique ?", 
         "¿Intentar cargar el guardado automático?",
-        "Onerantes Autosave conantur?"],
+        ""],
     "savingtxt": ["Saving data to slot: ", "保存数据至插槽：", "スロットにデータを保存しています: ", "Sauvegarde des données dans l'emplacement: ", "Guardar datos en la ranura: ", ""],
     "encodedtxt": ["Encoded data: ", "编码数据：", "エンコードされたデータ: ", "Données codées : ", "Datos codificados: ", ""],
     "saveSuccess": ["Save successful. ", "保存成功。", "保存に成功しました。", "Sauvegarde réussie.", "Copia de seguridad exitosa.", ""],
@@ -31,5 +32,7 @@
     "Slot": [["Slot ", "SLOTS"], ["槽", "插槽"], ["スロット", "スロット"], ["Emplacement", "emplacements"], ["archivo", "archivo"], ["", ""]],
     "Empty": ["Empty ", "空", "空の", "Vide", "Vacío", ""],
     "Close": ["Close", "关闭", "近い", "Fermer", "Cerca", ""],
-    "gameSavedIn": ["Game saved in", "保存于", "ゲームは保存されました", "Jeu sauvegardé dans", "Juego guardado en", ""]
+    "gameSavedIn": ["Game saved in", "保存于", "ゲームは保存されました", "Jeu sauvegardé dans", "Juego guardado en", ""],
+    "credits": ["CREDITS"],
+    "LeaveCreditTxt": ["Press SPACEBAR for MENU"]
 }
