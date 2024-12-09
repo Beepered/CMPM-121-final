@@ -96,12 +96,10 @@ Tell us about which three languages your game supports. For each language, tell 
 How should the user select which language will be used? Do they change the language setting from inside the game? Did you release three different versions of the game with a different language hard-coded into each? Does the player launch the game with special options (e.g. command line arguments or URL parameters) that encode the choice of language?
 
 ### Mobile Installation
-
-How did you get your game to be installable on a smartphone-class mobile device? If you followed a tutorial, guide, video, or blogpost, directly link to those resources that helped you learn. What changes were needed to make the game installable?
+The game is able to be downloaded on the live server. We couldn't figure out how to get it "properly" downloaded in github pages, because on mobile the game claims that the github site does not exist.
 
 ### Mobile Play (Offline)
-
-What changes to your design were needed to make it play well on a mobile device? Were there any changes needed to make sure it worked in the offline case?
+Mobile play was almost achieved. The game is downloadable on both computer and mobile, but only playable on computer. 
 
 ## Reflection
-Looking back on how you achieved the new F3 requirements, how has your team’s plan changed? Did you reconsider any of the choices you previously described for Tools and Materials or your Roles? Has your game design evolved now that you've started to think about giving the player more feedback? It would be very suspicious if you didn’t need to change anything. There’s learning value in you documenting how your team’s thinking has changed over time.
+Andrew worked on the internationalization and localization. Brendan worked on porting to mobile. At this point, we were all tired and had other projects to take care of. We didn't finish everything, but did as much as we could. We met up in a discord call and got enough of F2 finished, but F3 was too difficult. Not much code had to be changed, though this is mostly because we were also working on F2 at the same time.
