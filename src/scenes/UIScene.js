@@ -35,7 +35,7 @@ class UIScene extends Phaser.Scene {
         this.scale.on('resize', (gameSize) => {
             const { width, height } = gameSize;
             this.cameras.main.setSize(width, height); // Resize the camera
-            this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 40, 10);
+            this.dropdownToggle.setPosition(width - this.dropdownToggle.width - 10, 10);
         });
 
         // Create the dropdown menu

@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
         this.winCondition = 3;
         this.flowersGrown = 0;
 
+        this.outerButtons = []; //HTMLButtonElement 
         
         this.setListeners();
     }
@@ -284,6 +285,7 @@ class Play extends Phaser.Scene {
             this.UpdateCellText()
         })
         document.body.append(turnButton);
+        this.outerButtons.push(turnButton);
     }
     addDoButtons(){
         const doButtons = Array.from(
@@ -298,11 +300,18 @@ class Play extends Phaser.Scene {
                 this.doFunction(buttonTxt[i], i == 0); //function needs to be filled
             })
             document.body.append(button);
+            this.outerButtons.push(button);
         })
     }
     addAllButtons(){
         this.addTurnButton();
         this.addDoButtons();
+    }
+    replaceAllButtons(){
+        for(let i = 0; i < this.outerButtons.length; i++){
+            this.outerButtons[i].remove();
+        }
+        this.addAllButtons();
     }
 
     //the undo parameter is supposed to be a boolean, if true it is undo, if false it is redo. 
@@ -350,5 +359,6 @@ class Play extends Phaser.Scene {
         this.emitter.on("next-turn", (grid) => {
             this.NextTurn(grid)
           })
-        }
+        this.emitter.on("language-change", this.replaceAllButtons.bind(this));
+    }
 }
