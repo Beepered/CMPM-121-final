@@ -1,5 +1,14 @@
 class Cell extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture) {
+    emitter: EventDispatcher;
+    plant: Plant | null;
+    sun: number;
+    water: number;
+    sunText: Phaser.GameObjects.Text;
+    waterText: Phaser.GameObjects.Text;
+    xIndex: number | null | undefined;
+    yIndex: number | null | undefined;
+
+    constructor(scene: Phaser.Scene, x: number, y: number, texture:string) {
         super(scene, x, y, texture);
         scene.add.rectangle(x, y, this.displayWidth + 5, this.displayHeight + 5, 0x000000); // border
 
@@ -72,14 +81,15 @@ class Cell extends Phaser.GameObjects.Sprite {
         }
     }
 
-    Plant(typename) {
+    Plant(typename: string) {
         this.plant = new Plant(this.scene, this.x, this.y, typename);
         this.plant.typeName = typename
     }
 
     getNeighbors() {
-        const neighbors = []
-        const grid = this.scene.grid // Ensure the grid is correctly referenced
+        const playScene = this.scene.scene.get("playScene") as Play; 
+        const neighbors:Cell[] = []
+        const grid = playScene.grid // Ensure the grid is correctly referenced
 
         if (!grid || this.xIndex == null || this.yIndex == null) {
             console.error("Grid or indices not found for cell:", this)
@@ -94,8 +104,8 @@ class Cell extends Phaser.GameObjects.Sprite {
         ]
 
         directions.forEach(dir => {
-            const nx = this.xIndex + dir.x
-            const ny = this.yIndex + dir.y
+            const nx = this.xIndex! + dir.x
+            const ny = this.yIndex! + dir.y
 
             // Ensure neighbor is within grid boundaries
             if (nx >= 0 && nx < grid.length && ny >= 0 && ny < grid[0].length) {

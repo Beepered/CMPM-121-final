@@ -1,4 +1,6 @@
 class Credits extends Phaser.Scene {
+    SPACE!: Phaser.Input.Keyboard.Key;
+    
     constructor(){
         super("creditScene")
     }
@@ -10,7 +12,7 @@ class Credits extends Phaser.Scene {
             "Brendan Trieu\n\n" +
             "Ian Liu\n\n" +
             "Izaiah Lozano", { fontSize: '20px' }).setOrigin(0.5)
-        this.SPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.SPACE = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
     update(){
