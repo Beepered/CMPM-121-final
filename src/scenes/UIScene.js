@@ -167,7 +167,6 @@ class UIScene extends Phaser.Scene {
         let yPos = -45; // Position for the first button
         langChoices.forEach((lang, i) => {
             // Create language button
-            
             const langButton = this.add.text(0, yPos, lang, {
                 fontSize: "18px",
                 color: "#fff",
@@ -178,6 +177,7 @@ class UIScene extends Phaser.Scene {
                 txt.lang = i;
                 this.resetAllTxt();
                 this.slotWindow.removeAll(true)
+                this.emitter.emit("language-change");
             });
             this.slotWindow.add(langButton);
             yPos += 25; // Move the next button down
