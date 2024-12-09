@@ -138,9 +138,6 @@ class Play extends Phaser.Scene {
                 }
                 cell.Plant(plantName);
                 cell.plant.growth = plantGrowth;
-                if (cell.plant.growth == 3) { //Could change to be dynamic
-                    this.FlowerGrown();
-                }
                 cell.plant.updatePlant();
                 // Debugger code
                 console.log(`Loaded Plant: Type=${plantTypeArray[plantType - 1] || 'unknown'}, Growth=${plantGrowth} into Cell [${cell.xIndex}, ${cell.yIndex}]`);
