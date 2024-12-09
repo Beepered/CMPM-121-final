@@ -90,7 +90,7 @@ When adding adding support for a new language, we just add a the new translation
 ### Localization
 For localization, we put 5 languages, English, Chinese, Japanese, French and Spanish. We chose these languages due to their widespread popularity. For the localization to work, we had a JSON file which is accessed by all scene files and stores all the language options. At the very beginning of the JSON, there is a number variable which chooses the language. 1 is for English, 2 Chinese, 3 Japanese, 4 French, 5 Spanish. Every text displayed on screen has it’s own array of strings where each index of the array is the different languages for that text. Due to different languages having varying subject and verb alignment for their grammar we stored whole sentences. 
 For the translations, we used Google Translate. Some phrases with less words could be easily taken out of context by the translator so we would surround the words with other words to put it into context. For example “save” can be interpreted as saving a life instead of saving a game state for storage. So in google translate we would put “save file” and used the word in that context. 
-The language can be selected in the drop down menu by clicking on menu -> 🌐 inside the game. The player does not have to do a special option launch to choose the language. 
+The language can be selected in the drop down menu by clicking on menu -> language inside the game. The player does not have to do a special option launch to choose the language. 
 
 
 ### Mobile Installation
