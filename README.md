@@ -83,14 +83,11 @@ We knew we couldn't finish the project because the save and load from F1 was con
 ### F0+F1+F2
 No Major Changes to F0,F1, and F2 were made while implementing F3. This is in part because we worked on F3 at the same time as F2 so most changes are documented in the previous devlog. 
 
-### Internationalization
-
-The devlog should explain how your code has changed to distinguish between strings internal to the program and strings that will be shown to the player (needing localization). If you did something clever with your language's type system so that the compiler helps you catch incomplete translations or other missing messages, brag about that in this section.
-
-This section should outline which code or data files need to get changed when adding support for a new language or adding a new translatable message to the game.
+### Internationalization:
+To distinguish between strings internal to the program and strings shown to the player, we just replaced all the HTMLButtonElement texts and Phaser.GameObjects.text with variables referencing a JSON file that has all the translations. We just did trial and error to find any missing translations while knowing all the scene files will be the ones needing translations. 
+When adding adding support for a new language, we just add a the new translation to all the phrases which are arrays where each indexes are the languages in the JSON. When adding a new word, that word gets its own new array in JSON and has all the translations added to the Indexes. 
 
 ### Localization
-
 For localization, we put 5 languages, English, Chinese, Japanese, French and Spanish. We chose these languages due to their widespread popularity. For the localization to work, we had a JSON file which is accessed by all scene files and stores all the language options. At the very beginning of the JSON, there is a number variable which chooses the language. 1 is for English, 2 Chinese, 3 Japanese, 4 French, 5 Spanish. Every text displayed on screen has it’s own array of strings where each index of the array is the different languages for that text. Due to different languages having varying subject and verb alignment for their grammar we stored whole sentences. 
 For the translations, we used Google Translate. Some phrases with less words could be easily taken out of context by the translator so we would surround the words with other words to put it into context. For example “save” can be interpreted as saving a life instead of saving a game state for storage. So in google translate we would put “save file” and used the word in that context. 
 The language can be selected in the drop down menu by clicking on menu -> 🌐 inside the game. The player does not have to do a special option launch to choose the language. 
