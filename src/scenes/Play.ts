@@ -39,7 +39,6 @@ class Play extends Phaser.Scene {
     }
 
     create(){
-        console.log("sesese ")
         this.addAllButtons();
         this.scene.launch("uiScene")
         
@@ -94,7 +93,7 @@ class Play extends Phaser.Scene {
             }
         }
         return cellGrid;
-}
+    }
 
     UpdateCellText() {
         for(let i = 0; i < this.grid.length ; i++){
@@ -321,12 +320,12 @@ class Play extends Phaser.Scene {
     NextTurn(){
         seeds = maxSeeds;
 
-        currentWeather = weatherList.shift()!;
+        currentWeather = weatherList.shift()!
 
         //random weather value
         const values = Object.keys(WEATHER);
         const enumKey = values[Math.floor(Math.random() * values.length)];
-        weatherList.push(WEATHER[enumKey as keyof typeof WEATHER]);
+        weatherList.push(WEATHER[enumKey]);
 }
 
     setInfoFromData(){
