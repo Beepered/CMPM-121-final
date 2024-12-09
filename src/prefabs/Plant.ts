@@ -9,10 +9,7 @@ class Plant extends Phaser.GameObjects.Sprite{
         super(scene, x, y, plantType!.texture)
         this.scene = scene
         this.typeName = typeName
-        this.setScale(0.5)
         this.scene.add.existing(this)
-        //super(scene, x, y, texture);
-        //scene.add.existing(this);
 
         this.emitter = EventDispatcher.getInstance();
 

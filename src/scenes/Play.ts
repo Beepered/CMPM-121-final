@@ -39,7 +39,7 @@ class Play extends Phaser.Scene {
     }
 
     create(){
-
+        console.log("sesese ")
         this.addAllButtons();
         this.scene.launch("uiScene")
         
@@ -324,11 +324,13 @@ class Play extends Phaser.Scene {
 
     NextTurn(){
         seeds = maxSeeds;
+
+        currentWeather = weatherList.shift()
+
         //random weather value
         const values = Object.keys(WEATHER);
         const enumKey = values[Math.floor(Math.random() * values.length)];
-
-        weather = WEATHER[enumKey as keyof typeof WEATHER];
+        weatherList.push(WEATHER[enumKey]);
 }
 
     setInfoFromData(){
@@ -338,7 +340,7 @@ class Play extends Phaser.Scene {
         maxSeeds = data.maxSeeds;
         seeds = data.numSeeds;
         this.winCondition = data.winCondition;
-        weather = data.weather;
+        weatherList = data.Forecast;
         this.emitter.emit("update-ui");
     }
 
