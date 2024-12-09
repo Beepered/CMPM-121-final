@@ -81,7 +81,7 @@ We knew we couldn't finish the project because the save and load from F1 was con
 ## Log 5 - Dec 8 2024
 ## How we satisfied the software requirements
 ### F0+F1+F2
-The devlog should briefly comment on how the previous requirements remain satisfied in the latest version of your software. If no major changes were made, you can just simply state that no major changes were made. However, if you evolved your design to improve code quality (a good idea!) this section of your devlog entry would be a good place to brag about it.
+No Major Changes to F0,F1, and F2 were made while implementing F3. This is in part because we worked on F3 at the same time as F2 so most changes are documented in the previous devlog. 
 
 ### Internationalization
 
