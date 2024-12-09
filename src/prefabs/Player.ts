@@ -1,5 +1,20 @@
 class Player extends Phaser.Physics.Arcade.Sprite{
-    constructor(scene, x, y, texture){
+    emitter: any;
+    keyW: Phaser.Input.Keyboard.Key;
+    keyA: Phaser.Input.Keyboard.Key;
+    keyS: Phaser.Input.Keyboard.Key;
+    keyD: Phaser.Input.Keyboard.Key;
+    keyUP: Phaser.Input.Keyboard.Key;
+    keyLEFT: Phaser.Input.Keyboard.Key;
+    keyDOWN: Phaser.Input.Keyboard.Key;
+    keyRIGHT: Phaser.Input.Keyboard.Key;
+    SPACE: Phaser.Input.Keyboard.Key;
+    moveSpeed: number;
+    cell: Cell | null;
+    playersTurn: boolean;
+    checkCellList: any[];
+
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string){
         super(scene, x, y, texture);
         scene.add.existing(this)
         scene.physics.add.existing(this)
@@ -10,19 +25,19 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.depth = 1;
 
         this.setScale(0.6); 
-        this.body.setSize(this.width * 0.5, this.height * 0.5);
+        this.body!.setSize(this.width * 0.5, this.height * 0.5);
 
-        this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.keyA = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keyS = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.keyD = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.keyW = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.keyA = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyS = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.keyD = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         
-        this.keyUP = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        this.keyLEFT = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        this.keyDOWN = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-        this.keyRIGHT = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        this.keyUP = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.keyLEFT = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.keyDOWN = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.keyRIGHT = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
-        this.SPACE = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.SPACE = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         this.moveSpeed = 300;
 
@@ -40,33 +55,33 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             this.controls();
         }
 
-        if (this.body.embedded && this.checkCellList.length > 0) {
+        if (this.body!.embedded && this.checkCellList.length > 0) {
             this.cell = this.CalculatePlayerCell();
         }
-        else if (this.body.touching.none && !this.body.wasTouching.none) {
+        else if (this.body!.touching.none && !this.body!.wasTouching.none) {
             this.cell = null;
         }
     }
 
     controls(){
         if(this.keyUP.isDown || this.keyW.isDown){
-            this.body.velocity.y = -this.moveSpeed
+            this.body!.velocity.y = -this.moveSpeed
         }
         else if(this.keyDOWN.isDown || this.keyS.isDown){
-            this.body.velocity.y = this.moveSpeed
+            this.body!.velocity.y = this.moveSpeed
         }
         else {
-            this.body.velocity.y = 0
+            this.body!.velocity.y = 0
         }
 
         if(this.keyLEFT.isDown || this.keyA.isDown){
-            this.body.velocity.x = -this.moveSpeed
+            this.body!.velocity.x = -this.moveSpeed
         }
         else if(this.keyRIGHT.isDown || this.keyD.isDown){
-            this.body.velocity.x = this.moveSpeed
+            this.body!.velocity.x = this.moveSpeed
         }
         else {
-            this.body.velocity.x = 0
+            this.body!.velocity.x = 0
         }
         
         if(Phaser.Input.Keyboard.JustDown(this.SPACE)){
@@ -99,12 +114,12 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         
           const randSeed = Math.floor(Math.random() * 3) + 1;
           const typeName = typeMapping[randSeed];
-          this.cell.Plant(typeName);
+          this.cell!.Plant(typeName);
     }
 
     Reap(){
-        this.cell.plant.destroy();
-        this.cell.plant = null;
+        this.cell!.plant!.destroy();
+        this.cell!.plant = null;
     }
 
     // Check every cell the player is overlapping
@@ -129,7 +144,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
 
     
     undoRedo(){
-        const playScene = this.scene.scene.get("playScene"); 
+        const playScene = this.scene.scene.get("playScene") as Play; 
         const newBuffer = playScene.appendBuffer(playScene.GetArrayBufferFromGrid(), playScene.GetArrayBufferFromPlayer())
         const encode = playScene.arrayBufferToBase64(newBuffer)
         playScene.gameStateManager.gameStateChange(encode);

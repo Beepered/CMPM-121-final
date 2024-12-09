@@ -1,4 +1,16 @@
 class Play extends Phaser.Scene {
+    emitter: any;
+    XTiles: number;
+    YTiles: number;
+    winCondition: number;
+    flowersGrown: number;
+    gameObjects: Phaser.GameObjects.Group;
+    player: Player;
+    cellGroup: Phaser.GameObjects.Group;
+    grid: any[][];
+    gameStateManager: gameStateManager;
+
+    
     constructor(){
         super("playScene")
         this.emitter = EventDispatcher.getInstance();
@@ -56,7 +68,7 @@ class Play extends Phaser.Scene {
         this.UpdateCellText();
     }
     
-    createCell(x, y, gridX, gridY) {
+    createCell(x: number, y: number, gridX: undefined, gridY: undefined) {
         const cell = new Cell(this, x, y, "grass");
         cell.gridX = gridX;
         cell.gridY = gridY;

@@ -1,5 +1,10 @@
 class Plant extends Phaser.GameObjects.Sprite{
-    constructor(scene, x, y, typeName) {
+    typeName: string;
+    emitter: any;
+    growth: number;
+    maxGrowth: number;
+
+    constructor(scene: Phaser.Scene, x: number, y: number, typeName: string) {
         const plantType = PlantDSL.getPlantType(typeName)
         super(scene, x, y, plantType.texture)
         this.scene = scene
@@ -32,7 +37,7 @@ class Plant extends Phaser.GameObjects.Sprite{
         }
     }
 
-    GiveNutrients(cell, sun, water, neighbors){
+    GiveNutrients(cell: Cell, sun: number, water: number, neighbors: any[]){
         if (this.growth < this.maxGrowth) {
             const plantType = PlantDSL.getPlantType(this.typeName)
             const canGrow = plantType.growthRule(cell, { sun, water, neighbors })
