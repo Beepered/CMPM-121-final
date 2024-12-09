@@ -1,6 +1,6 @@
 class Plant extends Phaser.GameObjects.Sprite{
     typeName: string;
-    emitter: any;
+    emitter: EventDispatcher;
     growth: number;
     maxGrowth: number;
 

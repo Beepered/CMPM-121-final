@@ -1,12 +1,12 @@
 class Cell extends Phaser.GameObjects.Sprite {
-    emitter: any;
+    emitter: EventDispatcher;
     plant: Plant | null;
     sun: number;
     water: number;
     sunText: Phaser.GameObjects.Text;
     waterText: Phaser.GameObjects.Text;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, texture) {
+    constructor(scene: Phaser.Scene, x: number, y: number, texture:string) {
         super(scene, x, y, texture);
         scene.add.rectangle(x, y, this.displayWidth + 5, this.displayHeight + 5, 0x000000); // border
 
@@ -85,7 +85,7 @@ class Cell extends Phaser.GameObjects.Sprite {
     }
 
     getNeighbors() {
-        const neighbors = []
+        const neighbors:Cell[] = []
         const grid = this.scene.grid // Ensure the grid is correctly referenced
 
         if (!grid || this.xIndex == null || this.yIndex == null) {

@@ -1,4 +1,5 @@
 class OuterUI {
+    emitter: EventDispatcher;
     constructor(){
         this.emitter = EventDispatcher.getInstance();
         const buttonPanel = document.createElement("div");

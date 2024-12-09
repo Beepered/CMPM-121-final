@@ -1,5 +1,5 @@
 class Player extends Phaser.Physics.Arcade.Sprite{
-    emitter: any;
+    emitter: EventDispatcher;
     keyW: Phaser.Input.Keyboard.Key;
     keyA: Phaser.Input.Keyboard.Key;
     keyS: Phaser.Input.Keyboard.Key;
