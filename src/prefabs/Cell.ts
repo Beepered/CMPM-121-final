@@ -87,8 +87,9 @@ class Cell extends Phaser.GameObjects.Sprite {
     }
 
     getNeighbors() {
+        const playScene = this.scene.scene.get("playScene") as Play; 
         const neighbors:Cell[] = []
-        const grid = this.scene.grid // Ensure the grid is correctly referenced
+        const grid = playScene.grid // Ensure the grid is correctly referenced
 
         if (!grid || this.xIndex == null || this.yIndex == null) {
             console.error("Grid or indices not found for cell:", this)

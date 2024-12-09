@@ -2,7 +2,7 @@
 window.PlantDSL = {
   registry: new Map(),
 
-  addPlantType(name, texture, growthRule) {
+  addPlantType(name: any, texture: any, growthRule: any) {
     const newPlantType = {
       name,
       texture,
@@ -11,7 +11,7 @@ window.PlantDSL = {
     this.registry.set(name, newPlantType);
   },
 
-  getPlantType(name) {
+  getPlantType(name: any) {
     return this.registry.get(name);
   },
 };

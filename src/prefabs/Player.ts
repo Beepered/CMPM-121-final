@@ -106,14 +106,10 @@ class Player extends Phaser.Physics.Arcade.Sprite{
     }
 
     Plant() {
-        const typeMapping = {
-            1: "sunflower",
-            2: "rose",
-            3: "lavender"
-          };
+        const typeArray = ["sunflower", "rose", "lavender"]
         
-          const randSeed = Math.floor(Math.random() * 3) + 1;
-          const typeName = typeMapping[randSeed];
+          const randSeed = Math.floor(Math.random() * 3);
+          const typeName = typeArray[randSeed];
           this.cell!.Plant(typeName);
     }
 

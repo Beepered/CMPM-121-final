@@ -23,4 +23,5 @@ const WEATHER = {
     cloudy: "cloudy",
     rainy: "rainy"
 };
+const weatherArray = ["sunny", "cloudy", "rainy"]
 let weather = WEATHER.sunny

@@ -4,11 +4,11 @@ class Play extends Phaser.Scene {
     YTiles: number;
     winCondition: number;
     flowersGrown: number;
-    gameObjects: Phaser.GameObjects.Group;
-    player: Player;
-    cellGroup: Phaser.GameObjects.Group;
-    grid: any[][];
-    gameStateManager: gameStateManager;
+    gameObjects!: Phaser.GameObjects.Group;
+    player!: Player;
+    cellGroup!: Phaser.GameObjects.Group;
+    grid!: any[][];
+    gameStateManager!: gameStateManager;
 
     
     constructor(){
@@ -68,10 +68,8 @@ class Play extends Phaser.Scene {
         this.UpdateCellText();
     }
     
-    createCell(x: number, y: number, gridX: number , gridY: number) {
+    createCell(x: number, y: number) {
         const cell = new Cell(this, x, y, "grass");
-        cell.gridX = gridX;
-        cell.gridY = gridY;
         this.cellGroup.add(cell);
         return cell;
     }
@@ -122,7 +120,7 @@ class Play extends Phaser.Scene {
         const buffer = new ArrayBuffer((this.XTiles * this.YTiles) * 8); // size of grid * (4*2) (4 = amount of things to save (sun,water,type,growth), 2 = bytes)
         const view = new DataView(buffer);
         let byteCount = 0
-        const plantTypeArray: string[] = ['sunflower', 'lavendar', 'rose'];
+        const plantTypeArray: string[] = ['sunflower', 'lavender', 'rose'];
         for(const cell of this.gridCells()) {
             view.setInt16(byteCount, cell.sun);
             view.setInt16(byteCount + 2, cell.water);
@@ -153,18 +151,13 @@ class Play extends Phaser.Scene {
         let byteCount = 0
         this.flowersGrown = 0;
 
-        const plantTypeMap = {
-            1: 'sunflower',
-            2: 'lavender',
-            3: 'rose'
-            // Add more mappings if needed
-          }
+        const plantTypeArray: string[] = ['sunflower', 'lavender', 'rose'];
 
         for(const cell of this.gridCells()) {
             cell.sun = view.getInt16(byteCount);
             cell.water = view.getInt16(byteCount + 2);
             const plantType = view.getInt16(byteCount + 4);
-            const plantName = plantTypeMap[plantType] // Reverse mapping
+            const plantName = plantTypeArray[plantType-1] // Reverse mapping
             console.log(`Decoded PlantType=${plantType} -> PlantName=${plantName}`)
             console.log(`Decoded Plant Type=${plantType} at Cell [${cell.xIndex}, ${cell.yIndex}]`)
             if (plantType !== 0) {
@@ -172,7 +165,7 @@ class Play extends Phaser.Scene {
                 const plantGrowth = view.getInt16(byteCount + 6);
                 cell.removePlant(); 
             
-                const plantName = plantTypeMap[plantType]
+                const plantName = plantTypeArray[plantType-1]
                 if (!plantName) {
                     console.error(`Unknown plant type ${plantType} at [${cell.xIndex}, ${cell.yIndex}]`)
                     continue
@@ -186,7 +179,7 @@ class Play extends Phaser.Scene {
                 }
                 cell.plant.updatePlant();
                 // Debugger code
-                console.log(`Loaded Plant: Type=${plantTypeMap[plantType] || 'unknown'}, Growth=${plantGrowth} into Cell [${cell.xIndex}, ${cell.yIndex}]`)
+                console.log(`Loaded Plant: Type=${plantTypeArray[plantType-1] || 'unknown'}, Growth=${plantGrowth} into Cell [${cell.xIndex}, ${cell.yIndex}]`)
             } else {
             // Debugging logs for empty cell
             console.log(`Loaded Empty Cell at [${cell.xIndex}, ${cell.yIndex}]`)
@@ -334,7 +327,8 @@ class Play extends Phaser.Scene {
         //random weather value
         const values = Object.keys(WEATHER);
         const enumKey = values[Math.floor(Math.random() * values.length)];
-        weather = WEATHER[enumKey];
+
+        weather = WEATHER[enumKey as keyof typeof WEATHER];
 }
 
     setInfoFromData(){
@@ -350,8 +344,8 @@ class Play extends Phaser.Scene {
 
     setListeners(){
         this.emitter.on("fully-grown", this.FlowerGrown.bind(this));
-        this.emitter.on("next-turn", (grid) => {
-            this.NextTurn(grid)
+        this.emitter.on("next-turn", (grid: any) => {
+            this.NextTurn()
           })
         }
 }
