@@ -163,7 +163,7 @@ class UIScene extends Phaser.Scene {
 
     changeLanguage(){
         const txt = this.cache.json.get('language');
-        const langChoices = ["English ", "中文 ", "日本語 ", "Français ", "Espagnole "];
+        const langChoices = txt.format; //this should maybe 1 day be changed to get "format" array in txt
         let yPos = -45; // Position for the first button
         langChoices.forEach((lang, i) => {
             // Create language button
