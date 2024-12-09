@@ -1,3 +1,4 @@
+import PlantDSL from "../Utils/PlantDSL";
 class Plant extends Phaser.GameObjects.Sprite{
     typeName: string;
     emitter: EventDispatcher;
@@ -6,7 +7,7 @@ class Plant extends Phaser.GameObjects.Sprite{
 
     constructor(scene: Phaser.Scene, x: number, y: number, typeName: string) {
         const plantType = PlantDSL.getPlantType(typeName)
-        super(scene, x, y, plantType.texture)
+        super(scene, x, y, plantType!.texture)
         this.scene = scene
         this.typeName = typeName
         this.setScale(0.5)
@@ -40,7 +41,7 @@ class Plant extends Phaser.GameObjects.Sprite{
     GiveNutrients(cell: Cell, sun: number, water: number, neighbors: any[]){
         if (this.growth < this.maxGrowth) {
             const plantType = PlantDSL.getPlantType(this.typeName)
-            const canGrow = plantType.growthRule(cell, { sun, water, neighbors })
+            const canGrow = plantType!.growthRule(cell, { sun, water, neighbors })
             if (canGrow) {
               this.growth += 1
               cell.water -= Math.min(2, cell.water) // Adjust depletion rules
