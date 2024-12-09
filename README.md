@@ -42,19 +42,23 @@ Progress was slow because everyone was given other projects in other classes to 
 ## Reflection
   With various members traveling for Thanksgiving along with having other responsibilities come up, our F1 development came along very slowly. We have remained consistent in our use of Phaser alongside JavaScript. Our role structure hasn't stuck very much and we are just coding to try to meet deadlines. On top of the software requirements, we have implemented clickable buttons to replace keybinds for saving, loading, undoing, redoing, and progressing turns. After initially having them to random keys on the keyboard we switched to buttons to make the program usable for new users. Overall, progress has been really slow because of Thanksgiving and trying to manage another class' project at the same time.
 
-## Log 4 - XXXXXXX
+## Log 4 - Dec 6 2024
 ### F0 + F1
 - F0 changes:
   - F0[a]. The player using velocity instead of directly moving position. Changed cell creation to spawn cells based on cell size instead of game size.
+  - F0[b]. no changes
   - F0[c]. Fixed function that determines which cell the player is standing in.
   - F0[d]. Implemented a weather system so now water and sun changes based on weather. The Forecast shows what will happen on the next turn so the player can plan ahead.
-  - F0[g]. With an external DSL (described later), the amount of plants required until fully grown can be changed.
+  - F0[e]. Created an internal DSL for plants (described later).
+  - F0[f]. The internal plant DSL describes how the plants will grow.
+  - F0[g]. With an external DSL (described later), the amount of plants required until the win condition is satisfied can be changed.
 - F1 changes:
-  - F1[a]. Various bug fixes. (explain later and maybe show off by giving code changes)
+  - F1[a]. Various bug fixes.
   - F1[b]. Changed buttons so the player clicks on rectangles instead of text, making it easier to click on menu buttons.
-  - F1[d]. Reworked undo/redo system to utilize the array buffer from f1.a. Also reworked the redo logic to function properly. Undo/redo now properly works for all actions including, new turns, reaping, and planting. 
+  - F1[c]. no changes
+  - F1[d]. Reworked undo/redo system to utilize the array buffer from F1.a. Also reworked the redo logic to function properly. Undo/redo now properly works for all actions including, new turns, reaping, and planting. 
 ### External DSL for Scenario Design
-Created a JSON file that the play scene parses through on start that changes various values. Changing Forecast to ["rainy", "rainy", "cloudy", "sunny"] will change the weather to rainy for 2 turns, cloudy for 1 turn, and sunny for 1 turn. Had to change the seeds variable to be global so that the UI scene could take from a possibly different value instead of always assuming it will be 3.
+Created a JSON file that the play scene parses through on start that changes various values. For example, changing Forecast to ["rainy", "rainy", "cloudy", "sunny"] will change the weather to rainy for 2 turns, cloudy for 1 turn, and sunny for 1 turn. We had to change the seeds variable to be global so that the UI scene could take from a possibly different value instead of always assuming it will be 3.
 ```
 {
     "playerX": 0,
@@ -66,10 +70,10 @@ Created a JSON file that the play scene parses through on start that changes var
 }
 ```
 ### Internal DSL for Plants and Growth Conditions
-Created an Internal Domain Specific Language (DSL) to manage plant types and their growth conditions within a web application. The PlantDSL object contains a registry that stores plant types, each with a name, texture, and a growth rule. The growth rule is a function that takes environmental factors like sunlight, water, and neighboring plants to determine if the plant can grow. For example, sunflowers need at least 3 sunlight and 2 water with no more than one neighbor, while roses require high water and must be near another rose to grow. This DSL structure allows for easy addition of new plant types with unique growth conditions. It also ensures a clear separation of concerns and flexibility, making the system extensible and maintainable. The DSL simplifies the management of plant behaviors, allowing dynamic evaluation of growth conditions based on changing environmental factors.
+Created an Internal Domain Specific Language (DSL) to manage plant types and their growth conditions within a web application. The PlantDSL object contains a registry that stores plant types, each with a name, texture-image, and a growth rule. The growth rule is a function that takes environmental factors like sunlight, water, and neighboring plants to determine if the plant can grow. For example, sunflowers need at least 3 sunlight and 2 water with no more than one neighbor, while roses require high water and must be near another rose to grow. This DSL structure allows for easy addition of new plant types with unique growth conditions. It also ensures a clear separation of concerns and flexibility, making the system extensible and maintainable. The DSL simplifies the management of plant behaviors, allowing dynamic evaluation of growth conditions based on changing environmental factors.
 
 ### Switch to Alternate Platform
-Our port from javascript to typescript started by installing node into our existing project. Using Node we installed typescript, phaser and ESLint. Because of the similarities between javascript and typescript, we didn't have to change too many things. The biggest changes came from strongly typing all of our variables along with changing a bunch of syntax. Notable syntax chnages included changing references in SaveManager to work properly with static typing. The cleanup process also allowed us to delete legacy code that no longer had functionality. 
+Our port from JavaScript to TypeScript started by installing node into our existing project. Using Node, we installed TypeScript, Phaser and ESLint. Because of the similarities between JavaScript and TypeScript, we didn't have to change too many things. The biggest changes came from having to strongly type all of our variables along with changing a bunch of syntax. Notable syntax changes included changing references in SaveManager to work properly with static typing. The cleanup process also allowed us to delete legacy code that no longer had functionality. 
 
 ## Reflection
-We knew we couldn't finish the project because the save and load from F1 was constantly breaking and managing other projects. Eventually the roles didn't matter too much as everyone was just trying to do as much as they can. Brendan started focusing on making small user experience changes and implementing new ideas (player movement and cell checking, weather, JSON), while Ian focused on fixing the save/load and undo/redo. Izaiah switched focus from reworking our code to being compatible with each others logic, as well as the UI he designed, to working on the internal DSL logic and ensuring it was implemented accordingly to all the previous logic done before. 
+We knew we couldn't finish the project because the save and load from F1 was constantly breaking and managing other projects. Eventually the roles didn't matter too much as everyone was just trying to do as much as they can. Brendan started focusing on making small user experience changes and implementing new ideas (player movement and cell checking, weather, JSON). Ian focused on fixing the save/load, undo/redo, and transitioning to TypeScript. Izaiah switched focus from reworking our code to being compatible with each others logic, as well as the UI he designed, to working on the internal DSL logic and ensuring it was implemented accordingly to all the previous logic done before. 
