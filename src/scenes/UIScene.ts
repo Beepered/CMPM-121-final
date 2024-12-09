@@ -55,13 +55,13 @@ class UIScene extends Phaser.Scene {
     resetAllTxt(){
         const txt = this.cache.json.get('language');
         
-        this.seedText.text = (`${txt.Seeds[txt.lang]}: ${seeds}`);
-        this.weatherText.text = ( `${txt.Weather[txt.lang]}: ${currentWeather}`);
+        this.seedText.text = txt.Seeds[txt.lang] + ": " + seeds;
+        this.weatherText.text = txt.Weather[txt.lang] + currentWeather;
 
-        this.endText.text = (`${txt.GAMEFINISHED[txt.lang]}`)
+        this.endText.text = txt.GAMEFINISHED[txt.lang]
         this.endText.visible = false
 
-        this.dropdownToggle.text = (txt.Menu[txt.lang]);
+        this.dropdownToggle.text = txt.Menu[txt.lang]
     }
     
     setListeners() {
