@@ -4,9 +4,14 @@ class Credits extends Phaser.Scene {
     constructor(){
         super("creditScene")
     }
+    preload(){
+        this.load.json('language', 'src/Utils/language.json')
+    }
     create(){
-        this.add.text(gameWidth / 2, 50, "CREDITS", { fontSize: '40px' }).setOrigin(0.5)
-        this.add.text(gameWidth / 2, 90, "Press SPACEBAR for MENU", { fontSize: '30px' }).setOrigin(0.5)
+        const txt = this.cache.json.get('language');
+
+        this.add.text(gameWidth / 2, 50, txt.credits[txt.lang], { fontSize: '40px' }).setOrigin(0.5)
+        this.add.text(gameWidth / 2, 90, txt.LeaveCreditTxt[txt.lang], { fontSize: '30px' }).setOrigin(0.5)
         this.add.text(gameWidth / 2, gameHeight / 2, 
             "Andrew Byi\n\n" +
             "Brendan Trieu\n\n" +
