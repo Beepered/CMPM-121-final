@@ -25,8 +25,8 @@ class UIScene extends Phaser.Scene {
     create(){
         const txt = this.cache.json.get('language');
         // use seeds not this.seeds
-        this.seedText = this.add.text(gameWidth / 13, gameHeight / 12, `${txt.Seeds[txt.lang]}: ${seeds}`, { fontSize: '20px' })
-        this.weatherText = this.add.text(gameWidth / 13, gameHeight / 9, `${txt.Weather[txt.lang]}: ${currentWeather}`, { fontSize: '20px' })
+        this.seedText = this.add.text(20, 20, `${txt.Seeds[txt.lang]}: ${seeds}`, { fontSize: '20px' })
+        this.weatherText = this.add.text(20, 35, `${txt.Weather[txt.lang]}: ${currentWeather}`, { fontSize: '20px' })
 
         this.endText = this.add.text(gameWidth / 2, gameHeight / 2, `${txt.GAMEFINISHED[txt.lang]}`, { fontSize: '60px' }).setOrigin(0.5, 0.5)
         this.endText.visible = false
@@ -35,12 +35,12 @@ class UIScene extends Phaser.Scene {
 
         const menuButton = this.add.rectangle(this.cameras.main.width - 90, 0, 90, 30, 0x404040).setOrigin(0).setInteractive()
         menuButton.on("pointerdown", () => this.toggleDropdownMenu());
-        this.dropdownToggle = this.add.text(800, 10, txt.Menu[txt.lang], { fontSize: '16px', color: '#123456' }) //.setInteractive();
+        this.dropdownToggle = this.add.text(800, 10, txt.Menu[txt.lang], { fontSize: '16px', color: '#ffffff' }) //.setInteractive();
         //this.dropdownToggle.on("pointerdown", () => this.toggleDropdownMenu());
 
         // Position the button dynamically
         this.dropdownToggle.setScrollFactor(0);
-        this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 10, 10);
+        this.dropdownToggle.setPosition(this.cameras.main.width - this.dropdownToggle.width - 25, 8);
 
         // Handle resizing
         this.scale.on('resize', (gameSize: { width: any; height: any; }) => {
