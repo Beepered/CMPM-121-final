@@ -1,8 +1,19 @@
 class Cell extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture) {
+    emitter: EventDispatcher;
+    plant: Plant | null;
+    sun: number;
+    water: number;
+    sunText: Phaser.GameObjects.Text;
+    waterText: Phaser.GameObjects.Text;
+    xIndex: number | null | undefined;
+    yIndex: number | null | undefined;
+
+    constructor(scene: Phaser.Scene, x: number, y: number, texture:string) {
         super(scene, x, y, texture);
         scene.add.rectangle(x, y, this.displayWidth + 5, this.displayHeight + 5, 0x000000); // border
+
         scene.add.existing(this)
+        
         scene.physics.add.existing(this)
 
         this.emitter = EventDispatcher.getInstance();
@@ -13,8 +24,8 @@ class Cell extends Phaser.GameObjects.Sprite {
         this.sun = 3;
         this.water = 3;
 
-        this.sunText = scene.add.text(x - 60, y - 60, this.sun.toString(), { fontSize: '18px', fontStyle: 'bold', color:'yellow' }).setDepth(2)
-        this.waterText = scene.add.text(x - 35, y - 60, this.water.toString(), { fontSize: '18px', fontStyle: 'bold', color:'blue' }).setDepth(2)
+        this.sunText = scene.add.text(x - 60, y - 60, this.sun.toString(), { fontSize: '18px', color:'yellow' })
+        this.waterText = scene.add.text(x - 40, y - 60, this.water.toString(), { fontSize: '18px', color:'blue' })
     }
 
     NextTurn(){
@@ -29,10 +40,10 @@ class Cell extends Phaser.GameObjects.Sprite {
     ChangeSun() {
         let minSun = 0;
         let maxSun = 0;
-        switch(currentWeather){
+        switch(weather){
             case WEATHER.sunny:
-                minSun = 6;
-                maxSun = 10;
+                minSun = 6
+                maxSun = 10
                 break;
             case WEATHER.cloudy:
                 minSun = 3;
@@ -43,13 +54,13 @@ class Cell extends Phaser.GameObjects.Sprite {
                 maxSun = 3;
                 break;
         }
-        this.sun = Math.floor(Math.random() * (maxSun - minSun + 1)) + minSun; // Immediate use of sun or it will be reset
+        this.sun = Math.floor(Math.random() * maxSun) + minSun; // Immediate use of sun or it will be reset
     }
 
     ChangeWater() {
         let minWater = 0;
         let maxWater = 0;
-        switch(currentWeather){
+        switch(weather){
             case WEATHER.sunny:
                 minWater = 0;
                 maxWater = 0;
@@ -63,26 +74,22 @@ class Cell extends Phaser.GameObjects.Sprite {
                 maxWater = 3;
                 break;
         }
-        this.water += Math.floor(Math.random() * (maxWater - minWater + 1)) + minWater;
+        const WaterPower = Math.floor(Math.random() * maxWater) + minWater;
+        this.water = this.water + WaterPower;
         if(this.water > 10){ // max water cell can hold is 10
             this.water = 10;
         }
     }
 
-    CheckNeighbors() {
-        for(const cell of this.scene.neighboringCells(this.gridX, this.gridY)){
-            
-        }
-    }
-
-    Plant(typename) {
+    Plant(typename: string) {
         this.plant = new Plant(this.scene, this.x, this.y, typename);
         this.plant.typeName = typename
     }
 
     getNeighbors() {
-        const neighbors = []
-        const grid = this.scene.grid // Ensure the grid is correctly referenced
+        const playScene = this.scene.scene.get("playScene") as Play; 
+        const neighbors:Cell[] = []
+        const grid = playScene.grid // Ensure the grid is correctly referenced
 
         if (!grid || this.xIndex == null || this.yIndex == null) {
             console.error("Grid or indices not found for cell:", this)
@@ -97,8 +104,8 @@ class Cell extends Phaser.GameObjects.Sprite {
         ]
 
         directions.forEach(dir => {
-            const nx = this.xIndex + dir.x
-            const ny = this.yIndex + dir.y
+            const nx = this.xIndex! + dir.x
+            const ny = this.yIndex! + dir.y
 
             // Ensure neighbor is within grid boundaries
             if (nx >= 0 && nx < grid.length && ny >= 0 && ny < grid[0].length) {

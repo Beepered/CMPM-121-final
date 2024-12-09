@@ -1,4 +1,6 @@
 class Menu extends Phaser.Scene {
+    keyUP!: Phaser.Input.Keyboard.Key;
+    keyDOWN!: Phaser.Input.Keyboard.Key;
     constructor(){
         super("menuScene")
     }
@@ -24,8 +26,8 @@ class Menu extends Phaser.Scene {
         this.add.text(gameWidth / 2, gameHeight / 1.8, txt.startPlayTxt[txt.lang], textConfig).setOrigin(0.5)
         this.add.text(gameWidth / 2, gameHeight / 1.6, txt.creditsTxt[txt.lang], textConfig).setOrigin(0.5)
         
-        this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        this.keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.keyUP = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.keyDOWN = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     }
 
     update(){

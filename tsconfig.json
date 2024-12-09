@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "es6",
-    "strict": true,
-    "esModuleInterop": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "types": ["node", "phaser"]
+    "target": "es2015",                     // Output ECMAScript 2015 code
+    "module": "es6",                       // Use ES6 module syntax
+    "strict": true,                        // Enable strict type checking
+    "esModuleInterop": true,               // Allows compatibility with CommonJS modules
+    "outDir": "./dist",                    // Output directory for compiled files
+    "rootDir": "./src",                    // Root directory of the source files
+    "types": ["node", "phaser"],           // Include Node and Phaser types
+    "moduleResolution": "node",            // Resolve modules like Node.js
+    "allowSyntheticDefaultImports": true, // Enable default imports for modules without default exports
+    "skipLibCheck": true                   // Skip type checks of declaration files
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],                 // Include all TypeScript files in src directory
+  "exclude": ["node_modules", "dist"]      // Exclude node_modules and output directory
 }
